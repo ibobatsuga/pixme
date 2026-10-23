@@ -1236,27 +1236,29 @@
           currentUser = null;
         }
       } else {
-        // Pre-seed superadmin credentials
-        currentUser = {
-          id: 'usr-superadmin-001',
-          username: 'superadmin',
-          full_name: 'Super Administrator',
-          email: 'superadmin@picme.id',
-          role: 'superadmin'
-        };
-        localStorage.setItem('picme_current_user', JSON.stringify(currentUser));
+        currentUser = null;
       }
       updateUserUI(currentUser);
     }
 
     function updateUserUI(user) {
-      if (!user) return;
       const headerUsername = document.getElementById('headerUsername');
       const profileUsername = document.getElementById('profileUsername');
       const profileEmail = document.getElementById('profileEmail');
       const badgeSuperadmin = document.getElementById('badgeSuperadmin');
       const btnLogout = document.getElementById('btnLogout');
       const textAccountAuthAction = document.getElementById('textAccountAuthAction');
+
+      if (!user) {
+        if (headerUsername) headerUsername.innerText = 'Masuk';
+        if (profileUsername) profileUsername.innerText = 'Tamu';
+        if (profileEmail) profileEmail.innerText = '';
+        if (badgeSuperadmin) badgeSuperadmin.classList.add('hidden');
+        if (btnLogout) btnLogout.classList.add('hidden');
+        if (textAccountAuthAction) textAccountAuthAction.innerText = 'Masuk / Daftar Akun';
+        initSavedMasterSelfie();
+        return;
+      }
 
       if (headerUsername) headerUsername.innerText = user.username;
       if (profileUsername) profileUsername.innerText = user.username;
