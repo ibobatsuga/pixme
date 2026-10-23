@@ -216,9 +216,9 @@
       <!-- RIGHT SECTION: Theme Toggle ☀️/🌙, Cart 🛒, Chat 💬, & Profile -->
       <div class="flex items-center gap-1 sm:gap-2.5 shrink-0">
         
-        <!-- Theme Toggle Button (Dark / Light Mode with Sun or Moon icon) -->
-        <button id="themeToggleBtn" onclick="toggleTheme()" class="w-10 h-10 rounded-full hover:bg-purple-50 dark:hover:bg-slate-800 flex items-center justify-center text-purple-950 dark:text-amber-400 transition" title="Ganti Tema Gelap / Terang">
-          <i id="themeToggleIcon" class="ph-bold ph-moon text-xl"></i>
+        <!-- Theme Toggle Button (Dark / Light Mode: Sun / Moon with exact same color & fill as Cart & Chat) -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="w-10 h-10 rounded-full hover:bg-purple-50 dark:hover:bg-slate-800 flex items-center justify-center text-purple-900 dark:text-purple-300 transition" title="Ganti Tema Gelap / Terang">
+          <i id="themeToggleIcon" class="ph-fill ph-moon text-2xl text-purple-900 dark:text-purple-300"></i>
         </button>
 
         <!-- 1:1 FotoYu Cart Icon (Troli / Koleksi Saya) -->
@@ -278,23 +278,23 @@
             </select>
           </div>
 
-          <!-- Selfie Avatar Dropzone -->
-          <div class="space-y-3">
-            <div id="selfieZone" onclick="document.getElementById('selfieFileInput').click()" class="relative group cursor-pointer border-2 border-dashed border-slate-200 hover:border-pink-500 rounded-3xl p-6 text-center bg-gradient-to-b from-slate-50/50 to-white/70 hover:from-pink-50/30 hover:to-white transition-all duration-300 flex flex-col items-center justify-center">
+          <!-- Selfie Avatar Dropzone (Enforces Consent Modal First) -->
+          <div class="space-y-2">
+            <div id="selfieZone" onclick="handleSelfieClick()" class="relative group cursor-pointer border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-pink-500 rounded-3xl p-6 text-center bg-gradient-to-b from-slate-50/50 to-white/70 dark:from-[#171821]/50 dark:to-[#171821] hover:from-pink-50/30 hover:to-white transition-all duration-300 flex flex-col items-center justify-center">
               <input type="file" id="selfieFileInput" accept="image/*" capture="user" class="hidden" onchange="onSelfieSelected(event)">
               
               <!-- Empty State Avatar Prompt -->
               <div id="selfiePrompt" class="space-y-3 flex flex-col items-center">
                 <div class="relative">
-                  <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-slate-100 to-slate-200 border-4 border-white shadow-soft flex items-center justify-center text-slate-400 group-hover:text-pink-600 group-hover:scale-105 transition-all duration-300">
+                  <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 border-4 border-white dark:border-slate-800 shadow-soft flex items-center justify-center text-slate-400 group-hover:text-pink-600 group-hover:scale-105 transition-all duration-300">
                     <i class="ph-bold ph-user text-4xl"></i>
                   </div>
-                  <div class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-white">
+                  <div class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-white dark:ring-slate-800">
                     <i class="ph-bold ph-camera"></i>
                   </div>
                 </div>
                 <div>
-                  <p class="text-sm font-bold text-slate-800">Ambil Selfie / Foto Kamu</p>
+                  <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Ambil Selfie / Foto Kamu</p>
                   <p class="text-[11px] text-slate-400 max-w-[210px]">AI mengenali wajahmu meski di kerumunan konser atau pencahayaan panggung</p>
                 </div>
               </div>
@@ -307,18 +307,26 @@
                     <i class="ph-bold ph-check"></i>
                   </span>
                 </div>
-                <div class="bg-amber-50 border border-amber-200/80 rounded-2xl p-3 text-left w-full space-y-1">
-                  <p class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
+                <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl p-3 text-left w-full space-y-1">
+                  <p class="text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
                     <i class="ph-bold ph-info"></i>Tips untuk Foto Konser
                   </p>
-                  <p class="text-[11px] text-amber-700 leading-relaxed">
+                  <p class="text-[11px] text-amber-700 dark:text-amber-300 leading-relaxed">
                     Pastikan wajah terlihat jelas tanpa tertutup kacamata hitam pekat agar pencocokan AI maksimal.
                   </p>
                 </div>
-                <button type="button" onclick="event.stopPropagation(); document.getElementById('selfieFileInput').click()" class="text-xs font-bold text-slate-600 hover:text-pink-600 flex items-center gap-1">
+                <button type="button" onclick="event.stopPropagation(); handleSelfieClick()" class="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-pink-600 flex items-center gap-1">
                   <i class="ph-bold ph-arrow-counter-clockwise"></i>Ambil Ulang Selfie
                 </button>
               </div>
+            </div>
+
+            <!-- UU PDP Consent Link -->
+            <div class="text-center pt-1">
+              <button type="button" onclick="event.stopPropagation(); toggleModal('modalConsent', true)" class="text-[11px] font-semibold text-purple-700 dark:text-purple-400 hover:underline inline-flex items-center gap-1">
+                <i class="ph-bold ph-shield-check text-sm"></i>
+                <span>Ketentuan Penggunaan & Biometrik (UU PDP)</span>
+              </button>
             </div>
           </div>
 
@@ -669,42 +677,50 @@
   </main>
 
 
-  <!-- ==================== MODAL: PERSETUJUAN BIOMETRIK & PRIVASI ==================== -->
-  <div id="modalConsent" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
-    <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-md" onclick="toggleModal('modalConsent', false)"></div>
-    <div class="glass-card bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full relative z-10 shadow-2xl space-y-5 border border-slate-100">
+  <!-- ==================== 1:1 FOTOYU LEMBAR KETENTUAN PENGGUNAAN & BIOMETRIK ==================== -->
+  <div id="modalConsent" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="toggleModal('modalConsent', false)"></div>
+    <div class="bg-white dark:bg-[#161822] rounded-3xl p-6 sm:p-8 max-w-lg w-full relative z-10 shadow-2xl space-y-4 border border-slate-200/80 dark:border-slate-800">
       
-      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
-        <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-          <i class="ph-bold ph-shield-check text-pink-600 text-2xl"></i>
-          Ketentuan Penggunaan & Privasi
-        </h3>
-        <button onclick="toggleModal('modalConsent', false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition">
-          <i class="ph-bold ph-x"></i>
-        </button>
-      </div>
+      <!-- Close Button (Top Right 1:1 FotoYu) -->
+      <button onclick="toggleModal('modalConsent', false)" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-500/80 hover:bg-slate-600 text-white flex items-center justify-center text-sm transition shadow-sm" title="Tutup">
+        <i class="ph-bold ph-x"></i>
+      </button>
 
-      <div class="text-xs text-slate-600 space-y-3 leading-relaxed max-h-60 overflow-y-auto pr-2">
+      <!-- Purple Title (1:1 FotoYu) -->
+      <h2 class="text-2xl font-bold text-purple-800 dark:text-purple-400 tracking-tight pt-1">
+        Ketentuan Penggunaan
+      </h2>
+
+      <!-- Scrollable Legal Terms Text (1:1 FotoYu) -->
+      <div class="text-xs sm:text-[13px] text-slate-700 dark:text-slate-300 space-y-3.5 leading-relaxed max-h-72 overflow-y-auto pr-2">
         <p>
-          Selamat datang di <b>PicMe</b>. Platform pencarian dan galeri foto event musik, konser, dan olahraga dengan teknologi AI yang mempertemukan fotografer dengan penonton dan peserta.
+          Selamat datang, dan terima kasih telah menggunakan <b>PicMe</b> melalui website maupun aplikasi. Kami harap kamu mendapatkan pengalaman yang menyenangkan dan selalu bersama kami dalam perjalanan selanjutnya.
         </p>
         <p>
-          Sesuai dengan <b>Undang-Undang Perlindungan Data Pribadi (UU PDP No. 27 Tahun 2022)</b>, kami menjamin bahwa foto wajah dan representasi vektor biometrik Anda diproteksi dengan enkripsi dan hanya digunakan untuk mencocokkan foto dokumentasi Anda pada event yang dipilih.
+          Sekarang kamu sedang membaca perjanjian antara kamu (sebagai pengguna dan kreator) dan PicMe (sebagai penyedia layanan). Kenalkan, <b>PicMe</b>, platform marketplace dokumentasi personal, dengan teknologi privasi AI, yang mempertemukan <b>Fotografer (kreator)</b> dengan <b>Pengguna</b>. PicMe juga dilengkapi dengan fitur media sosial sebagai tempat berbagi konten dokumentasi kamu dengan teman. Saat ini, PicMe berada di bawah kendali dan pengembangan <b>PT. PicMe Teknologi Indonesia</b> (selanjutnya disebut "PicMe", "kami").
+        </p>
+        <p>
+          Sesuai dengan ketentuan <b>Undang-Undang Republik Indonesia Nomor 27 Tahun 2022 tentang Perlindungan Data Pribadi (UU PDP)</b>, kami menjamin bahwa foto wajah selfie yang Anda berikan semata-mata diubah menjadi representasi vektor numerik matematis (vektor embedding) berenkripsi untuk mencocokkan kehadiran Anda pada foto dokumentasi konser, festival musik, atau event olahraga yang Anda pilih.
+        </p>
+        <p>
+          PicMe <b>TIDAK</b> akan memperjualbelikan, menyewakan, atau menyalahgunakan data biometrik Anda kepada pihak ketiga mana pun untuk tujuan periklanan atau tujuan komersial di luar pencarian foto dokumentasi ini. Anda berhak menarik persetujuan atau meminta penghapusan representasi data biometrik Anda kapan saja melalui Pengaturan Akun.
         </p>
       </div>
 
-      <div class="p-4 rounded-2xl bg-pink-50 border border-pink-200/60 space-y-3">
-        <label class="flex items-start gap-3 cursor-pointer">
-          <input type="checkbox" id="checkConsent" class="mt-0.5 w-4 h-4 rounded text-pink-600 focus:ring-pink-500 border-slate-300">
-          <span class="text-xs text-slate-700 leading-snug">
-            Saya memberikan persetujuan saya kepada <b>PicMe</b> untuk mengumpulkan, menyimpan, dan memproses Pengenal Biometrik Wajah saya (data diproteksi enkripsi).
+      <!-- Purple Bordered Consent Box (1:1 FotoYu) -->
+      <div class="p-4 rounded-2xl border-2 border-purple-700/80 dark:border-purple-600 bg-purple-50/40 dark:bg-purple-950/20 space-y-3 mt-3">
+        <label class="flex items-start gap-3 cursor-pointer select-none">
+          <input type="checkbox" id="checkConsent" class="mt-0.5 w-5 h-5 rounded text-purple-700 focus:ring-purple-500 border-slate-300 dark:border-slate-600 accent-purple-700 shrink-0">
+          <span class="text-xs text-slate-700 dark:text-slate-300 leading-snug">
+            Saya memberikan persetujuan saya kepada <b>PT. PicMe Teknologi Indonesia</b> untuk mengumpulkan, menyimpan, dan memproses Pengenal Biometrik Wajah dan Data Lokasi Ponsel saya (data diprotek enkripsi).
           </span>
         </label>
-      </div>
 
-      <div class="flex justify-end gap-3 pt-2">
-        <button onclick="toggleModal('modalConsent', false)" class="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Batal</button>
-        <button id="btnSubmitConsent" onclick="confirmConsent()" class="px-6 py-2.5 rounded-full text-xs font-bold bg-pink-600 hover:bg-pink-700 text-white shadow-soft transition">Saya Setuju</button>
+        <!-- Solid Purple Button (1:1 FotoYu) -->
+        <button id="btnSubmitConsent" onclick="confirmConsent()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-6 rounded-full text-sm shadow-md hover:shadow-lg transition flex items-center justify-center">
+          Saya Setuju
+        </button>
       </div>
 
     </div>
@@ -1115,7 +1131,9 @@
     function updateThemeIcon(isDark) {
       const icon = document.getElementById('themeToggleIcon');
       if (icon) {
-        icon.className = isDark ? 'ph-bold ph-sun text-xl text-amber-400' : 'ph-bold ph-moon text-xl text-purple-900';
+        icon.className = isDark 
+          ? 'ph-fill ph-sun text-2xl text-purple-900 dark:text-purple-300' 
+          : 'ph-fill ph-moon text-2xl text-purple-900 dark:text-purple-300';
       }
     }
 
@@ -1368,7 +1386,16 @@
       reader.readAsDataURL(file);
     }
 
-    // 10. Confirm Consent
+    // 10. Handle Selfie Initiation (Enforces Legal Consent First)
+    function handleSelfieClick() {
+      if (!hasGivenConsent) {
+        toggleModal('modalConsent', true);
+      } else {
+        document.getElementById('selfieFileInput').click();
+      }
+    }
+
+    // 11. Confirm Consent & Directly Launch Camera
     function confirmConsent() {
       const checkbox = document.getElementById('checkConsent');
       if (!checkbox.checked) {
@@ -1378,22 +1405,24 @@
       hasGivenConsent = true;
       localStorage.setItem('picme_biometric_consent', 'true');
       toggleModal('modalConsent', false);
-      proceedFaceSearch();
+      
+      // Directly launch selfie camera / file picker!
+      document.getElementById('selfieFileInput').click();
     }
 
-    // 11. Trigger Face Search with Consent Check
+    // 12. Trigger Face Search with Consent Check
     function triggerFaceSearch() {
       if (!currentEventId) {
         alert('Harap pilih event terlebih dahulu');
         return;
       }
-      if (!selectedSelfieFile) {
-        alert('Harap unggah atau ambil foto selfie terlebih dahulu');
-        return;
-      }
-
       if (!hasGivenConsent) {
         toggleModal('modalConsent', true);
+        return;
+      }
+      if (!selectedSelfieFile) {
+        alert('Harap ambil atau unggah foto selfie Anda terlebih dahulu');
+        handleSelfieClick();
         return;
       }
 
