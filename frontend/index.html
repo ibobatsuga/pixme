@@ -501,8 +501,9 @@
       <!-- Profile Avatar & Details Row -->
       <div class="flex items-center gap-4 sm:gap-6 pt-1">
         <!-- Rounded Square Avatar -->
-        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-700/80 border-2 border-slate-600 flex items-center justify-center text-slate-400 text-4xl shrink-0 shadow-inner">
-          <i class="ph-fill ph-user"></i>
+        <div class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-700/80 border-2 border-slate-600 flex items-center justify-center text-slate-400 text-4xl shrink-0 shadow-inner overflow-hidden relative">
+          <img id="profileAvatarImg" class="w-full h-full object-cover hidden" alt="Avatar">
+          <i id="profileAvatarIcon" class="ph-fill ph-user"></i>
         </div>
 
         <div class="space-y-1">
@@ -566,6 +567,53 @@
         </div>
       </div>
 
+    </div>
+
+    <!-- Master Biometric Selfie Status Card (Akses & Ambil Ulang Selfie) -->
+    <div class="mt-5 bg-white dark:bg-[#18181b] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
+      <div class="flex items-start justify-between gap-3">
+        <div>
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <i class="ph-bold ph-scan text-purple-600 text-lg"></i>
+            <span>Foto Selfie Wajah Master (AI PicMe)</span>
+          </h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
+            Digunakan oleh AI Face Recognition untuk memindai wajah Anda di semua foto konser & festival musik secara otomatis.
+          </p>
+        </div>
+        <span id="accountSelfieBadge" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
+          Wajah Terdaftar
+        </span>
+      </div>
+
+      <div class="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 dark:bg-[#13141f] p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
+        <div class="relative shrink-0">
+          <img id="accountMasterSelfieImg" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-purple-500 shadow-md">
+          <div id="accountMasterSelfiePlaceholder" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-3xl hidden">
+            <i class="ph-bold ph-camera"></i>
+          </div>
+          <span id="accountMasterSelfieCheck" class="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs shadow ring-2 ring-white dark:ring-slate-900">
+            <i class="ph-bold ph-check"></i>
+          </span>
+        </div>
+        
+        <div class="flex-1 space-y-2 text-center sm:text-left">
+          <div id="accountMasterSelfieDesc" class="text-xs text-slate-600 dark:text-slate-300">
+            Foto selfie Anda tersimpan secara aman. AI PicMe siap mencocokkan wajah Anda pada setiap panggung dan kerumunan festival.
+          </div>
+          <div class="flex items-center justify-center sm:justify-start gap-2 pt-1 flex-wrap">
+            <button onclick="openRetakeModal()" class="bg-gradient-to-r from-purple-700 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1.5 shadow-sm hover:shadow transition">
+              <i class="ph-bold ph-camera-rotate text-sm"></i>
+              <span>Ambil Ulang Selfie</span>
+            </button>
+            <button onclick="document.getElementById('inputAccountSelfieUpload').click()" class="bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold px-3.5 py-2 rounded-full text-xs flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-upload-simple text-sm"></i>
+              <span>Unggah dari File</span>
+            </button>
+            <input type="file" id="inputAccountSelfieUpload" accept="image/*" class="hidden" onchange="handleAccountSelfieUpload(event)">
+          </div>
+        </div>
+      </div>
     </div>
 
     <!-- Subtabs: Jual vs Postingan (1:1 FotoYu) -->
@@ -741,6 +789,105 @@
         <button id="btnSubmitConsent" onclick="confirmConsent()" class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-3 px-6 rounded-full text-sm shadow-md hover:shadow-lg transition flex items-center justify-center">
           Saya Setuju
         </button>
+      </div>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== MODAL: AMBIL / ULANG SELFIE DENGAN AI QUALITY CHECK ==================== -->
+  <div id="modalSelfieQualityChecker" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="closeRetakeModal()"></div>
+    <div class="bg-white dark:bg-[#161822] rounded-3xl p-6 sm:p-7 max-w-md w-full relative z-10 shadow-2xl space-y-4 border border-slate-200/80 dark:border-slate-800">
+      
+      <!-- Close Button -->
+      <button onclick="closeRetakeModal()" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm transition shadow-sm" title="Tutup">
+        <i class="ph-bold ph-x"></i>
+      </button>
+
+      <!-- Title & Guidance -->
+      <div class="text-left space-y-1">
+        <h2 class="text-xl font-extrabold text-slate-900 dark:text-white tracking-tight">
+          Foto Selfie Profil Master
+        </h2>
+        <p class="text-xs text-slate-500 dark:text-slate-400">
+          AI PicMe akan memeriksa pencahayaan dan fokus wajah secara otomatis agar pencarian foto di konser maksimal.
+        </p>
+      </div>
+
+      <!-- Viewfinder / Stream container -->
+      <div class="relative w-full h-72 mx-auto rounded-3xl overflow-hidden bg-slate-950 border-2 border-dashed border-purple-500/80 shadow-inner flex flex-col items-center justify-center">
+        <!-- Live Video -->
+        <video id="modalSelfieVideo" autoplay playsinline muted class="w-full h-full object-cover hidden"></video>
+
+        <!-- Preview Image -->
+        <img id="modalSelfiePreview" class="w-full h-full object-cover hidden" alt="Selfie Preview">
+
+        <!-- Initial Placeholder Prompt -->
+        <div id="modalSelfiePrompt" class="p-6 text-center space-y-3">
+          <div class="w-16 h-16 mx-auto rounded-2xl bg-white/10 text-white flex items-center justify-center text-3xl">
+            <i class="ph-bold ph-camera"></i>
+          </div>
+          <p class="text-xs text-slate-300 font-medium">Buka kamera depan atau pilih foto selfie dari file Anda.</p>
+        </div>
+
+        <!-- Face Guide Oval -->
+        <div id="modalFaceOvalGuide" class="pointer-events-none absolute inset-x-8 inset-y-4 border-2 border-white/50 border-dashed rounded-full hidden flex items-center justify-center">
+          <span class="text-[10px] font-bold text-white/80 bg-black/50 px-2.5 py-0.5 rounded-full mt-auto mb-2">Posisikan wajah di dalam oval</span>
+        </div>
+
+        <!-- AI Quality Checking Loader -->
+        <div id="modalAiCheckingOverlay" class="absolute inset-0 bg-slate-950/85 backdrop-blur-sm flex flex-col items-center justify-center text-center p-4 space-y-3 hidden">
+          <div class="w-12 h-12 rounded-full border-4 border-purple-500 border-t-transparent animate-spin"></div>
+          <div>
+            <p class="text-xs font-bold text-white">Memeriksa Kualitas Foto...</p>
+            <p class="text-[11px] text-purple-300">Menganalisis pencahayaan dan fokus wajah</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Quality Feedback Banner -->
+      <div id="modalQualityFeedbackBox" class="hidden p-3.5 rounded-2xl text-xs space-y-1.5 transition-all">
+        <!-- Injected via JS -->
+      </div>
+
+      <!-- Controls -->
+      <div class="space-y-2 pt-1">
+        <!-- Pre-camera State -->
+        <div id="modalCameraStartActions" class="space-y-2">
+          <button type="button" onclick="startModalCamera()" class="w-full bg-gradient-to-r from-purple-800 via-purple-700 to-pink-600 hover:from-purple-900 hover:to-pink-700 text-white font-bold py-3 px-4 rounded-full text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-camera text-base"></i>
+            <span>Buka Kamera Depan</span>
+          </button>
+          <button type="button" onclick="document.getElementById('inputModalSelfieFile').click()" class="w-full bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 px-4 rounded-full text-xs transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-upload-simple text-sm"></i>
+            <span>Pilih dari Galeri / File</span>
+          </button>
+          <input type="file" id="inputModalSelfieFile" accept="image/*" capture="user" class="hidden" onchange="handleModalSelfieFile(event)">
+        </div>
+
+        <!-- Camera Streaming State -->
+        <div id="modalCameraStreamingActions" class="hidden space-y-2">
+          <button type="button" onclick="captureModalSnapshot()" class="w-full bg-pink-600 hover:bg-pink-700 text-white font-bold py-3.5 px-4 rounded-full text-xs sm:text-sm shadow-lg transition flex items-center justify-center gap-2 animate-pulse">
+            <i class="ph-bold ph-aperture text-lg"></i>
+            <span>Jepret Foto Selfie</span>
+          </button>
+          <button type="button" onclick="stopModalCamera()" class="w-full text-slate-500 hover:text-slate-700 dark:hover:text-slate-300 text-xs font-semibold py-1">
+            Batal & Tutup Kamera
+          </button>
+        </div>
+
+        <!-- Captured & Evaluated State -->
+        <div id="modalCameraCapturedActions" class="hidden space-y-2">
+          <button id="modalBtnProceedSave" type="button" onclick="saveAndApplyModalSelfie()" class="w-full bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-bold py-3 px-4 rounded-full text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-check text-base"></i>
+            <span>Simpan Foto Profil Master</span>
+          </button>
+          <button type="button" onclick="retakeModalSelfie()" class="w-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 font-bold py-2.5 px-4 rounded-full text-xs transition flex items-center justify-center gap-2">
+            <i class="ph-bold ph-arrow-counter-clockwise text-sm"></i>
+            <span>Foto Ulang</span>
+          </button>
+        </div>
       </div>
 
     </div>
@@ -1132,13 +1279,14 @@
     let supabaseClient = null;
     let currentUser = null;
 
-    // 0. Dark / Light Theme Controller
+    // 0. Dark / Light Theme Controller (Strict Default: Light Mode)
     function initTheme() {
       const savedTheme = localStorage.getItem('picme_theme');
-      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      if (savedTheme === 'dark') {
         document.documentElement.classList.add('dark');
         updateThemeIcon(true);
       } else {
+        // Explicit default is ALWAYS light mode
         document.documentElement.classList.remove('dark');
         updateThemeIcon(false);
       }
@@ -1228,6 +1376,7 @@
 
       if (btnLogout) btnLogout.classList.remove('hidden');
       if (textAccountAuthAction) textAccountAuthAction.innerText = 'Ganti Akun';
+      initSavedMasterSelfie();
     }
 
     async function handleLogout() {
@@ -1243,6 +1392,7 @@
       initTheme();
       initSupabase();
       initAuthState();
+      initSavedMasterSelfie();
       await fetchEvents();
     });
 
@@ -1475,31 +1625,340 @@
       renderGallery(allCurrentEventPhotos, false);
     }
 
-    // 9. Handle Selfie Selection
-    function onSelfieSelected(event) {
+    // ==================== MASTER SELFIE & REAL-TIME AI QUALITY CHECK ====================
+    let modalCameraStream = null;
+    let pendingModalSelfieData = null;
+
+    function initSavedMasterSelfie() {
+      const saved = localStorage.getItem('picme_saved_selfie');
+      const accImg = document.getElementById('accountMasterSelfieImg');
+      const accPlaceholder = document.getElementById('accountMasterSelfiePlaceholder');
+      const accBadge = document.getElementById('accountSelfieBadge');
+      const profileAvatarImg = document.getElementById('profileAvatarImg');
+      const profileAvatarIcon = document.getElementById('profileAvatarIcon');
+
+      if (saved) {
+        if (accImg) {
+          accImg.src = saved;
+          accImg.classList.remove('hidden');
+        }
+        if (accPlaceholder) accPlaceholder.classList.add('hidden');
+        if (accBadge) {
+          accBadge.innerText = 'Wajah Terdaftar';
+          accBadge.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800';
+        }
+        if (profileAvatarImg) {
+          profileAvatarImg.src = saved;
+          profileAvatarImg.classList.remove('hidden');
+        }
+        if (profileAvatarIcon) profileAvatarIcon.classList.add('hidden');
+
+        // Sync with UserView selfie zone
+        const selfieImg = document.getElementById('selfieImg');
+        const selfiePrompt = document.getElementById('selfiePrompt');
+        const selfiePreviewBox = document.getElementById('selfiePreviewBox');
+        if (selfieImg && selfiePrompt && selfiePreviewBox) {
+          selfieImg.src = saved;
+          selfiePrompt.classList.add('hidden');
+          selfiePreviewBox.classList.remove('hidden');
+          selectedSelfieFile = saved;
+        }
+      } else {
+        if (accImg) accImg.classList.add('hidden');
+        if (accPlaceholder) accPlaceholder.classList.remove('hidden');
+        if (accBadge) {
+          accBadge.innerText = 'Belum Ada Selfie';
+          accBadge.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800';
+        }
+      }
+    }
+
+    function openRetakeModal() {
+      toggleModal('modalSelfieQualityChecker', true);
+      document.getElementById('modalQualityFeedbackBox').classList.add('hidden');
+      document.getElementById('modalSelfiePreview').classList.add('hidden');
+      document.getElementById('modalCameraCapturedActions').classList.add('hidden');
+      document.getElementById('modalCameraStreamingActions').classList.add('hidden');
+      document.getElementById('modalCameraStartActions').classList.remove('hidden');
+      document.getElementById('modalSelfiePrompt').classList.remove('hidden');
+      // Attempt camera start
+      startModalCamera();
+    }
+
+    function closeRetakeModal() {
+      stopModalCamera();
+      toggleModal('modalSelfieQualityChecker', false);
+    }
+
+    async function startModalCamera() {
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 640 } },
+          audio: false
+        });
+        modalCameraStream = stream;
+        const video = document.getElementById('modalSelfieVideo');
+        video.srcObject = stream;
+        video.classList.remove('hidden');
+        document.getElementById('modalSelfiePrompt').classList.add('hidden');
+        document.getElementById('modalSelfiePreview').classList.add('hidden');
+        document.getElementById('modalFaceOvalGuide').classList.remove('hidden');
+        document.getElementById('modalCameraStartActions').classList.add('hidden');
+        document.getElementById('modalCameraStreamingActions').classList.remove('hidden');
+        document.getElementById('modalCameraCapturedActions').classList.add('hidden');
+        document.getElementById('modalQualityFeedbackBox').classList.add('hidden');
+      } catch (err) {
+        console.warn('Camera stream error:', err);
+        stopModalCamera();
+      }
+    }
+
+    function stopModalCamera() {
+      if (modalCameraStream) {
+        modalCameraStream.getTracks().forEach(t => t.stop());
+        modalCameraStream = null;
+      }
+      const video = document.getElementById('modalSelfieVideo');
+      if (video) {
+        video.srcObject = null;
+        video.classList.add('hidden');
+      }
+      const guide = document.getElementById('modalFaceOvalGuide');
+      if (guide) guide.classList.add('hidden');
+      const streamingActions = document.getElementById('modalCameraStreamingActions');
+      if (streamingActions) streamingActions.classList.add('hidden');
+      const startActions = document.getElementById('modalCameraStartActions');
+      if (startActions) startActions.classList.remove('hidden');
+    }
+
+    function captureModalSnapshot() {
+      const video = document.getElementById('modalSelfieVideo');
+      if (!video || !modalCameraStream) return;
+
+      const canvas = document.createElement('canvas');
+      canvas.width = video.videoWidth || 480;
+      canvas.height = video.videoHeight || 480;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      const dataUrl = canvas.toDataURL('image/jpeg', 0.88);
+
+      stopModalCamera();
+      displayAndEvaluateModalSelfie(dataUrl);
+    }
+
+    function handleModalSelfieFile(event) {
       const file = event.target.files[0];
       if (!file) return;
-      selectedSelfieFile = file;
-
       const reader = new FileReader();
       reader.onload = function(e) {
-        document.getElementById('selfieImg').src = e.target.result;
-        document.getElementById('selfiePrompt').classList.add('hidden');
-        document.getElementById('selfiePreviewBox').classList.remove('hidden');
+        stopModalCamera();
+        displayAndEvaluateModalSelfie(e.target.result);
       };
       reader.readAsDataURL(file);
     }
 
-    // 10. Handle Selfie Initiation (Enforces Legal Consent First)
+    function handleAccountSelfieUpload(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        openRetakeModal();
+        stopModalCamera();
+        displayAndEvaluateModalSelfie(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    function displayAndEvaluateModalSelfie(dataUrl) {
+      pendingModalSelfieData = dataUrl;
+      const preview = document.getElementById('modalSelfiePreview');
+      preview.src = dataUrl;
+      preview.classList.remove('hidden');
+      document.getElementById('modalSelfiePrompt').classList.add('hidden');
+      document.getElementById('modalSelfieVideo').classList.add('hidden');
+      document.getElementById('modalCameraStartActions').classList.add('hidden');
+      document.getElementById('modalCameraStreamingActions').classList.add('hidden');
+      document.getElementById('modalCameraCapturedActions').classList.remove('hidden');
+
+      runModalQualityAssessment(dataUrl);
+    }
+
+    /**
+     * Balanced Real-time AI Selfie Quality Checker
+     * "jangan terlalu meminta kualitas super bagus, seperlunya saja"
+     */
+    function analyzeSelfieQuality(imgElement) {
+      const canvas = document.createElement('canvas');
+      const width = 240;
+      const height = Math.round((imgElement.naturalHeight || imgElement.height || 240) / (imgElement.naturalWidth || imgElement.width || 240) * width);
+      canvas.width = width;
+      canvas.height = height;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(imgElement, 0, 0, width, height);
+
+      const imgData = ctx.getImageData(0, 0, width, height);
+      const data = imgData.data;
+      let totalLuminance = 0;
+      const gray = new Float32Array(width * height);
+
+      for (let i = 0; i < data.length; i += 4) {
+        const lum = 0.299 * data[i] + 0.587 * data[i + 1] + 0.114 * data[i + 2];
+        totalLuminance += lum;
+        gray[i / 4] = lum;
+      }
+
+      const avgBrightness = totalLuminance / (width * height);
+
+      let lapSum = 0;
+      let lapSqSum = 0;
+      let sampleCount = 0;
+
+      for (let y = 1; y < height - 1; y += 2) {
+        for (let x = 1; x < width - 1; x += 2) {
+          const idx = y * width + x;
+          const lap = Math.abs(4 * gray[idx] - gray[idx - 1] - gray[idx + 1] - gray[idx - width] - gray[idx + width]);
+          lapSum += lap;
+          lapSqSum += lap * lap;
+          sampleCount++;
+        }
+      }
+
+      const lapMean = lapSum / sampleCount;
+      const lapVar = (lapSqSum / sampleCount) - (lapMean * lapMean);
+      const blurScore = Math.round(lapVar);
+
+      if (avgBrightness < 45) {
+        return {
+          passed: false,
+          comment: '⚠️ Pencahayaan kurang terang: Wajah Anda tampak agak gelap. Silakan cari tempat dengan cahaya lebih terang agar AI dapat mengenali wajah Anda secara maksimal.',
+          metrics: { avgBrightness: Math.round(avgBrightness), blurScore }
+        };
+      }
+
+      if (avgBrightness > 225) {
+        return {
+          passed: false,
+          comment: '⚠️ Cahaya terlalu silau / backlight: Wajah Anda kurang terlihat jelas karena pantulan cahaya. Silakan foto ulang dengan posisi cahaya yang lebih merata.',
+          metrics: { avgBrightness: Math.round(avgBrightness), blurScore }
+        };
+      }
+
+      if (blurScore < 22) {
+        return {
+          passed: false,
+          comment: '⚠️ Foto tampak buram atau goyang: Wajah kurang fokus. Tahan kamera dengan tenang dan ulangi foto selfie.',
+          metrics: { avgBrightness: Math.round(avgBrightness), blurScore }
+        };
+      }
+
+      return {
+        passed: true,
+        comment: '✅ Kualitas foto sudah cukup baik! Pencahayaan dan ketajaman wajah sudah memadai untuk pemindaian festival otomatis.',
+        metrics: { avgBrightness: Math.round(avgBrightness), blurScore }
+      };
+    }
+
+    function runModalQualityAssessment(dataUrl) {
+      const overlay = document.getElementById('modalAiCheckingOverlay');
+      const box = document.getElementById('modalQualityFeedbackBox');
+      overlay.classList.remove('hidden');
+      box.classList.add('hidden');
+
+      const img = new Image();
+      img.onload = function() {
+        setTimeout(() => {
+          overlay.classList.add('hidden');
+          const evalResult = analyzeSelfieQuality(img);
+          box.classList.remove('hidden');
+
+          if (evalResult.passed) {
+            box.className = 'p-3.5 rounded-2xl text-xs space-y-1.5 transition-all bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-200 dark:border-emerald-800 text-emerald-900 dark:text-emerald-200';
+            box.innerHTML = `
+              <p class="font-extrabold flex items-center gap-1.5">
+                <i class="ph-bold ph-check-circle text-base text-emerald-600"></i>
+                <span>Foto Berkualitas Baik</span>
+              </p>
+              <p class="text-[11px] leading-relaxed text-emerald-800 dark:text-emerald-300">
+                ${evalResult.comment}
+              </p>
+              <p class="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 pt-0.5">
+                Foto langsung disimpan sebagai profil master PicMe Anda.
+              </p>
+            `;
+
+            // Auto save immediately!
+            saveAndApplyModalSelfie();
+
+          } else {
+            box.className = 'p-3.5 rounded-2xl text-xs space-y-1.5 transition-all bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800 text-amber-900 dark:text-amber-200';
+            box.innerHTML = `
+              <p class="font-extrabold flex items-center gap-1.5">
+                <i class="ph-bold ph-warning-circle text-base text-amber-600"></i>
+                <span>Hasil Foto Kurang Optimal</span>
+              </p>
+              <p class="text-[11px] leading-relaxed text-amber-800 dark:text-amber-300">
+                ${evalResult.comment}
+              </p>
+              <div class="pt-1 flex items-center justify-between">
+                <span class="text-[10px] text-amber-700 dark:text-amber-400">Harap ulangi foto agar hasil pencarian maksimal.</span>
+                <button type="button" onclick="saveAndApplyModalSelfie()" class="text-[10px] font-bold text-purple-700 dark:text-purple-400 underline">
+                  Tetap Simpan Foto Ini
+                </button>
+              </div>
+            `;
+          }
+        }, 500);
+      };
+      img.src = dataUrl;
+    }
+
+    function saveAndApplyModalSelfie() {
+      if (!pendingModalSelfieData) return;
+      localStorage.setItem('picme_saved_selfie', pendingModalSelfieData);
+      localStorage.setItem('picme_biometric_consent', 'true');
+      hasGivenConsent = true;
+
+      // Update current user avatar if logged in
+      if (currentUser) {
+        currentUser.avatar_url = pendingModalSelfieData;
+        localStorage.setItem('picme_current_user', JSON.stringify(currentUser));
+      }
+
+      initSavedMasterSelfie();
+      setTimeout(() => {
+        closeRetakeModal();
+      }, 700);
+    }
+
+    function retakeModalSelfie() {
+      pendingModalSelfieData = null;
+      document.getElementById('modalQualityFeedbackBox').classList.add('hidden');
+      startModalCamera();
+    }
+
+    // 9. Handle Selfie Selection via file input
+    function onSelfieSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        openRetakeModal();
+        stopModalCamera();
+        displayAndEvaluateModalSelfie(e.target.result);
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 10. Handle Selfie Initiation (Enforces Legal Consent First, then opens Quality Modal)
     function handleSelfieClick() {
       if (!hasGivenConsent) {
         toggleModal('modalConsent', true);
       } else {
-        document.getElementById('selfieFileInput').click();
+        openRetakeModal();
       }
     }
 
-    // 11. Confirm Consent & Directly Launch Camera
+    // 11. Confirm Consent & Directly Launch Quality Selfie Modal
     function confirmConsent() {
       const checkbox = document.getElementById('checkConsent');
       if (!checkbox.checked) {
@@ -1510,8 +1969,8 @@
       localStorage.setItem('picme_biometric_consent', 'true');
       toggleModal('modalConsent', false);
       
-      // Directly launch selfie camera / file picker!
-      document.getElementById('selfieFileInput').click();
+      // Directly launch quality selfie modal!
+      openRetakeModal();
     }
 
     // 12. Trigger Face Search with Consent Check
@@ -1524,10 +1983,14 @@
         toggleModal('modalConsent', true);
         return;
       }
-      if (!selectedSelfieFile) {
+      if (!selectedSelfieFile && !localStorage.getItem('picme_saved_selfie')) {
         alert('Harap ambil atau unggah foto selfie Anda terlebih dahulu');
         handleSelfieClick();
         return;
+      }
+
+      if (!selectedSelfieFile && localStorage.getItem('picme_saved_selfie')) {
+        selectedSelfieFile = localStorage.getItem('picme_saved_selfie');
       }
 
       proceedFaceSearch();
@@ -1540,7 +2003,23 @@
       progressBar.style.width = '30%';
 
       const formData = new FormData();
-      formData.append('selfie', selectedSelfieFile);
+      if (typeof selectedSelfieFile === 'string' && selectedSelfieFile.startsWith('data:image')) {
+        try {
+          const byteString = atob(selectedSelfieFile.split(',')[1]);
+          const mimeString = selectedSelfieFile.split(',')[0].split(':')[1].split(';')[0];
+          const ab = new ArrayBuffer(byteString.length);
+          const ia = new Uint8Array(ab);
+          for (let i = 0; i < byteString.length; i++) {
+            ia[i] = byteString.charCodeAt(i);
+          }
+          const blob = new Blob([ab], { type: mimeString });
+          formData.append('selfie', blob, 'master_selfie.jpg');
+        } catch (e) {
+          formData.append('selfie', selectedSelfieFile);
+        }
+      } else {
+        formData.append('selfie', selectedSelfieFile);
+      }
 
       try {
         progressBar.style.width = '75%';
