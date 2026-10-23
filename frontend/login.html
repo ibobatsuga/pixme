@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Masuk ke PicMe — Login & Registrasi</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            purpleTheme: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+            }
+          },
+          boxShadow: {
+            'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02)',
+            'glass': '0 20px 40px -15px rgba(30, 58, 138, 0.12)',
+            'neon': '0 0 35px -5px rgba(236, 72, 153, 0.35)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    html, body {
+      max-width: 100%;
+      overflow-x: hidden;
+      min-height: 100%;
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.88);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+      transition: background-color 0.25s, border-color 0.25s;
+    }
+    html.dark body {
+      background-color: #090a0f !important;
+      color: #f1f5f9 !important;
+    }
+    html.dark .glass-card {
+      background: rgba(18, 20, 29, 0.92) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      color: #f1f5f9 !important;
+    }
+    html.dark input {
+      background-color: #1a1c2b !important;
+      color: #f1f5f9 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 font-sans min-h-screen flex flex-col items-center justify-center relative p-4 selection:bg-purple-600 selection:text-white transition-colors duration-250">
+
+  <!-- Ambient Light Blobs -->
+  <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
+    <div class="absolute top-10 left-1/3 w-[450px] h-[450px] bg-pink-500/10 rounded-full blur-[140px]"></div>
+    <div class="absolute bottom-10 right-1/4 w-[400px] h-[400px] bg-purple-600/10 rounded-full blur-[140px]"></div>
+  </div>
+
+  <!-- Theme Toggle Top Corner -->
+  <div class="absolute top-4 right-4 sm:top-6 sm:right-6 flex items-center gap-2">
+    <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-white dark:bg-[#1a1c2b] border border-slate-200 dark:border-slate-800 flex items-center justify-center text-purple-900 dark:text-purple-300 shadow-sm transition">
+      <i id="themeToggleIcon" class="ph-fill ph-moon text-xl"></i>
+    </button>
+  </div>
+
+  <!-- Main Login / Sign-up Container -->
+  <div class="w-full max-w-md space-y-5">
+    
+    <!-- Brand Logo Header -->
+    <div class="text-center space-y-1">
+      <a href="/" class="inline-flex items-center gap-2.5 group">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-purple-900 via-purple-700 to-pink-500 flex items-center justify-center text-white text-xl shadow-glass group-hover:scale-105 transition-transform">
+          <i class="ph-bold ph-music-notes"></i>
+        </div>
+        <div class="text-left">
+          <span class="font-extrabold text-2xl tracking-tight text-slate-900 dark:text-white">Pic<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
+          <span class="block text-[10px] font-bold text-purple-700 dark:text-purple-400">Festival AI & Photo Hub</span>
+        </div>
+      </a>
+      <p class="text-xs text-slate-500 dark:text-slate-400 pt-1">Masuk untuk mengakses koleksi foto, upload fotografer, & AI Face Recognition</p>
+    </div>
+
+    <!-- Glassmorphic Auth Card -->
+    <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl relative border border-slate-200/80 dark:border-slate-800 space-y-5">
+      
+      <!-- Top Tabs: Masuk vs Daftar -->
+      <div class="grid grid-cols-2 p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 text-xs font-bold">
+        <button id="tabBtnLogin" onclick="switchAuthTab('login')" class="py-2.5 rounded-xl bg-white dark:bg-[#13141f] text-slate-900 dark:text-white shadow-sm transition">
+          Masuk (Sign In)
+        </button>
+        <button id="tabBtnRegister" onclick="switchAuthTab('register')" class="py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition">
+          Daftar (Sign Up)
+        </button>
+      </div>
+
+      <!-- Google OAuth Button (Supabase Auth) -->
+      <button onclick="handleGoogleSignIn()" class="w-full bg-white dark:bg-[#1a1c2b] hover:bg-slate-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-200 font-bold py-3.5 px-4 rounded-2xl border border-slate-200/90 dark:border-slate-700 shadow-sm flex items-center justify-center gap-3 transition group">
+        <!-- Official Google SVG Logo -->
+        <svg class="w-5 h-5 shrink-0" viewBox="0 0 24 24">
+          <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+          <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+          <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.06H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.94l2.85-2.22.81-.63z"/>
+          <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.06l3.66 2.84c.87-2.6 3.3-4.52 6.16-4.52z"/>
+        </svg>
+        <span id="googleBtnText" class="text-xs sm:text-sm font-semibold">Lanjutkan dengan Google</span>
+      </button>
+
+      <!-- Divider -->
+      <div class="relative flex items-center justify-center">
+        <div class="border-t border-slate-200 dark:border-slate-800 w-full"></div>
+        <span class="bg-white dark:bg-[#161822] px-3 text-[11px] font-semibold text-slate-400 uppercase tracking-wider shrink-0">atau dengan email / username</span>
+      </div>
+
+      <!-- Auth Form -->
+      <form id="authForm" onsubmit="handleSubmit(event)" class="space-y-4">
+        
+        <!-- Registration Full Name (Only visible when Register tab is active) -->
+        <div id="fieldFullName" class="hidden space-y-1">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Nama Lengkap</label>
+          <div class="relative">
+            <i class="ph-bold ph-user absolute left-3.5 top-3.5 text-slate-400 text-base"></i>
+            <input type="text" id="inputFullName" placeholder="Nama Anda" class="w-full bg-slate-50 dark:bg-[#1a1c2b] border border-slate-200 dark:border-slate-700 rounded-2xl pl-10 pr-4 py-3 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none transition">
+          </div>
+        </div>
+
+        <!-- Username or Email -->
+        <div class="space-y-1">
+          <label id="labelIdentifier" class="block text-xs font-bold text-slate-700 dark:text-slate-300">Username atau Email</label>
+          <div class="relative">
+            <i class="ph-bold ph-at absolute left-3.5 top-3.5 text-slate-400 text-base"></i>
+            <input type="text" id="inputIdentifier" required placeholder="superadmin atau nama@email.com" class="w-full bg-slate-50 dark:bg-[#1a1c2b] border border-slate-200 dark:border-slate-700 rounded-2xl pl-10 pr-4 py-3 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none transition">
+          </div>
+        </div>
+
+        <!-- Password -->
+        <div class="space-y-1">
+          <div class="flex items-center justify-between">
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Password</label>
+            <a href="javascript:void(0)" onclick="alert('Untuk reset password akun Superadmin, gunakan Hu33cw56 atau hubungi database administrator.')" class="text-[11px] text-purple-700 dark:text-purple-400 hover:underline">Lupa password?</a>
+          </div>
+          <div class="relative">
+            <i class="ph-bold ph-lock-key absolute left-3.5 top-3.5 text-slate-400 text-base"></i>
+            <input type="password" id="inputPassword" required placeholder="••••••••" class="w-full bg-slate-50 dark:bg-[#1a1c2b] border border-slate-200 dark:border-slate-700 rounded-2xl pl-10 pr-10 py-3 text-xs sm:text-sm font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none transition">
+            <button type="button" onclick="togglePasswordVisibility()" class="absolute right-3.5 top-3 text-slate-400 hover:text-slate-600 text-lg">
+              <i id="eyeIcon" class="ph-bold ph-eye"></i>
+            </button>
+          </div>
+        </div>
+
+        <!-- Superadmin Quick-Fill Helper Pill -->
+        <div class="pt-1">
+          <button type="button" onclick="quickFillSuperadmin()" class="w-full p-2.5 rounded-2xl bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 text-amber-900 dark:text-amber-200 text-xs font-bold flex items-center justify-between hover:bg-amber-100 transition group">
+            <span class="flex items-center gap-1.5">
+              <span class="text-sm">👑</span>
+              <span>Akun Superadmin (superadmin)</span>
+            </span>
+            <span class="text-[10px] text-purple-700 dark:text-purple-400 underline group-hover:scale-105 transition">Auto-Fill & Masuk</span>
+          </button>
+        </div>
+
+        <!-- Submit Button -->
+        <button type="submit" id="btnSubmitAuth" class="w-full bg-gradient-to-r from-purple-800 via-purple-700 to-pink-600 hover:from-purple-900 hover:to-pink-700 text-white font-bold py-3.5 px-6 rounded-full text-xs sm:text-sm shadow-md hover:shadow-lg transition flex items-center justify-center gap-2">
+          <i class="ph-bold ph-sign-in text-base"></i>
+          <span id="btnSubmitText">Masuk ke PicMe</span>
+        </button>
+
+      </form>
+
+      <!-- Supabase Connection Config Drawer Pill -->
+      <div class="pt-2 text-center border-t border-slate-100 dark:border-slate-800">
+        <button type="button" onclick="toggleSupabaseSettings()" class="text-[11px] text-slate-400 hover:text-purple-700 dark:hover:text-purple-400 flex items-center justify-center gap-1 mx-auto transition">
+          <i class="ph-bold ph-database"></i>
+          <span id="supabaseStatusText">Koneksi Supabase: Otomatis Terhubung</span>
+          <i class="ph-bold ph-gear text-xs"></i>
+        </button>
+
+        <div id="supabaseSettingsPanel" class="hidden mt-3 p-3.5 rounded-2xl bg-slate-50 dark:bg-[#1a1c2b] border border-slate-200 dark:border-slate-700 text-left space-y-2">
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-500">Supabase Project URL</label>
+            <input type="text" id="supabaseUrlInput" placeholder="https://xyzcompany.supabase.co" class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-mono">
+          </div>
+          <div>
+            <label class="block text-[10px] font-bold uppercase text-slate-500">Supabase Anon Key</label>
+            <input type="text" id="supabaseAnonKeyInput" placeholder="eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9..." class="w-full bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-700 rounded-xl px-3 py-1.5 text-xs font-mono">
+          </div>
+          <button type="button" onclick="saveSupabaseConfig()" class="w-full bg-slate-900 hover:bg-purple-900 text-white font-bold py-2 rounded-xl text-xs transition">
+            Simpan Konfigurasi Supabase
+          </button>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Back to Home Link -->
+    <div class="text-center">
+      <a href="/" class="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-purple-700 dark:hover:text-purple-400 inline-flex items-center gap-1.5 transition">
+        <i class="ph-bold ph-arrow-left"></i>
+        <span>Kembali ke Beranda PicMe</span>
+      </a>
+    </div>
+
+  </div>
+
+  <!-- SCRIPT CONTROLLER -->
+  <script>
+    let currentAuthMode = 'login'; // 'login' or 'register'
+    let supabaseClient = null;
+
+    // 1. Initialize Supabase
+    function initSupabase() {
+      const defaultUrl = localStorage.getItem('picme_supabase_url') || 'https://xyzcompany.supabase.co';
+      const defaultAnonKey = localStorage.getItem('picme_supabase_anon_key') || 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy';
+      
+      document.getElementById('supabaseUrlInput').value = defaultUrl !== 'https://xyzcompany.supabase.co' ? defaultUrl : '';
+      document.getElementById('supabaseAnonKeyInput').value = defaultAnonKey !== 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.dummy' ? defaultAnonKey : '';
+
+      try {
+        if (window.supabase && defaultUrl && defaultAnonKey) {
+          supabaseClient = window.supabase.createClient(defaultUrl, defaultAnonKey);
+          if (defaultUrl !== 'https://xyzcompany.supabase.co') {
+            document.getElementById('supabaseStatusText').innerText = 'Koneksi Supabase: Terhubung Aktif';
+          }
+        }
+      } catch (err) {
+        console.warn('Supabase initialization warning:', err);
+      }
+    }
+
+    function toggleSupabaseSettings() {
+      const panel = document.getElementById('supabaseSettingsPanel');
+      panel.classList.toggle('hidden');
+    }
+
+    function saveSupabaseConfig() {
+      const url = document.getElementById('supabaseUrlInput').value.trim();
+      const key = document.getElementById('supabaseAnonKeyInput').value.trim();
+      if (!url || !key) {
+        alert('Harap masukkan Project URL dan Anon Key Supabase');
+        return;
+      }
+      localStorage.setItem('picme_supabase_url', url);
+      localStorage.setItem('picme_supabase_anon_key', key);
+      initSupabase();
+      alert('Konfigurasi Supabase berhasil disimpan!');
+      document.getElementById('supabaseSettingsPanel').classList.add('hidden');
+    }
+
+    // 2. Tab Switcher (Masuk vs Daftar)
+    function switchAuthTab(mode) {
+      currentAuthMode = mode;
+      const tabLogin = document.getElementById('tabBtnLogin');
+      const tabReg = document.getElementById('tabBtnRegister');
+      const fieldFullName = document.getElementById('fieldFullName');
+      const btnText = document.getElementById('btnSubmitText');
+      const googleBtnText = document.getElementById('googleBtnText');
+
+      if (mode === 'login') {
+        tabLogin.className = 'py-2.5 rounded-xl bg-white dark:bg-[#13141f] text-slate-900 dark:text-white shadow-sm transition';
+        tabReg.className = 'py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+        fieldFullName.classList.add('hidden');
+        btnText.innerText = 'Masuk ke PicMe';
+        googleBtnText.innerText = 'Lanjutkan dengan Google';
+      } else {
+        tabReg.className = 'py-2.5 rounded-xl bg-white dark:bg-[#13141f] text-slate-900 dark:text-white shadow-sm transition';
+        tabLogin.className = 'py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
+        fieldFullName.classList.remove('hidden');
+        btnText.innerText = 'Daftar Akun Baru';
+        googleBtnText.innerText = 'Daftar Cepat dengan Google';
+      }
+    }
+
+    // 3. Password Visibility Toggle
+    function togglePasswordVisibility() {
+      const input = document.getElementById('inputPassword');
+      const icon = document.getElementById('eyeIcon');
+      if (input.type === 'password') {
+        input.type = 'text';
+        icon.className = 'ph-bold ph-eye-slash';
+      } else {
+        input.type = 'password';
+        icon.className = 'ph-bold ph-eye';
+      }
+    }
+
+    // 4. Quick-Fill Superadmin
+    function quickFillSuperadmin() {
+      switchAuthTab('login');
+      document.getElementById('inputIdentifier').value = 'superadmin';
+      document.getElementById('inputPassword').value = 'Hu33cw56';
+      
+      // Auto submit
+      setTimeout(() => {
+        document.getElementById('authForm').requestSubmit();
+      }, 300);
+    }
+
+    // 5. Google Sign In / Sign Up Handler via Supabase
+    async function handleGoogleSignIn() {
+      if (supabaseClient && localStorage.getItem('picme_supabase_url')) {
+        try {
+          const { data, error } = await supabaseClient.auth.signInWithOAuth({
+            provider: 'google',
+            options: {
+              redirectTo: window.location.origin
+            }
+          });
+          if (error) throw error;
+        } catch (err) {
+          alert('Supabase Google OAuth Error: ' + err.message);
+        }
+      } else {
+        // Mock Google Sign-In Simulation for preview
+        const mockGoogleUser = {
+          id: 'google-user-' + Date.now(),
+          username: 'Google User',
+          email: 'user.google@gmail.com',
+          role: 'user',
+          avatar_url: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150'
+        };
+        localStorage.setItem('picme_current_user', JSON.stringify(mockGoogleUser));
+        alert('Berhasil masuk dengan akun Google!');
+        window.location.href = '/';
+      }
+    }
+
+    // 6. Handle Form Submit (Superadmin & Standard Users)
+    async function handleSubmit(event) {
+      event.preventDefault();
+      const identifier = document.getElementById('inputIdentifier').value.trim();
+      const password = document.getElementById('inputPassword').value;
+      const fullName = document.getElementById('inputFullName').value.trim();
+
+      // Check Superadmin Credentials
+      if ((identifier === 'superadmin' || identifier === 'superadmin@picme.id') && password === 'Hu33cw56') {
+        const superadminUser = {
+          id: 'usr-superadmin-001',
+          username: 'superadmin',
+          full_name: 'Super Administrator',
+          email: 'superadmin@picme.id',
+          role: 'superadmin',
+          created_at: new Date().toISOString()
+        };
+        localStorage.setItem('picme_current_user', JSON.stringify(superadminUser));
+        alert('Login Berhasil! Selamat datang, Superadmin.');
+        window.location.href = '/';
+        return;
+      }
+
+      // Check with Supabase Auth if connected
+      if (supabaseClient && localStorage.getItem('picme_supabase_url')) {
+        try {
+          if (currentAuthMode === 'login') {
+            const { data, error } = await supabaseClient.auth.signInWithPassword({
+              email: identifier.includes('@') ? identifier : `${identifier}@picme.id`,
+              password: password
+            });
+            if (error) throw error;
+            const profile = {
+              id: data.user.id,
+              username: data.user.user_metadata?.username || identifier,
+              email: data.user.email,
+              role: data.user.user_metadata?.role || 'user'
+            };
+            localStorage.setItem('picme_current_user', JSON.stringify(profile));
+            alert('Login berhasil via Supabase!');
+            window.location.href = '/';
+          } else {
+            const { data, error } = await supabaseClient.auth.signUp({
+              email: identifier.includes('@') ? identifier : `${identifier}@picme.id`,
+              password: password,
+              options: {
+                data: {
+                  username: identifier.replace(/[^a-zA-Z0-9_]/g, ''),
+                  full_name: fullName || identifier
+                }
+              }
+            });
+            if (error) throw error;
+            alert('Registrasi berhasil! Silakan periksa email untuk konfirmasi.');
+            switchAuthTab('login');
+          }
+          return;
+        } catch (err) {
+          alert('Supabase Auth: ' + err.message);
+          return;
+        }
+      }
+
+      // Fallback local sign in / sign up for non-superadmin
+      if (currentAuthMode === 'login') {
+        const savedUser = JSON.parse(localStorage.getItem('picme_user_' + identifier) || 'null');
+        if (savedUser && savedUser.password === password) {
+          localStorage.setItem('picme_current_user', JSON.stringify(savedUser));
+          alert('Login Berhasil!');
+          window.location.href = '/';
+        } else {
+          alert('Username / Password salah. Untuk superadmin gunakan:\nUsername: superadmin\nPassword: Hu33cw56');
+        }
+      } else {
+        const newUser = {
+          id: 'usr-' + Date.now(),
+          username: identifier,
+          full_name: fullName || identifier,
+          email: identifier.includes('@') ? identifier : `${identifier}@picme.id`,
+          password: password,
+          role: 'user'
+        };
+        localStorage.setItem('picme_user_' + identifier, JSON.stringify(newUser));
+        localStorage.setItem('picme_current_user', JSON.stringify(newUser));
+        alert('Registrasi akun berhasil!');
+        window.location.href = '/';
+      }
+    }
+
+    // 7. Theme Controller
+    function initTheme() {
+      const savedTheme = localStorage.getItem('picme_theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        document.getElementById('themeToggleIcon').className = 'ph-fill ph-sun text-xl text-purple-900 dark:text-purple-300';
+      } else {
+        document.documentElement.classList.remove('dark');
+        document.getElementById('themeToggleIcon').className = 'ph-fill ph-moon text-xl text-purple-900 dark:text-purple-300';
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('picme_theme', isDark ? 'dark' : 'light');
+      document.getElementById('themeToggleIcon').className = isDark 
+        ? 'ph-fill ph-sun text-xl text-purple-900 dark:text-purple-300' 
+        : 'ph-fill ph-moon text-xl text-purple-900 dark:text-purple-300';
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      initTheme();
+      initSupabase();
+    });
+  </script>
+</body>
+</html>

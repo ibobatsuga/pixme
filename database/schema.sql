@@ -1,12 +1,57 @@
 -- ==============================================================================
--- Schema Database: PixMe (Supabase PostgreSQL + pgvector)
+-- Schema Database: PicMe (Supabase PostgreSQL + pgvector + Auth)
 -- Stack: 100% Free-Tier Compatible
 -- ==============================================================================
 
--- 1. Enable pgvector extension
+-- 1. Enable pgvector & pgcrypto extension
 CREATE EXTENSION IF NOT EXISTS vector;
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
 
--- 2. Events Table (Marathon, Cycling, Graduation, etc.)
+-- 2. Profiles Table (Linked to Supabase Auth & Role Management)
+CREATE TABLE IF NOT EXISTS public.profiles (
+    id UUID PRIMARY KEY REFERENCES auth.users(id) ON DELETE CASCADE,
+    username VARCHAR(64) UNIQUE NOT NULL,
+    full_name VARCHAR(128),
+    avatar_url TEXT,
+    role VARCHAR(32) DEFAULT 'user' CHECK (role IN ('user', 'creator', 'superadmin')),
+    created_at TIMESTAMP WITH TIME ZONE DEFAULT NOW(),
+    updated_at TIMESTAMP WITH TIME ZONE DEFAULT NOW()
+);
+
+-- Enable RLS on Profiles
+ALTER TABLE public.profiles ENABLE ROW LEVEL SECURITY;
+
+CREATE POLICY "Public profiles are viewable by everyone" 
+ON public.profiles FOR SELECT USING (true);
+
+CREATE POLICY "Users can update their own profile" 
+ON public.profiles FOR UPDATE USING (auth.uid() = id);
+
+-- 3. Automatic Profile Creation Trigger on Sign-Up (Google / Email)
+CREATE OR REPLACE FUNCTION public.handle_new_user()
+RETURNS TRIGGER AS $$
+BEGIN
+    INSERT INTO public.profiles (id, username, full_name, avatar_url, role)
+    VALUES (
+        new.id,
+        COALESCE(new.raw_user_meta_data->>'username', split_part(new.email, '@', 1)),
+        COALESCE(new.raw_user_meta_data->>'full_name', new.raw_user_meta_data->>'name', split_part(new.email, '@', 1)),
+        new.raw_user_meta_data->>'avatar_url',
+        CASE 
+            WHEN new.email = 'superadmin@picme.id' OR new.raw_user_meta_data->>'username' = 'superadmin' THEN 'superadmin'
+            ELSE 'user'
+        END
+    );
+    RETURN NEW;
+END;
+$$ LANGUAGE plpgsql SECURITY DEFINER;
+
+DROP TRIGGER IF EXISTS on_auth_user_created ON auth.users;
+CREATE TRIGGER on_auth_user_created
+    AFTER INSERT ON auth.users
+    FOR EACH ROW EXECUTE FUNCTION public.handle_new_user();
+
+-- 4. Events Table (Music Festival, Concerts, Marathon, etc.)
 CREATE TABLE IF NOT EXISTS events (
     id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
     title VARCHAR(255) NOT NULL,

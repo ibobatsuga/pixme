@@ -12,6 +12,8 @@
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <!-- Supabase JS Client v2 -->
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
   
   <script>
     tailwind.config = {
@@ -233,13 +235,15 @@
           <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-pink-500 rounded-full"></span>
         </button>
 
-        <!-- User Profile Pill Button (Leads to Akun Saya) -->
-        <button onclick="navGoTo('akun')" class="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 transition text-slate-800 dark:text-slate-200 ml-1" title="Buka Profil & Akun Saya">
-          <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-300 font-bold text-xs shrink-0">
-            <i class="ph-fill ph-user text-sm"></i>
-          </div>
-          <span class="hidden sm:inline text-xs font-bold text-slate-800 dark:text-slate-200 pr-2">ibobatsuga</span>
-        </button>
+        <!-- User Profile Pill Button or Login Button (Dynamic) -->
+        <div id="headerAuthSection" class="flex items-center ml-1">
+          <button onclick="navGoTo('akun')" class="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 transition text-slate-800 dark:text-slate-200" title="Buka Profil & Akun Saya">
+            <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-300 font-bold text-xs shrink-0">
+              <i class="ph-fill ph-user text-sm"></i>
+            </div>
+            <span id="headerUsername" class="hidden sm:inline text-xs font-bold text-slate-800 dark:text-slate-200 pr-2">ibobatsuga</span>
+          </button>
+        </div>
 
       </div>
 
@@ -502,8 +506,12 @@
         </div>
 
         <div class="space-y-1">
-          <h2 class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">ibobatsuga</h2>
-          <div class="flex items-center gap-4 text-xs sm:text-sm text-slate-300">
+          <div class="flex items-center gap-2 flex-wrap">
+            <h2 id="profileUsername" class="text-xl sm:text-2xl font-extrabold text-white tracking-tight">ibobatsuga</h2>
+            <span id="badgeSuperadmin" class="hidden px-2 py-0.5 rounded-full bg-gradient-to-r from-amber-400 to-amber-600 text-slate-950 font-black text-[10px] shadow-sm">👑 SUPERADMIN</span>
+          </div>
+          <p id="profileEmail" class="text-xs text-purple-300 font-mono"></p>
+          <div class="flex items-center gap-4 text-xs sm:text-sm text-slate-300 pt-0.5">
             <div>
               <span class="font-extrabold text-white">0</span>
               <span class="text-slate-400 ml-1">Pengikut</span>
@@ -518,13 +526,25 @@
 
       <!-- Action Buttons Row (1:1 with Screenshot) -->
       <div class="flex items-center gap-3 pt-2">
-        <button onclick="alert('Sunting Profil')" class="flex-1 bg-white hover:bg-slate-100 text-slate-900 font-bold py-2.5 px-4 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition">
+        <button onclick="alert('Fitur Sunting Profil')" class="flex-1 bg-white hover:bg-slate-100 text-slate-900 font-bold py-2.5 px-4 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition">
           <i class="ph-bold ph-pencil-simple text-sm"></i>
           <span>Sunting Profil</span>
         </button>
         
         <button onclick="setRole('creator')" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 px-4 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition">
           <span>Unggah</span>
+        </button>
+      </div>
+
+      <!-- Auth State & Supabase Project Link -->
+      <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
+        <a href="/login.html" id="btnAccountLoginLink" class="text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1.5 transition">
+          <i class="ph-bold ph-sign-in"></i>
+          <span id="textAccountAuthAction">Ganti Akun / Masuk</span>
+        </a>
+        <button id="btnLogout" onclick="handleLogout()" class="hidden text-rose-400 hover:text-rose-300 font-bold flex items-center gap-1 transition">
+          <i class="ph-bold ph-sign-out"></i>
+          <span>Keluar</span>
         </button>
       </div>
 
@@ -1109,6 +1129,8 @@
     let allCurrentEventPhotos = [];
     let currentCategoryFilter = 'all';
     let hasGivenConsent = localStorage.getItem('picme_biometric_consent') === 'true';
+    let supabaseClient = null;
+    let currentUser = null;
 
     // 0. Dark / Light Theme Controller
     function initTheme() {
@@ -1137,8 +1159,90 @@
       }
     }
 
+    // 0.1 Supabase & Superadmin Auth State
+    function initSupabase() {
+      const defaultUrl = localStorage.getItem('picme_supabase_url');
+      const defaultAnonKey = localStorage.getItem('picme_supabase_anon_key');
+      if (window.supabase && defaultUrl && defaultAnonKey) {
+        try {
+          supabaseClient = window.supabase.createClient(defaultUrl, defaultAnonKey);
+          supabaseClient.auth.onAuthStateChange((event, session) => {
+            if (session?.user) {
+              const u = {
+                id: session.user.id,
+                username: session.user.user_metadata?.username || session.user.email.split('@')[0],
+                email: session.user.email,
+                role: (session.user.email === 'superadmin@picme.id' || session.user.user_metadata?.username === 'superadmin') ? 'superadmin' : (session.user.user_metadata?.role || 'user'),
+                avatar_url: session.user.user_metadata?.avatar_url
+              };
+              localStorage.setItem('picme_current_user', JSON.stringify(u));
+              updateUserUI(u);
+            }
+          });
+        } catch (e) {
+          console.warn('Supabase client error:', e);
+        }
+      }
+    }
+
+    function initAuthState() {
+      const stored = localStorage.getItem('picme_current_user');
+      if (stored) {
+        try {
+          currentUser = JSON.parse(stored);
+        } catch (e) {
+          currentUser = null;
+        }
+      } else {
+        // Pre-seed superadmin credentials
+        currentUser = {
+          id: 'usr-superadmin-001',
+          username: 'superadmin',
+          full_name: 'Super Administrator',
+          email: 'superadmin@picme.id',
+          role: 'superadmin'
+        };
+        localStorage.setItem('picme_current_user', JSON.stringify(currentUser));
+      }
+      updateUserUI(currentUser);
+    }
+
+    function updateUserUI(user) {
+      if (!user) return;
+      const headerUsername = document.getElementById('headerUsername');
+      const profileUsername = document.getElementById('profileUsername');
+      const profileEmail = document.getElementById('profileEmail');
+      const badgeSuperadmin = document.getElementById('badgeSuperadmin');
+      const btnLogout = document.getElementById('btnLogout');
+      const textAccountAuthAction = document.getElementById('textAccountAuthAction');
+
+      if (headerUsername) headerUsername.innerText = user.username;
+      if (profileUsername) profileUsername.innerText = user.username;
+      if (profileEmail) profileEmail.innerText = user.email || '';
+
+      if (user.role === 'superadmin') {
+        if (badgeSuperadmin) badgeSuperadmin.classList.remove('hidden');
+      } else {
+        if (badgeSuperadmin) badgeSuperadmin.classList.add('hidden');
+      }
+
+      if (btnLogout) btnLogout.classList.remove('hidden');
+      if (textAccountAuthAction) textAccountAuthAction.innerText = 'Ganti Akun';
+    }
+
+    async function handleLogout() {
+      if (supabaseClient) {
+        try { await supabaseClient.auth.signOut(); } catch (e) {}
+      }
+      localStorage.removeItem('picme_current_user');
+      alert('Anda telah keluar. Mengalihkan ke halaman login...');
+      window.location.href = '/login.html';
+    }
+
     window.addEventListener('DOMContentLoaded', async () => {
       initTheme();
+      initSupabase();
+      initAuthState();
       await fetchEvents();
     });
 
