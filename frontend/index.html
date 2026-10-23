@@ -1,0 +1,836 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PixMe — AI Event Photo Face Matching</title>
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          borderRadius: {
+            '2xl': '20px',
+            '3xl': '28px',
+            '4xl': '36px',
+          },
+          boxShadow: {
+            'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02)',
+            'glass': '0 20px 40px -15px rgba(30, 58, 138, 0.12)',
+            'glow': '0 0 40px -10px rgba(59, 130, 246, 0.4)',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    /* Ambient Glow & Custom Scrollbars */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: rgba(148, 163, 184, 0.4);
+      border-radius: 9999px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: rgba(100, 116, 139, 0.6);
+    }
+    .glass-card {
+      background: rgba(255, 255, 255, 0.85);
+      backdrop-filter: blur(24px);
+      -webkit-backdrop-filter: blur(24px);
+      border: 1px solid rgba(255, 255, 255, 0.9);
+    }
+    .glass-nav {
+      background: rgba(255, 255, 255, 0.75);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+    }
+    .glass-dark {
+      background: rgba(15, 23, 42, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+    }
+  </style>
+</head>
+<body class="bg-[#f8fafc] text-slate-800 font-sans min-h-screen flex flex-col relative selection:bg-brand-500 selection:text-white">
+
+  <!-- Ambient Light Blobs (Decorative Background Glows) -->
+  <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
+  <div class="fixed bottom-10 right-10 w-[450px] h-[450px] bg-indigo-400/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+
+  <!-- Top Glass Navigation Bar -->
+  <header class="glass-nav sticky top-0 z-40 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between gap-4">
+      
+      <!-- Brand Logo -->
+      <div class="flex items-center gap-3">
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-900 via-brand-700 to-blue-500 flex items-center justify-center text-white text-xl shadow-glass transform hover:scale-105 transition-transform duration-200">
+          <i class="ph-bold ph-aperture"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-2">
+            <span class="font-extrabold text-2xl tracking-tight text-slate-900">Pix<span class="text-brand-600">Me</span></span>
+            <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200/60 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
+              Free Access
+            </span>
+          </div>
+          <p class="hidden sm:block text-[11px] font-medium text-slate-400">AI Face Recognition & Event Photography</p>
+        </div>
+      </div>
+
+      <!-- Center: Quick Event Selector Pill (Desktop / Tablet) -->
+      <div class="hidden md:flex items-center bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 max-w-md w-full">
+        <i class="ph-bold ph-calendar-blank text-slate-400 ml-3 mr-2"></i>
+        <select id="globalEventSelect" onchange="syncEventSelection(this.value)" class="bg-transparent text-xs font-semibold text-slate-700 w-full focus:outline-none cursor-pointer pr-3 truncate">
+          <option value="">Pilih Event Olahraga / Lari...</option>
+        </select>
+      </div>
+
+      <!-- Mode Switcher (Pill Toggle styled from GuruShots reference) -->
+      <div class="flex items-center gap-2 bg-slate-100/90 p-1 rounded-full border border-slate-200/70 shadow-sm">
+        <button id="btnTabUser" onclick="switchMode('user')" class="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs font-bold transition-all duration-200 bg-slate-900 text-white shadow-md">
+          <i class="ph-bold ph-user-focus text-sm"></i>
+          <span>Peserta</span>
+        </button>
+        <button id="btnTabCreator" onclick="switchMode('creator')" class="flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 transition-all duration-200">
+          <i class="ph-bold ph-camera text-sm"></i>
+          <span>Fotografer</span>
+        </button>
+      </div>
+
+    </div>
+  </header>
+
+  <!-- ==================== PESERTA / RUNNER VIEW ==================== -->
+  <main id="userView" class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-opacity duration-300">
+    
+    <!-- Desktop & Tablet Layout: 2-Column Split (Sidebar Controller + Main Canvas) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- LEFT COLUMN: Sticky User AI Control Panel (4 Cols on Desktop) -->
+      <aside class="lg:col-span-4 xl:col-span-4 w-full lg:sticky lg:top-28 space-y-6">
+        
+        <!-- Glassmorphic Card: Selfie Search Box -->
+        <div class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft relative overflow-hidden">
+          
+          <!-- Subtle ambient top gradient border -->
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-brand-700"></div>
+
+          <!-- Section Header -->
+          <div class="flex items-center justify-between mb-5">
+            <div>
+              <span class="text-[11px] font-bold tracking-wider uppercase text-brand-600">Scan Wajah AI</span>
+              <h2 class="text-xl font-extrabold text-slate-900">Temukan Foto Anda</h2>
+            </div>
+            <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-lg shadow-sm">
+              <i class="ph-bold ph-sparkle"></i>
+            </div>
+          </div>
+
+          <!-- Event Selector (Visible on Mobile / Syncs with Header) -->
+          <div class="mb-5 md:hidden">
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Pilih Acara</label>
+            <select id="mobileEventSelect" onchange="syncEventSelection(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+              <option value="">Memuat event...</option>
+            </select>
+          </div>
+
+          <!-- Selfie Avatar Dropzone (Styled after GuruShots circular user avatar) -->
+          <div class="space-y-3">
+            <div id="selfieZone" onclick="document.getElementById('selfieFileInput').click()" class="relative group cursor-pointer border-2 border-dashed border-slate-200 hover:border-brand-500 rounded-3xl p-6 text-center bg-gradient-to-b from-slate-50/50 to-white/70 hover:from-blue-50/40 hover:to-white transition-all duration-300 flex flex-col items-center justify-center">
+              <input type="file" id="selfieFileInput" accept="image/*" capture="user" class="hidden" onchange="onSelfieSelected(event)">
+              
+              <!-- Empty State Avatar Prompt -->
+              <div id="selfiePrompt" class="space-y-3 flex flex-col items-center">
+                <div class="relative">
+                  <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-slate-100 to-slate-200 border-4 border-white shadow-soft flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:scale-105 transition-all duration-300">
+                    <i class="ph-bold ph-user text-4xl"></i>
+                  </div>
+                  <div class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-white">
+                    <i class="ph-bold ph-camera"></i>
+                  </div>
+                </div>
+                <div>
+                  <p class="text-sm font-bold text-slate-800">Ambil Selfie / Pilih Foto</p>
+                  <p class="text-[11px] text-slate-400 max-w-[200px]">Cukup satu foto wajah jelas untuk memindai ribuan dokumentasi</p>
+                </div>
+              </div>
+
+              <!-- Preview State with Detected Face Indicator -->
+              <div id="selfiePreviewBox" class="hidden flex flex-col items-center space-y-2">
+                <div class="relative">
+                  <img id="selfieImg" class="w-28 h-28 object-cover rounded-full border-4 border-brand-500 shadow-glow">
+                  <span class="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs ring-2 ring-white">
+                    <i class="ph-bold ph-check"></i>
+                  </span>
+                </div>
+                <span class="text-xs font-semibold text-brand-600 hover:underline">Klik untuk ganti selfie</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sensitivity Adjuster (Accordion / Mini slider) -->
+          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
+            <span class="flex items-center gap-1.5 font-medium">
+              <i class="ph-bold ph-sliders"></i>Akurasi AI Match
+            </span>
+            <span class="font-bold text-slate-700 bg-slate-100 px-2 py-0.5 rounded-full">Optimal (36%)</span>
+          </div>
+
+          <!-- Big Glowing Pill Action Button -->
+          <button id="btnSearchSubmit" onclick="triggerFaceSearch()" class="mt-5 w-full bg-gradient-to-r from-brand-900 via-brand-700 to-blue-600 hover:from-slate-900 hover:to-brand-800 text-white font-bold py-4 px-6 rounded-full shadow-glass hover:shadow-glow transition-all duration-300 flex items-center justify-center gap-2 group">
+            <i class="ph-bold ph-magnifying-glass text-lg group-hover:scale-110 transition-transform"></i>
+            <span class="text-sm">Mulai Pindai Foto Saya</span>
+          </button>
+
+          <!-- Free Guarantee Micro Copy -->
+          <div class="mt-4 text-center">
+            <p class="text-[11px] text-slate-400 flex items-center justify-center gap-1">
+              <i class="ph-bold ph-shield-check text-emerald-500"></i>
+              Bebas watermark, download resolusi asli tanpa bayar
+            </p>
+          </div>
+
+        </div>
+
+        <!-- Mini Stats & Event Info Card (Desktop GuruShots style) -->
+        <div class="glass-card rounded-3xl p-5 shadow-soft space-y-4">
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-2xl bg-amber-50 text-amber-600 flex items-center justify-center text-xl">
+              <i class="ph-bold ph-trophy"></i>
+            </div>
+            <div>
+              <p class="text-xs font-bold text-slate-800">Event Documentation Hub</p>
+              <p class="text-[11px] text-slate-400">Diperbarui secara real-time</p>
+            </div>
+          </div>
+          
+          <div class="grid grid-cols-2 gap-3 pt-2">
+            <div class="bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Foto Terindeks</span>
+              <span id="statTotalPhotos" class="text-lg font-extrabold text-slate-900">0</span>
+            </div>
+            <div class="bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Wajah</span>
+              <span id="statTotalFaces" class="text-lg font-extrabold text-brand-600">0</span>
+            </div>
+          </div>
+        </div>
+
+      </aside>
+
+      <!-- RIGHT COLUMN: Hero Banner + Expansive Masonry Gallery (8 Cols on Desktop) -->
+      <section class="lg:col-span-8 xl:col-span-8 w-full space-y-7">
+        
+        <!-- Hero Editorial Banner (Inspired by the Left GuruShots Blue Card) -->
+        <div id="eventHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-tr from-brand-900 via-brand-800 to-blue-600 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]">
+          <!-- Background Pattern -->
+          <div class="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-white/5 blur-2xl pointer-events-none"></div>
+          
+          <!-- Top Row: Badge & Category -->
+          <div class="flex items-center justify-between z-10">
+            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold tracking-wide border border-white/20">
+              <i class="ph-bold ph-flag-checkered text-amber-300"></i>
+              <span id="heroCategory">Running & Marathon</span>
+            </span>
+            <span class="text-xs font-medium text-blue-200 flex items-center gap-1">
+              <i class="ph-bold ph-map-pin"></i>
+              <span id="heroLocation">Jakarta, Indonesia</span>
+            </span>
+          </div>
+
+          <!-- Bottom Row: Title & Action -->
+          <div class="mt-8 z-10 space-y-2">
+            <h1 id="heroTitle" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
+              Jakarta Marathon 2026
+            </h1>
+            <p id="heroDate" class="text-xs sm:text-sm text-blue-100/90 font-medium flex items-center gap-2">
+              <i class="ph-bold ph-calendar"></i>
+              <span>25 Oktober 2026</span>
+              <span class="text-white/40">•</span>
+              <span>Dokumentasi Resmi Terverifikasi</span>
+            </p>
+          </div>
+        </div>
+
+        <!-- Filter & Search Results Header -->
+        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
+          <div>
+            <div class="flex items-center gap-2">
+              <h3 id="galleryTitle" class="text-xl font-extrabold text-slate-900">Semua Foto Event</h3>
+              <span id="badgeResultCount" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200/80 text-slate-700">0</span>
+            </div>
+            <p id="gallerySubtitle" class="text-xs text-slate-400 mt-0.5">Unggah selfie Anda di sebelah kiri untuk menyaring foto wajah Anda.</p>
+          </div>
+
+          <!-- View toggles or filter buttons -->
+          <div class="flex items-center gap-2">
+            <button id="btnShowAll" onclick="resetSearchFilter()" class="hidden px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 transition flex items-center gap-1.5">
+              <i class="ph-bold ph-arrow-counter-clockwise"></i>
+              <span>Tampilkan Semua Foto</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- Gallery Grid (True Multi-Column Responsive Masonry, never 1 column on desktop!) -->
+        <div id="photosMasonryGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-5">
+          <!-- Dynamically populated via JS -->
+        </div>
+
+        <!-- Empty State Placeholder -->
+        <div id="emptyGalleryState" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 p-8">
+          <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-3xl mb-3">
+            <i class="ph-bold ph-image"></i>
+          </div>
+          <h4 class="text-base font-bold text-slate-800">Belum Ada Foto untuk Event Ini</h4>
+          <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Beralih ke tab <b>Fotografer</b> di pojok kanan atas untuk mengunggah foto dokumentasi event.</p>
+        </div>
+
+      </section>
+
+    </div>
+
+  </main>
+
+
+  <!-- ==================== FOTOGRAFER / CREATOR PORTAL VIEW ==================== -->
+  <main id="creatorView" class="hidden flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8 transition-opacity duration-300">
+    
+    <!-- Header with Action -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
+      <div>
+        <span class="text-[11px] font-bold tracking-wider uppercase text-brand-600">Creator Workspace</span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Portal Unggah & Manajemen Event</h1>
+        <p class="text-sm text-slate-500 mt-1">Unggah dokumentasi Anda, sistem AI akan otomatis mengekstrak & mencocokkan wajah setiap peserta.</p>
+      </div>
+
+      <button onclick="toggleModal('modalNewEvent', true)" class="self-start sm:self-auto bg-slate-900 hover:bg-brand-600 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-full flex items-center gap-2 shadow-soft hover:shadow-glass transition-all duration-200">
+        <i class="ph-bold ph-plus-circle text-base"></i>
+        <span>Buat Event Baru</span>
+      </button>
+    </div>
+
+    <!-- Desktop Grid: Upload Area (Left) + Event Inventory (Right) -->
+    <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+      
+      <!-- Upload Workspace (7 Cols) -->
+      <div class="lg:col-span-7 space-y-6">
+        
+        <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-soft space-y-6">
+          <div class="flex items-center justify-between">
+            <h3 class="font-extrabold text-lg text-slate-900 flex items-center gap-2">
+              <i class="ph-bold ph-cloud-arrow-up text-brand-600 text-xl"></i>
+              Bulk Ingest Foto Event
+            </h3>
+            <span class="text-[11px] font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Multi-Upload Ready</span>
+          </div>
+
+          <!-- Select Target Event -->
+          <div>
+            <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Target Event</label>
+            <select id="creatorTargetEvent" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+              <option value="">Memuat event...</option>
+            </select>
+          </div>
+
+          <!-- Drag and Drop Large Box -->
+          <div id="creatorDropzone" onclick="document.getElementById('creatorFilesInput').click()" class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-3xl p-8 sm:p-12 text-center cursor-pointer bg-slate-50/50 hover:bg-brand-50/30 transition-all duration-300 group">
+            <input type="file" id="creatorFilesInput" multiple accept="image/*" class="hidden" onchange="onCreatorFilesPicked(event)">
+            
+            <div class="w-16 h-16 mx-auto rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
+              <i class="ph-bold ph-images-square"></i>
+            </div>
+            <h4 class="text-base font-extrabold text-slate-800">Tarik & Lepas Foto di Sini, atau Klik untuk Browse</h4>
+            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Mendukung file JPG, PNG, WEBP resolusi tinggi. Pilih puluhan foto sekaligus untuk pemrosesan AI otomatis.</p>
+            
+            <!-- File selected badge -->
+            <div id="creatorFilesBadge" class="hidden mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-100/70 text-brand-700 text-xs font-bold">
+              <i class="ph-bold ph-check-circle"></i>
+              <span id="creatorFilesCountText">0 Foto Dipilih</span>
+            </div>
+          </div>
+
+          <!-- Process Button -->
+          <button id="btnCreatorProcess" onclick="submitCreatorUpload()" disabled class="w-full bg-gradient-to-r from-brand-900 to-brand-700 hover:from-slate-900 hover:to-brand-800 text-white font-bold py-4 px-6 rounded-full shadow-glass transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+            <i class="ph-bold ph-cpu text-lg"></i>
+            <span id="btnCreatorText">Mulai Ekstraksi AI & Simpan Foto</span>
+          </button>
+        </div>
+
+      </div>
+
+      <!-- Right: Event List & Stats (5 Cols) -->
+      <div class="lg:col-span-5 space-y-6">
+        <div class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft space-y-5">
+          <h3 class="font-extrabold text-lg text-slate-900 flex items-center gap-2">
+            <i class="ph-bold ph-calendar-check text-brand-600"></i>
+            Daftar Event Anda
+          </h3>
+          
+          <div id="creatorEventList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
+            <!-- Event items rendered here -->
+          </div>
+        </div>
+      </div>
+
+    </div>
+
+  </main>
+
+
+  <!-- ==================== MODAL: BUAT EVENT BARU ==================== -->
+  <div id="modalNewEvent" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <!-- Backdrop Blur -->
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="toggleModal('modalNewEvent', false)"></div>
+    
+    <!-- Modal Card -->
+    <div class="glass-card bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full relative z-10 shadow-2xl space-y-5 border border-slate-100">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-4">
+        <div>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-brand-600">Event Registry</span>
+          <h3 class="text-xl font-extrabold text-slate-900">Buat Event Olahraga Baru</h3>
+        </div>
+        <button onclick="toggleModal('modalNewEvent', false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+
+      <div class="space-y-4">
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nama Event</label>
+          <input type="text" id="newEventTitle" placeholder="Contoh: Borobudur 10K Marathon 2026" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Lokasi</label>
+            <input type="text" id="newEventLocation" placeholder="Contoh: Magelang, Jawa Tengah" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+          </div>
+          <div>
+            <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Event</label>
+            <input type="date" id="newEventDate" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+          </div>
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi Singkat</label>
+          <textarea id="newEventDesc" rows="3" placeholder="Informasi rute, fotografer resmi, atau ketentuan..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+        </div>
+      </div>
+
+      <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
+        <button onclick="toggleModal('modalNewEvent', false)" class="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Batal</button>
+        <button onclick="submitCreateEvent()" class="px-6 py-2.5 rounded-full text-xs font-bold bg-brand-900 hover:bg-brand-700 text-white shadow-soft transition">Simpan & Terbitkan</button>
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== CLIENT JAVASCRIPT LOGIC ==================== -->
+  <script>
+    let eventsList = [];
+    let currentEventId = null;
+    let selectedSelfieFile = null;
+    let selectedCreatorFiles = [];
+    let allCurrentEventPhotos = [];
+
+    // Initialize Page
+    window.addEventListener('DOMContentLoaded', async () => {
+      await fetchEvents();
+    });
+
+    // 1. Fetch Events List
+    async function fetchEvents() {
+      try {
+        const res = await fetch('/api/events');
+        const data = await res.json();
+        eventsList = data.events || [];
+
+        renderEventSelectors();
+        renderCreatorEventList();
+
+        if (eventsList.length > 0 && !currentEventId) {
+          syncEventSelection(eventsList[0].id);
+        }
+      } catch (err) {
+        console.error('Failed to load events:', err);
+      }
+    }
+
+    // 2. Render Select Dropdowns
+    function renderEventSelectors() {
+      const globalSel = document.getElementById('globalEventSelect');
+      const mobileSel = document.getElementById('mobileEventSelect');
+      const creatorSel = document.getElementById('creatorTargetEvent');
+
+      if (eventsList.length === 0) {
+        const emptyOpt = '<option value="">Belum ada event (buat di portal fotografer)</option>';
+        globalSel.innerHTML = emptyOpt;
+        mobileSel.innerHTML = emptyOpt;
+        creatorSel.innerHTML = emptyOpt;
+        return;
+      }
+
+      const options = eventsList.map(ev => 
+        `<option value="${ev.id}">${ev.title} (${ev.location})</option>`
+      ).join('');
+
+      globalSel.innerHTML = options;
+      mobileSel.innerHTML = options;
+      creatorSel.innerHTML = options;
+    }
+
+    // 3. Render Creator Event Inventory List
+    function renderCreatorEventList() {
+      const container = document.getElementById('creatorEventList');
+      if (eventsList.length === 0) {
+        container.innerHTML = '<p class="text-xs text-slate-400 py-4 text-center">Belum ada event terdaftar.</p>';
+        return;
+      }
+
+      container.innerHTML = eventsList.map(ev => `
+        <div class="p-4 rounded-2xl bg-slate-50/70 border border-slate-100 hover:border-brand-300 transition flex items-center justify-between">
+          <div>
+            <h5 class="font-bold text-sm text-slate-800">${ev.title}</h5>
+            <p class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+              <span><i class="ph-bold ph-calendar"></i> ${ev.event_date}</span>
+              <span>•</span>
+              <span><i class="ph-bold ph-map-pin"></i> ${ev.location}</span>
+            </p>
+          </div>
+          <button onclick="syncEventSelection('${ev.id}'); switchMode('user');" class="text-xs font-bold text-brand-600 hover:text-brand-800 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
+            Lihat
+          </button>
+        </div>
+      `).join('');
+    }
+
+    // 4. Synchronize Selected Event Across All Components
+    async function syncEventSelection(eventId) {
+      if (!eventId) return;
+      currentEventId = eventId;
+
+      document.getElementById('globalEventSelect').value = eventId;
+      document.getElementById('mobileEventSelect').value = eventId;
+      document.getElementById('creatorTargetEvent').value = eventId;
+
+      const ev = eventsList.find(e => e.id === eventId);
+      if (ev) {
+        document.getElementById('heroTitle').innerText = ev.title;
+        document.getElementById('heroLocation').innerText = ev.location;
+        document.getElementById('heroDate').innerHTML = `<i class="ph-bold ph-calendar"></i> <span>${ev.event_date}</span> <span class="text-white/40">•</span> <span>Dokumentasi Resmi Terverifikasi</span>`;
+      }
+
+      await loadEventPhotos(eventId);
+    }
+
+    // 5. Load All Photos for Current Event
+    async function loadEventPhotos(eventId) {
+      try {
+        const res = await fetch(`/api/events/${eventId}/photos`);
+        const data = await res.json();
+        allCurrentEventPhotos = data.photos || [];
+
+        // Update stats
+        document.getElementById('statTotalPhotos').innerText = allCurrentEventPhotos.length;
+        const totalFaces = allCurrentEventPhotos.reduce((sum, p) => sum + (p.faces_detected || 0), 0);
+        document.getElementById('statTotalFaces').innerText = totalFaces;
+
+        renderGallery(allCurrentEventPhotos, false);
+      } catch (err) {
+        console.error('Error fetching event photos:', err);
+      }
+    }
+
+    // 6. Render Photo Gallery Grid (Responsive Multi-Column Masonry)
+    function renderGallery(photos, isSearchResult = false) {
+      const grid = document.getElementById('photosMasonryGrid');
+      const emptyState = document.getElementById('emptyGalleryState');
+      const badgeCount = document.getElementById('badgeResultCount');
+      const galleryTitle = document.getElementById('galleryTitle');
+      const gallerySubtitle = document.getElementById('gallerySubtitle');
+      const btnShowAll = document.getElementById('btnShowAll');
+
+      badgeCount.innerText = photos.length;
+
+      if (isSearchResult) {
+        galleryTitle.innerText = 'Foto Anda yang Cocok';
+        gallerySubtitle.innerText = `AI menemukan ${photos.length} foto yang cocok dengan selfie Anda.`;
+        btnShowAll.classList.remove('hidden');
+      } else {
+        galleryTitle.innerText = 'Semua Foto Event';
+        gallerySubtitle.innerText = 'Unggah selfie Anda di sebelah kiri untuk menyaring foto wajah Anda.';
+        btnShowAll.classList.add('hidden');
+      }
+
+      if (photos.length === 0) {
+        grid.innerHTML = '';
+        emptyState.classList.remove('hidden');
+        return;
+      }
+
+      emptyState.classList.add('hidden');
+
+      grid.innerHTML = photos.map((item, idx) => {
+        const isMatch = isSearchResult;
+        const matchScore = isMatch ? Math.round((item.similarity || (1 - item.distance)) * 100) : null;
+
+        return `
+          <div class="group relative rounded-3xl overflow-hidden bg-white border border-slate-200/80 shadow-soft hover:shadow-glass hover:-translate-y-1 transition-all duration-300 flex flex-col justify-between">
+            
+            <!-- Image Frame -->
+            <div class="relative overflow-hidden aspect-[4/5] bg-slate-100">
+              <img src="${item.thumbnail_url}" alt="${item.filename}" loading="lazy" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500">
+              
+              <!-- Subtle gradient overlay on hover -->
+              <div class="absolute inset-0 bg-gradient-to-t from-slate-950/80 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex flex-col justify-end p-4">
+                <span class="text-white text-[11px] font-semibold truncate">${item.filename}</span>
+              </div>
+
+              <!-- Match Pill Badge (If from AI Search) -->
+              ${isMatch ? `
+                <div class="absolute top-3 left-3 flex items-center gap-1.5 px-3 py-1 rounded-full bg-emerald-500/90 backdrop-blur-md text-white text-[11px] font-bold shadow-md">
+                  <i class="ph-bold ph-check"></i>
+                  <span>${matchScore}% Cocok</span>
+                </div>
+              ` : `
+                <div class="absolute top-3 left-3 flex items-center gap-1 px-2.5 py-1 rounded-full bg-slate-900/60 backdrop-blur-md text-white text-[10px] font-semibold">
+                  <i class="ph-bold ph-users"></i>
+                  <span>${item.faces_detected || 0} Wajah</span>
+                </div>
+              `}
+            </div>
+
+            <!-- Card Bottom Bar: Quick Download Button -->
+            <div class="p-3.5 bg-white flex items-center justify-between gap-2 border-t border-slate-100">
+              <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+                Gratis HD
+              </span>
+              <a href="${item.file_url}" download="${item.filename}" class="flex items-center gap-1.5 bg-slate-900 hover:bg-brand-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-sm hover:shadow-md transition">
+                <i class="ph-bold ph-download-simple"></i>
+                <span>Download</span>
+              </a>
+            </div>
+
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 7. Reset Search Filter
+    function resetSearchFilter() {
+      renderGallery(allCurrentEventPhotos, false);
+    }
+
+    // 8. Handle Selfie Selection
+    function onSelfieSelected(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+      selectedSelfieFile = file;
+
+      const reader = new FileReader();
+      reader.onload = function(e) {
+        document.getElementById('selfieImg').src = e.target.result;
+        document.getElementById('selfiePrompt').classList.add('hidden');
+        document.getElementById('selfiePreviewBox').classList.remove('hidden');
+      };
+      reader.readAsDataURL(file);
+    }
+
+    // 9. Trigger Face Search
+    async function triggerFaceSearch() {
+      if (!currentEventId) {
+        alert('Harap pilih event terlebih dahulu');
+        return;
+      }
+      if (!selectedSelfieFile) {
+        alert('Harap unggah atau ambil foto selfie terlebih dahulu');
+        return;
+      }
+
+      const btn = document.getElementById('btnSearchSubmit');
+      btn.disabled = true;
+      btn.innerHTML = '<i class="ph-bold ph-spinner animate-spin text-lg"></i><span>Memindai AI Wajah...</span>';
+
+      const formData = new FormData();
+      formData.append('selfie', selectedSelfieFile);
+
+      try {
+        const res = await fetch(`/api/events/${currentEventId}/search`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+
+        if (data.matches && data.matches.length > 0) {
+          renderGallery(data.matches, true);
+        } else {
+          alert('Tidak ditemukan wajah yang cocok di event ini. Coba gunakan selfie dengan pencahayaan lebih baik.');
+          renderGallery([], true);
+        }
+
+        // Smooth scroll to gallery
+        document.getElementById('photosMasonryGrid').scrollIntoView({ behavior: 'smooth' });
+      } catch (err) {
+        alert('Gagal memproses pencarian: ' + err.message);
+      } finally {
+        btn.disabled = false;
+        btn.innerHTML = '<i class="ph-bold ph-magnifying-glass text-lg"></i><span>Mulai Pindai Foto Saya</span>';
+      }
+    }
+
+    // 10. Creator Mode: File Selection
+    function onCreatorFilesPicked(event) {
+      selectedCreatorFiles = Array.from(event.target.files);
+      const badge = document.getElementById('creatorFilesBadge');
+      const text = document.getElementById('creatorFilesCountText');
+      const btn = document.getElementById('btnCreatorProcess');
+
+      if (selectedCreatorFiles.length > 0) {
+        text.innerText = `${selectedCreatorFiles.length} Foto Dipilih Siap Upload`;
+        badge.classList.remove('hidden');
+        btn.disabled = false;
+      } else {
+        badge.classList.add('hidden');
+        btn.disabled = true;
+      }
+    }
+
+    // 11. Creator Mode: Submit Upload
+    async function submitCreatorUpload() {
+      const eventId = document.getElementById('creatorTargetEvent').value;
+      if (!eventId) {
+        alert('Pilih target event terlebih dahulu');
+        return;
+      }
+      if (selectedCreatorFiles.length === 0) {
+        alert('Pilih foto terlebih dahulu');
+        return;
+      }
+
+      const btn = document.getElementById('btnCreatorProcess');
+      const btnText = document.getElementById('btnCreatorText');
+      btn.disabled = true;
+      btnText.innerText = 'Sedang Mengekstrak AI Wajah & Mengunggah...';
+
+      const formData = new FormData();
+      selectedCreatorFiles.forEach(f => formData.append('files', f));
+
+      try {
+        const res = await fetch(`/api/events/${eventId}/photos`, {
+          method: 'POST',
+          body: formData
+        });
+        const data = await res.json();
+        alert(`Sukses! ${data.total} foto berhasil diproses & diindeks AI.`);
+
+        selectedCreatorFiles = [];
+        document.getElementById('creatorFilesInput').value = '';
+        document.getElementById('creatorFilesBadge').classList.add('hidden');
+        btn.disabled = true;
+        btnText.innerText = 'Mulai Ekstraksi AI & Simpan Foto';
+
+        // Refresh current event view
+        await syncEventSelection(eventId);
+      } catch (err) {
+        alert('Terjadi kesalahan saat upload: ' + err.message);
+        btn.disabled = false;
+        btnText.innerText = 'Mulai Ekstraksi AI & Simpan Foto';
+      }
+    }
+
+    // 12. Submit Create Event
+    async function submitCreateEvent() {
+      const title = document.getElementById('newEventTitle').value.trim();
+      const location = document.getElementById('newEventLocation').value.trim();
+      const date = document.getElementById('newEventDate').value;
+      const desc = document.getElementById('newEventDesc').value.trim();
+
+      if (!title || !location || !date) {
+        alert('Harap isi Nama Event, Lokasi, dan Tanggal');
+        return;
+      }
+
+      try {
+        const res = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, location, event_date: date, description: desc })
+        });
+        if (res.ok) {
+          toggleModal('modalNewEvent', false);
+          document.getElementById('newEventTitle').value = '';
+          document.getElementById('newEventLocation').value = '';
+          document.getElementById('newEventDate').value = '';
+          document.getElementById('newEventDesc').value = '';
+
+          await fetchEvents();
+          alert('Event berhasil dibuat!');
+        }
+      } catch (err) {
+        alert('Gagal membuat event: ' + err.message);
+      }
+    }
+
+    // 13. Switch Modes (User vs Creator)
+    function switchMode(mode) {
+      const userView = document.getElementById('userView');
+      const creatorView = document.getElementById('creatorView');
+      const tabUser = document.getElementById('btnTabUser');
+      const tabCreator = document.getElementById('btnTabCreator');
+
+      if (mode === 'user') {
+        userView.classList.remove('hidden');
+        creatorView.classList.add('hidden');
+        tabUser.className = 'flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs font-bold transition-all duration-200 bg-slate-900 text-white shadow-md';
+        tabCreator.className = 'flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 transition-all duration-200';
+      } else {
+        userView.classList.add('hidden');
+        creatorView.classList.remove('hidden');
+        tabCreator.className = 'flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs font-bold transition-all duration-200 bg-slate-900 text-white shadow-md';
+        tabUser.className = 'flex items-center gap-2 px-4 sm:px-5 py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 transition-all duration-200';
+      }
+    }
+
+    // 14. Toggle Modal Helper
+    function toggleModal(modalId, show) {
+      const modal = document.getElementById(modalId);
+      if (show) {
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+  </script>
+</body>
+</html>
