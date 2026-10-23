@@ -250,221 +250,114 @@
     </div>
   </header>
 
-  <!-- ==================== PESERTA / RUNNER VIEW ==================== -->
-  <main id="userView" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 pb-36 sm:pb-44 transition-opacity duration-300 overflow-x-hidden">
+  <!-- ==================== PESERTA / RUNNER VIEW (FULL-WIDTH MODERN FEED) ==================== -->
+  <main id="userView" class="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 pb-36 sm:pb-44 transition-opacity duration-300 overflow-x-hidden space-y-6">
     
-    <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start w-full max-w-full">
+    <!-- Mobile Event Selector (Visible on Mobile) -->
+    <div class="md:hidden">
+      <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Pilih Konser / Acara</label>
+      <select id="mobileEventSelect" onchange="syncEventSelection(this.value)" class="w-full bg-white dark:bg-[#1a1c2b] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-purple-600 focus:outline-none shadow-sm">
+        <option value="">Memuat event...</option>
+      </select>
+    </div>
+
+    <!-- Category Filter Pills (Uniform Colors: Pink-Purple Gradient Active) -->
+    <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none w-full max-w-full">
+      <button onclick="filterByCategory('all')" id="catBtn-all" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md flex items-center gap-1.5 shrink-0 transition border border-transparent">
+        <i class="ph-bold ph-squares-four text-white"></i>Semua Event
+      </button>
+      <button onclick="filterByCategory('music')" id="catBtn-music" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-speaker-hifi text-pink-600"></i>Konser & Festival Musik
+      </button>
+      <button onclick="filterByCategory('sports')" id="catBtn-sports" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-sneaker-move text-pink-600"></i>Lari & Olahraga
+      </button>
+    </div>
+
+    <!-- Hero Editorial Banner -->
+    <div id="eventHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]">
+      <div class="absolute -right-12 -bottom-12 w-72 h-72 rounded-full bg-pink-500/20 blur-3xl pointer-events-none"></div>
       
-      <!-- LEFT COLUMN: Sticky User AI Control Panel (4 Cols on Desktop) -->
-      <aside class="lg:col-span-4 xl:col-span-4 w-full lg:sticky lg:top-28 space-y-5 sm:space-y-6">
-        
-        <!-- Glassmorphic Card: Selfie Search Box -->
-        <div class="glass-card rounded-3xl p-5 sm:p-7 shadow-soft relative overflow-hidden">
-          
-          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600"></div>
-
-          <!-- Section Header -->
-          <div class="flex items-center justify-between mb-5">
-            <div>
-              <span class="text-[11px] font-bold tracking-wider uppercase text-pink-600">AI Crowd & Face Match</span>
-              <h2 class="text-xl font-extrabold text-slate-900">Temukan Foto Kamu</h2>
-            </div>
-            <div class="w-9 h-9 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center text-lg shadow-sm">
-              <i class="ph-bold ph-sparkle"></i>
-            </div>
-          </div>
-
-          <!-- Event Selector (Visible on Mobile) -->
-          <div class="mb-5 md:hidden">
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">Pilih Konser / Acara</label>
-            <select id="mobileEventSelect" onchange="syncEventSelection(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-pink-500 focus:outline-none">
-              <option value="">Memuat event...</option>
-            </select>
-          </div>
-
-          <!-- Selfie Avatar Dropzone (Enforces Consent Modal First) -->
-          <div class="space-y-2">
-            <div id="selfieZone" onclick="handleSelfieClick()" class="relative group cursor-pointer border-2 border-dashed border-slate-200 dark:border-slate-700 hover:border-pink-500 rounded-3xl p-6 text-center bg-gradient-to-b from-slate-50/50 to-white/70 dark:from-[#171821]/50 dark:to-[#171821] hover:from-pink-50/30 hover:to-white transition-all duration-300 flex flex-col items-center justify-center">
-              <input type="file" id="selfieFileInput" accept="image/*" capture="user" class="hidden" onchange="onSelfieSelected(event)">
-              
-              <!-- Empty State Avatar Prompt -->
-              <div id="selfiePrompt" class="space-y-3 flex flex-col items-center">
-                <div class="relative">
-                  <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-slate-100 to-slate-200 dark:from-slate-800 dark:to-slate-700 border-4 border-white dark:border-slate-800 shadow-soft flex items-center justify-center text-slate-400 group-hover:text-pink-600 group-hover:scale-105 transition-all duration-300">
-                    <i class="ph-bold ph-user text-4xl"></i>
-                  </div>
-                  <div class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-white dark:ring-slate-800">
-                    <i class="ph-bold ph-camera"></i>
-                  </div>
-                </div>
-                <div>
-                  <p class="text-sm font-bold text-slate-800 dark:text-slate-100">Ambil Selfie / Foto Kamu</p>
-                  <p class="text-[11px] text-slate-400 max-w-[210px]">AI mengenali wajahmu meski di kerumunan konser atau pencahayaan panggung</p>
-                </div>
-              </div>
-
-              <!-- Preview State with Quality Check Review -->
-              <div id="selfiePreviewBox" class="hidden flex flex-col items-center space-y-3 w-full">
-                <div class="relative">
-                  <img id="selfieImg" class="w-28 h-28 object-cover rounded-full border-4 border-pink-500 shadow-neon">
-                  <span class="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs ring-2 ring-white">
-                    <i class="ph-bold ph-check"></i>
-                  </span>
-                </div>
-                <div class="bg-amber-50 dark:bg-amber-950/30 border border-amber-200/80 dark:border-amber-800/40 rounded-2xl p-3 text-left w-full space-y-1">
-                  <p class="text-xs font-bold text-amber-900 dark:text-amber-200 flex items-center gap-1.5">
-                    <i class="ph-bold ph-info"></i>Tips untuk Foto Konser
-                  </p>
-                  <p class="text-[11px] text-amber-700 dark:text-amber-300 leading-relaxed">
-                    Pastikan wajah terlihat jelas tanpa tertutup kacamata hitam pekat agar pencocokan AI maksimal.
-                  </p>
-                </div>
-                <button type="button" onclick="event.stopPropagation(); handleSelfieClick()" class="text-xs font-bold text-slate-600 dark:text-slate-400 hover:text-pink-600 flex items-center gap-1">
-                  <i class="ph-bold ph-arrow-counter-clockwise"></i>Ambil Ulang Selfie
-                </button>
-              </div>
-            </div>
-
-            <!-- UU PDP Consent Link -->
-            <div class="text-center pt-1">
-              <button type="button" onclick="event.stopPropagation(); toggleModal('modalConsent', true)" class="text-[11px] font-semibold text-purple-700 dark:text-purple-400 hover:underline inline-flex items-center gap-1">
-                <i class="ph-bold ph-shield-check text-sm"></i>
-                <span>Ketentuan Penggunaan & Biometrik (UU PDP)</span>
-              </button>
-            </div>
-          </div>
-
-          <!-- Sensitivity Adjuster -->
-          <div class="mt-4 pt-4 border-t border-slate-100 flex items-center justify-between text-xs text-slate-500">
-            <span class="flex items-center gap-1.5 font-medium">
-              <i class="ph-bold ph-sliders"></i>Akurasi AI Match
-            </span>
-            <span class="font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full">Stage & Crowd Mode</span>
-          </div>
-
-          <!-- Big Glowing Pill Action Button -->
-          <button id="btnSearchSubmit" onclick="triggerFaceSearch()" class="mt-5 w-full bg-gradient-to-r from-slate-900 via-purple-900 to-pink-600 hover:from-black hover:to-pink-700 text-white font-bold py-4 px-6 rounded-full shadow-glass hover:shadow-neon transition-all duration-300 flex items-center justify-center gap-2 group">
-            <i class="ph-bold ph-magnifying-glass text-lg group-hover:scale-110 transition-transform"></i>
-            <span class="text-sm">Pindai Foto Saya di Festival Ini</span>
-          </button>
-
-          <!-- Free Guarantee Micro Copy -->
-          <div class="mt-4 text-center">
-            <p class="text-[11px] text-slate-400 flex items-center justify-center gap-1">
-              <i class="ph-bold ph-sparkle text-pink-500"></i>
-              Download Full-HD langsung dari fotografer panggung
-            </p>
-          </div>
-
+      <div class="flex items-center justify-between z-10 flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold tracking-wide border border-white/20">
+            <i id="heroCategoryIcon" class="ph-bold ph-music-note text-pink-300"></i>
+            <span id="heroCategory">Music Festival</span>
+          </span>
+          <span class="text-xs font-medium text-pink-200 flex items-center gap-1">
+            <i class="ph-bold ph-map-pin"></i>
+            <span id="heroLocation">Jakarta, Indonesia</span>
+          </span>
         </div>
 
-        <!-- Mini Stats & Storage Status Card -->
-        <div class="glass-card rounded-3xl p-5 shadow-soft space-y-4">
-          <div class="flex items-center justify-between">
-            <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-xl">
-                <i class="ph-bold ph-music-notes"></i>
-              </div>
-              <div>
-                <p class="text-xs font-bold text-slate-800">Festival Gallery Hub</p>
-                <p class="text-[11px] text-slate-400">Live Stage & Crowd Coverage</p>
-              </div>
-            </div>
-            <span class="text-xs font-bold text-pink-600 bg-pink-50 px-2.5 py-1 rounded-full">Official Photos</span>
-          </div>
-          
-          <div class="grid grid-cols-2 gap-3 pt-1">
-            <div class="bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Foto Konser</span>
-              <span id="statTotalPhotos" class="text-lg font-extrabold text-slate-900">0</span>
-            </div>
-            <div class="bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Wajah Terindeks</span>
-              <span id="statTotalFaces" class="text-lg font-extrabold text-pink-600">0</span>
-            </div>
-          </div>
+        <!-- Event Quick Stats Badges -->
+        <div class="flex items-center gap-2 text-[11px] font-bold">
+          <span class="bg-black/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-white flex items-center gap-1">
+            <i class="ph-bold ph-camera text-pink-300"></i>
+            <span id="statTotalPhotos">0</span> Foto
+          </span>
+          <span class="bg-black/30 backdrop-blur-md px-3 py-1 rounded-full border border-white/10 text-pink-200 flex items-center gap-1">
+            <i class="ph-bold ph-user-focus text-purple-300"></i>
+            <span id="statTotalFaces">0</span> Wajah
+          </span>
+        </div>
+      </div>
+
+      <div class="mt-6 sm:mt-8 z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div class="space-y-1.5">
+          <h1 id="heroTitle" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
+            We The Fest 2026
+          </h1>
+          <p id="heroDate" class="text-xs sm:text-sm text-pink-100/90 font-medium flex items-center gap-2">
+            <i class="ph-bold ph-calendar"></i>
+            <span>14 Agustus 2026</span>
+            <span class="text-white/40">•</span>
+            <span>Main Stage, Barrier & Crowd Coverage</span>
+          </p>
         </div>
 
-      </aside>
+        <!-- Scan Button directly inside Hero Banner -->
+        <button onclick="triggerFaceSearch()" class="bg-white hover:bg-slate-100 text-slate-900 font-extrabold text-xs sm:text-sm px-5 py-3 rounded-full shadow-lg hover:shadow-xl transition flex items-center justify-center gap-2 group shrink-0">
+          <i class="ph-bold ph-scan text-purple-700 text-lg group-hover:scale-110 transition-transform"></i>
+          <span>Pindai Foto Saya dengan AI</span>
+        </button>
+      </div>
+    </div>
 
-      <!-- RIGHT COLUMN: Hero Banner + Category Pills + Masonry Gallery (8 Cols on Desktop) -->
-      <section class="lg:col-span-8 xl:col-span-8 w-full space-y-6">
-        
-        <!-- Category Filter Pills (Uniform Colors: Pink-Purple Gradient Active) -->
-        <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none w-full max-w-full">
-          <button onclick="filterByCategory('all')" id="catBtn-all" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md flex items-center gap-1.5 shrink-0 transition border border-transparent">
-            <i class="ph-bold ph-squares-four text-white"></i>Semua Event
-          </button>
-          <button onclick="filterByCategory('music')" id="catBtn-music" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
-            <i class="ph-bold ph-speaker-hifi text-pink-600"></i>Konser & Festival Musik
-          </button>
-          <button onclick="filterByCategory('sports')" id="catBtn-sports" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
-            <i class="ph-bold ph-sneaker-move text-pink-600"></i>Lari & Olahraga
-          </button>
+    <!-- Filter & Search Results Header -->
+    <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pt-2">
+      <div>
+        <div class="flex items-center gap-2">
+          <h3 id="galleryTitle" class="text-xl font-extrabold text-slate-900 dark:text-white">Semua Foto Event</h3>
+          <span id="badgeResultCount" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200/80 dark:bg-slate-800 text-slate-700 dark:text-slate-300">0</span>
         </div>
+        <p id="gallerySubtitle" class="text-xs text-slate-400 mt-0.5">Semua foto dokumentasi resmi konser & festival musik beresolusi tinggi.</p>
+      </div>
 
-        <!-- Hero Editorial Banner -->
-        <div id="eventHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[230px]">
-          <div class="absolute -right-12 -bottom-12 w-72 h-72 rounded-full bg-pink-500/20 blur-3xl pointer-events-none"></div>
-          
-          <div class="flex items-center justify-between z-10">
-            <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold tracking-wide border border-white/20">
-              <i id="heroCategoryIcon" class="ph-bold ph-music-note text-pink-300"></i>
-              <span id="heroCategory">Music Festival</span>
-            </span>
-            <span class="text-xs font-medium text-pink-200 flex items-center gap-1">
-              <i class="ph-bold ph-map-pin"></i>
-              <span id="heroLocation">Jakarta, Indonesia</span>
-            </span>
-          </div>
+      <div class="flex items-center gap-2">
+        <button id="btnShowAll" onclick="resetSearchFilter()" class="hidden px-3.5 py-1.5 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-xs font-bold text-slate-600 dark:text-slate-300 transition flex items-center gap-1.5">
+          <i class="ph-bold ph-arrow-counter-clockwise"></i>
+          <span>Tampilkan Semua Foto</span>
+        </button>
+        <button onclick="triggerFaceSearch()" class="px-4 py-2 rounded-full bg-gradient-to-r from-purple-700 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm flex items-center gap-1.5 transition">
+          <i class="ph-bold ph-scan"></i>
+          <span>Cari Foto Saya</span>
+        </button>
+      </div>
+    </div>
 
-          <div class="mt-8 z-10 space-y-2">
-            <h1 id="heroTitle" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              We The Fest 2026
-            </h1>
-            <p id="heroDate" class="text-xs sm:text-sm text-pink-100/90 font-medium flex items-center gap-2">
-              <i class="ph-bold ph-calendar"></i>
-              <span>14 Agustus 2026</span>
-              <span class="text-white/40">•</span>
-              <span>Main Stage, Barrier & Crowd Coverage</span>
-            </p>
-          </div>
-        </div>
+    <!-- Gallery Grid (Responsive Multi-Column Masonry) -->
+    <div id="photosMasonryGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-3 gap-4 sm:gap-5">
+      <!-- Dynamically populated via JS -->
+    </div>
 
-        <!-- Filter & Search Results Header -->
-        <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pt-2">
-          <div>
-            <div class="flex items-center gap-2">
-              <h3 id="galleryTitle" class="text-xl font-extrabold text-slate-900">Semua Foto Event</h3>
-              <span id="badgeResultCount" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200/80 text-slate-700">0</span>
-            </div>
-            <p id="gallerySubtitle" class="text-xs text-slate-400 mt-0.5">Unggah selfie kamu di sebelah kiri untuk menemukan foto kamu di konser ini.</p>
-          </div>
-
-          <div class="flex items-center gap-2">
-            <button id="btnShowAll" onclick="resetSearchFilter()" class="hidden px-3.5 py-1.5 rounded-full bg-slate-100 hover:bg-slate-200 text-xs font-bold text-slate-600 transition flex items-center gap-1.5">
-              <i class="ph-bold ph-arrow-counter-clockwise"></i>
-              <span>Tampilkan Semua Foto</span>
-            </button>
-          </div>
-        </div>
-
-        <!-- Gallery Grid (True Multi-Column Responsive Masonry) -->
-        <div id="photosMasonryGrid" class="grid grid-cols-2 sm:grid-cols-2 md:grid-cols-3 xl:grid-cols-3 gap-4 sm:gap-5">
-          <!-- Dynamically populated via JS -->
-        </div>
-
-        <!-- Empty State Placeholder -->
-        <div id="emptyGalleryState" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 p-8">
-          <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-3xl mb-3">
-            <i class="ph-bold ph-camera"></i>
-          </div>
-          <h4 class="text-base font-bold text-slate-800">Belum Ada Foto untuk Event Ini</h4>
-          <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Beralih ke tab <b>Fotografer</b> di pojok kanan atas untuk mengunggah foto dokumentasi konser/festival.</p>
-        </div>
-
-      </section>
-
+    <!-- Empty State Placeholder -->
+    <div id="emptyGalleryState" class="hidden text-center py-16 bg-white dark:bg-[#18181b] rounded-3xl border border-dashed border-slate-200 dark:border-slate-800 p-8">
+      <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 dark:bg-slate-800 text-slate-400 flex items-center justify-center text-3xl mb-3">
+        <i class="ph-bold ph-camera"></i>
+      </div>
+      <h4 class="text-base font-bold text-slate-800 dark:text-slate-200">Belum Ada Foto untuk Event Ini</h4>
+      <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Beralih ke tab <b>Fotografer</b> di pojok kanan atas untuk mengunggah foto dokumentasi konser/festival.</p>
     </div>
 
     <!-- Extra Bottom Padding Spacer so fixed bottom bar never cuts off text -->
@@ -570,49 +463,50 @@
     </div>
 
     <!-- Master Biometric Selfie Status Card (Akses & Ambil Ulang Selfie) -->
-    <div class="mt-5 bg-white dark:bg-[#18181b] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm space-y-4">
-      <div class="flex items-start justify-between gap-3">
-        <div>
-          <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
-            <i class="ph-bold ph-scan text-purple-600 text-lg"></i>
-            <span>Foto Selfie Wajah Master (AI PicMe)</span>
-          </h3>
-          <p class="text-xs text-slate-500 dark:text-slate-400 mt-0.5">
-            Digunakan oleh AI Face Recognition untuk memindai wajah Anda di semua foto konser & festival musik secara otomatis.
-          </p>
-        </div>
-        <span id="accountSelfieBadge" class="shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800">
-          Wajah Terdaftar
-        </span>
-      </div>
-
-      <div class="flex flex-col sm:flex-row items-center gap-4 bg-slate-50 dark:bg-[#13141f] p-4 rounded-2xl border border-slate-100 dark:border-slate-800">
-        <div class="relative shrink-0">
-          <img id="accountMasterSelfieImg" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl object-cover border-2 border-purple-500 shadow-md">
-          <div id="accountMasterSelfiePlaceholder" class="w-20 h-20 sm:w-24 sm:h-24 rounded-2xl bg-slate-200 dark:bg-slate-800 flex items-center justify-center text-slate-400 text-3xl hidden">
-            <i class="ph-bold ph-camera"></i>
-          </div>
-          <span id="accountMasterSelfieCheck" class="absolute -bottom-1.5 -right-1.5 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs shadow ring-2 ring-white dark:ring-slate-900">
-            <i class="ph-bold ph-check"></i>
-          </span>
-        </div>
+    <div class="mt-5 bg-white dark:bg-[#18181b] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
+      <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         
-        <div class="flex-1 space-y-2 text-center sm:text-left">
-          <div id="accountMasterSelfieDesc" class="text-xs text-slate-600 dark:text-slate-300">
-            Foto selfie Anda tersimpan secara aman. AI PicMe siap mencocokkan wajah Anda pada setiap panggung dan kerumunan festival.
+        <!-- Left: Avatar + Title & Info (Unified Row) -->
+        <div class="flex items-center gap-4">
+          <div class="relative shrink-0">
+            <img id="accountMasterSelfieImg" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-purple-500 shadow-md hidden" alt="Master Selfie">
+            <div id="accountMasterSelfiePlaceholder" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-purple-100 to-pink-100 dark:from-slate-800 dark:to-slate-700 border-2 border-dashed border-purple-400 flex items-center justify-center text-purple-700 dark:text-purple-300 text-2xl shadow-inner">
+              <i class="ph-bold ph-camera"></i>
+            </div>
+            <span id="accountMasterSelfieCheck" class="absolute -bottom-1 -right-1 w-5 h-5 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs shadow ring-2 ring-white dark:ring-slate-900 hidden">
+              <i class="ph-bold ph-check"></i>
+            </span>
           </div>
-          <div class="flex items-center justify-center sm:justify-start gap-2 pt-1 flex-wrap">
-            <button onclick="openRetakeModal()" class="bg-gradient-to-r from-purple-700 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold px-4 py-2 rounded-full text-xs flex items-center gap-1.5 shadow-sm hover:shadow transition">
-              <i class="ph-bold ph-camera-rotate text-sm"></i>
-              <span>Ambil Ulang Selfie</span>
-            </button>
-            <button onclick="document.getElementById('inputAccountSelfieUpload').click()" class="bg-white dark:bg-slate-800 hover:bg-slate-100 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold px-3.5 py-2 rounded-full text-xs flex items-center gap-1.5 transition">
-              <i class="ph-bold ph-upload-simple text-sm"></i>
-              <span>Unggah dari File</span>
-            </button>
-            <input type="file" id="inputAccountSelfieUpload" accept="image/*" class="hidden" onchange="handleAccountSelfieUpload(event)">
+
+          <div class="space-y-1">
+            <div class="flex items-center gap-2 flex-wrap">
+              <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
+                <i class="ph-bold ph-scan text-purple-600"></i>
+                <span>Foto Selfie Wajah Master (AI PicMe)</span>
+              </h3>
+              <span id="accountSelfieBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
+                Belum Ada Selfie
+              </span>
+            </div>
+            <p id="accountMasterSelfieDesc" class="text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
+              Foto acuan biometrik Anda untuk mendeteksi wajah di kerumunan konser & festival musik secara otomatis.
+            </p>
           </div>
         </div>
+
+        <!-- Right: Action Buttons (Aligned across) -->
+        <div class="flex items-center gap-2 shrink-0 self-start md:self-center">
+          <button onclick="openRetakeModal()" class="bg-gradient-to-r from-purple-700 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-1.5 shadow-sm hover:shadow transition">
+            <i class="ph-bold ph-camera-rotate text-sm"></i>
+            <span id="accountBtnSelfieActionText">Ambil Ulang Selfie</span>
+          </button>
+          <button onclick="document.getElementById('inputAccountSelfieUpload').click()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold px-3.5 py-2.5 rounded-full text-xs flex items-center gap-1.5 transition">
+            <i class="ph-bold ph-upload-simple text-sm"></i>
+            <span>Pilih File</span>
+          </button>
+          <input type="file" id="inputAccountSelfieUpload" accept="image/*" class="hidden" onchange="handleAccountSelfieUpload(event)">
+        </div>
+
       </div>
     </div>
 
@@ -1633,9 +1527,11 @@
       const saved = localStorage.getItem('picme_saved_selfie');
       const accImg = document.getElementById('accountMasterSelfieImg');
       const accPlaceholder = document.getElementById('accountMasterSelfiePlaceholder');
+      const accCheck = document.getElementById('accountMasterSelfieCheck');
       const accBadge = document.getElementById('accountSelfieBadge');
       const profileAvatarImg = document.getElementById('profileAvatarImg');
       const profileAvatarIcon = document.getElementById('profileAvatarIcon');
+      const actionText = document.getElementById('accountBtnSelfieActionText');
 
       if (saved) {
         if (accImg) {
@@ -1643,33 +1539,27 @@
           accImg.classList.remove('hidden');
         }
         if (accPlaceholder) accPlaceholder.classList.add('hidden');
+        if (accCheck) accCheck.classList.remove('hidden');
         if (accBadge) {
           accBadge.innerText = 'Wajah Terdaftar';
-          accBadge.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800';
+          accBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-emerald-100 text-emerald-800 dark:bg-emerald-950/50 dark:text-emerald-400 border border-emerald-200 dark:border-emerald-800';
         }
+        if (actionText) actionText.innerText = 'Ambil Ulang Selfie';
         if (profileAvatarImg) {
           profileAvatarImg.src = saved;
           profileAvatarImg.classList.remove('hidden');
         }
         if (profileAvatarIcon) profileAvatarIcon.classList.add('hidden');
-
-        // Sync with UserView selfie zone
-        const selfieImg = document.getElementById('selfieImg');
-        const selfiePrompt = document.getElementById('selfiePrompt');
-        const selfiePreviewBox = document.getElementById('selfiePreviewBox');
-        if (selfieImg && selfiePrompt && selfiePreviewBox) {
-          selfieImg.src = saved;
-          selfiePrompt.classList.add('hidden');
-          selfiePreviewBox.classList.remove('hidden');
-          selectedSelfieFile = saved;
-        }
+        selectedSelfieFile = saved;
       } else {
         if (accImg) accImg.classList.add('hidden');
         if (accPlaceholder) accPlaceholder.classList.remove('hidden');
+        if (accCheck) accCheck.classList.add('hidden');
         if (accBadge) {
           accBadge.innerText = 'Belum Ada Selfie';
-          accBadge.className = 'shrink-0 px-2.5 py-1 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800';
+          accBadge.className = 'px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800';
         }
+        if (actionText) actionText.innerText = 'Ambil Foto Selfie';
       }
     }
 
@@ -1983,16 +1873,13 @@
         toggleModal('modalConsent', true);
         return;
       }
-      if (!selectedSelfieFile && !localStorage.getItem('picme_saved_selfie')) {
-        alert('Harap ambil atau unggah foto selfie Anda terlebih dahulu');
-        handleSelfieClick();
+      const savedSelfie = localStorage.getItem('picme_saved_selfie');
+      if (!savedSelfie) {
+        alert('Anda belum memiliki foto selfie master. Silakan ambil atau unggah foto selfie terlebih dahulu.');
+        openRetakeModal();
         return;
       }
-
-      if (!selectedSelfieFile && localStorage.getItem('picme_saved_selfie')) {
-        selectedSelfieFile = localStorage.getItem('picme_saved_selfie');
-      }
-
+      selectedSelfieFile = savedSelfie;
       proceedFaceSearch();
     }
 
@@ -2163,12 +2050,8 @@
         if (tabPicme) tabPicme.className = 'flex flex-col items-center justify-center gap-1 text-purple-700 transition';
         if (tabAkun) tabAkun.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition';
         
-        const selfieZone = document.getElementById('selfieZone');
-        if (selfieZone) {
-          selfieZone.scrollIntoView({ behavior: 'smooth', block: 'center' });
-          selfieZone.classList.add('ring-4', 'ring-purple-600');
-          setTimeout(() => selfieZone.classList.remove('ring-4', 'ring-purple-600'), 1500);
-        }
+        // Directly trigger face matching with master selfie!
+        triggerFaceSearch();
       } else if (tab === 'akun') {
         userView.classList.add('hidden');
         accountView.classList.remove('hidden');
