@@ -538,7 +538,7 @@
 
       <!-- Auth State & Supabase Project Link -->
       <div class="pt-3 border-t border-slate-800 flex items-center justify-between text-xs">
-        <a href="/login.html" id="btnAccountLoginLink" class="text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1.5 transition">
+        <a href="/login" id="btnAccountLoginLink" class="text-purple-400 hover:text-purple-300 font-bold flex items-center gap-1.5 transition">
           <i class="ph-bold ph-sign-in"></i>
           <span id="textAccountAuthAction">Ganti Akun / Masuk</span>
         </a>
@@ -1236,7 +1236,7 @@
       }
       localStorage.removeItem('picme_current_user');
       alert('Anda telah keluar. Mengalihkan ke halaman login...');
-      window.location.href = '/login.html';
+      window.location.href = '/login';
     }
 
     window.addEventListener('DOMContentLoaded', async () => {
