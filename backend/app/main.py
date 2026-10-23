@@ -45,6 +45,7 @@ class CreateEventRequest(BaseModel):
     title: str
     location: str
     event_date: str
+    category: Optional[str] = "music"
     description: Optional[str] = ""
 
 
@@ -54,8 +55,11 @@ def health_check():
 
 
 @app.get("/api/events")
-def list_events():
-    return {"events": db_service.list_events()}
+def list_events(category: Optional[str] = None):
+    events = db_service.list_events()
+    if category and category != "all":
+        events = [e for e in events if e.get("category") == category]
+    return {"events": events}
 
 
 @app.post("/api/events")
@@ -64,6 +68,7 @@ def create_event(req: CreateEventRequest):
         title=req.title,
         location=req.location,
         event_date=req.event_date,
+        category=req.category or "music",
         description=req.description or ""
     )
     return {"event": event}

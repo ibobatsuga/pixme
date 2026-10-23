@@ -24,6 +24,7 @@ class DatabaseService:
                 id TEXT PRIMARY KEY,
                 title TEXT NOT NULL,
                 slug TEXT UNIQUE NOT NULL,
+                category TEXT DEFAULT 'music',
                 description TEXT,
                 location TEXT NOT NULL,
                 event_date TEXT NOT NULL,
@@ -62,14 +63,21 @@ class DatabaseService:
             """)
             conn.commit()
 
-    def create_event(self, title: str, location: str, event_date: str, description: str = "") -> Dict[str, Any]:
+    def create_event(self, title: str, location: str, event_date: str, description: str = "", category: str = "music") -> Dict[str, Any]:
         event_id = str(uuid.uuid4())
         slug = title.lower().replace(" ", "-") + "-" + event_id[:8]
         with self._get_connection() as conn:
             cursor = conn.cursor()
+            # Ensure column exists for existing database files
+            try:
+                cursor.execute("ALTER TABLE events ADD COLUMN category TEXT DEFAULT 'music'")
+                conn.commit()
+            except sqlite3.OperationalError:
+                pass
+
             cursor.execute(
-                "INSERT INTO events (id, title, slug, location, event_date, description) VALUES (?, ?, ?, ?, ?, ?)",
-                (event_id, title, slug, location, event_date, description)
+                "INSERT INTO events (id, title, slug, category, location, event_date, description) VALUES (?, ?, ?, ?, ?, ?, ?)",
+                (event_id, title, slug, category, location, event_date, description)
             )
             conn.commit()
         return self.get_event(event_id)

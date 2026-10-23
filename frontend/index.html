@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixMe — AI Event Photo Face Matching</title>
+  <title>PixMe — Temukan Foto Kamu di Konser Musik & Event</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Phosphor Icons -->
@@ -31,6 +31,13 @@
               800: '#1e40af',
               900: '#1e3a8a',
             },
+            music: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+            },
             purpleTheme: {
               50: '#faf5ff',
               100: '#f3e8ff',
@@ -49,6 +56,7 @@
             'soft': '0 10px 30px -5px rgba(0, 0, 0, 0.05), 0 5px 15px -5px rgba(0, 0, 0, 0.02)',
             'glass': '0 20px 40px -15px rgba(30, 58, 138, 0.12)',
             'glow': '0 0 40px -10px rgba(59, 130, 246, 0.4)',
+            'neon': '0 0 35px -5px rgba(236, 72, 153, 0.35)',
           }
         }
       }
@@ -74,7 +82,7 @@
       border: 1px solid rgba(255, 255, 255, 0.9);
     }
     .glass-nav {
-      background: rgba(255, 255, 255, 0.8);
+      background: rgba(255, 255, 255, 0.82);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(226, 232, 240, 0.7);
@@ -84,8 +92,8 @@
 <body class="bg-[#f8fafc] text-slate-800 font-sans min-h-screen flex flex-col relative selection:bg-brand-500 selection:text-white">
 
   <!-- Ambient Light Blobs -->
-  <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-blue-400/10 rounded-full blur-[120px] pointer-events-none -z-10"></div>
-  <div class="fixed bottom-10 right-10 w-[450px] h-[450px] bg-indigo-400/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+  <div class="fixed top-0 left-1/4 w-[500px] h-[500px] bg-pink-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
+  <div class="fixed bottom-10 right-10 w-[450px] h-[450px] bg-indigo-500/10 rounded-full blur-[140px] pointer-events-none -z-10"></div>
 
   <!-- ==================== TOP GLASS NAVIGATION ==================== -->
   <header class="glass-nav sticky top-0 z-40 transition-all duration-300">
@@ -93,26 +101,26 @@
       
       <!-- Brand Logo -->
       <div class="flex items-center gap-3">
-        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-900 via-brand-700 to-blue-500 flex items-center justify-center text-white text-xl shadow-glass transform hover:scale-105 transition-transform duration-200">
-          <i class="ph-bold ph-aperture"></i>
+        <div class="w-11 h-11 rounded-2xl bg-gradient-to-tr from-brand-900 via-purple-700 to-pink-500 flex items-center justify-center text-white text-xl shadow-glass transform hover:scale-105 transition-transform duration-200">
+          <i class="ph-bold ph-music-notes"></i>
         </div>
         <div>
           <div class="flex items-center gap-2">
-            <span class="font-extrabold text-2xl tracking-tight text-slate-900">Pix<span class="text-brand-600">Me</span></span>
-            <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-emerald-50 text-emerald-600 border border-emerald-200/60 shadow-sm">
-              <span class="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse"></span>
-              Free Access
+            <span class="font-extrabold text-2xl tracking-tight text-slate-900">Pix<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
+            <span class="inline-flex items-center gap-1 text-[11px] font-bold px-2.5 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-200/60 shadow-sm">
+              <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
+              Live Festival AI
             </span>
           </div>
-          <p class="hidden sm:block text-[11px] font-medium text-slate-400">AI Face Recognition & Event Photography</p>
+          <p class="hidden sm:block text-[11px] font-medium text-slate-400">Festival Musik, Konser & Event Dokumentasi</p>
         </div>
       </div>
 
       <!-- Quick Event Selector (Desktop / Tablet) -->
       <div class="hidden md:flex items-center bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 max-w-sm w-full">
-        <i class="ph-bold ph-calendar-blank text-slate-400 ml-3 mr-2"></i>
+        <i class="ph-bold ph-guitar text-pink-500 ml-3 mr-2"></i>
         <select id="globalEventSelect" onchange="syncEventSelection(this.value)" class="bg-transparent text-xs font-semibold text-slate-700 w-full focus:outline-none cursor-pointer pr-3 truncate">
-          <option value="">Pilih Event Olahraga / Lari...</option>
+          <option value="">Pilih Konser / Festival Musik...</option>
         </select>
       </div>
 
@@ -123,7 +131,7 @@
         <div class="flex items-center bg-slate-100/90 p-1 rounded-full border border-slate-200/70 shadow-sm">
           <button id="btnTabUser" onclick="switchMode('user')" class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold transition-all duration-200 bg-slate-900 text-white shadow-md">
             <i class="ph-bold ph-user-focus text-sm"></i>
-            <span>Peserta</span>
+            <span>Penonton & Peserta</span>
           </button>
           <button id="btnTabCreator" onclick="switchMode('creator')" class="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 py-1.5 sm:py-2 rounded-full text-xs font-bold text-slate-600 hover:text-slate-900 transition-all duration-200">
             <i class="ph-bold ph-camera text-sm"></i>
@@ -153,65 +161,65 @@
         <!-- Glassmorphic Card: Selfie Search Box -->
         <div class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft relative overflow-hidden">
           
-          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-blue-500 via-indigo-500 to-brand-700"></div>
+          <div class="absolute top-0 left-0 right-0 h-1.5 bg-gradient-to-r from-pink-500 via-purple-500 to-blue-600"></div>
 
           <!-- Section Header -->
           <div class="flex items-center justify-between mb-5">
             <div>
-              <span class="text-[11px] font-bold tracking-wider uppercase text-brand-600">Scan Wajah AI</span>
-              <h2 class="text-xl font-extrabold text-slate-900">Temukan Foto Anda</h2>
+              <span class="text-[11px] font-bold tracking-wider uppercase text-pink-600">AI Crowd & Face Match</span>
+              <h2 class="text-xl font-extrabold text-slate-900">Temukan Foto Kamu</h2>
             </div>
-            <div class="w-9 h-9 rounded-full bg-blue-50 text-blue-600 flex items-center justify-center text-lg shadow-sm">
+            <div class="w-9 h-9 rounded-full bg-pink-50 text-pink-600 flex items-center justify-center text-lg shadow-sm">
               <i class="ph-bold ph-sparkle"></i>
             </div>
           </div>
 
           <!-- Event Selector (Visible on Mobile) -->
           <div class="mb-5 md:hidden">
-            <label class="block text-xs font-bold text-slate-600 mb-1.5">Pilih Acara</label>
-            <select id="mobileEventSelect" onchange="syncEventSelection(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-blue-500 focus:outline-none">
+            <label class="block text-xs font-bold text-slate-600 mb-1.5">Pilih Konser / Acara</label>
+            <select id="mobileEventSelect" onchange="syncEventSelection(this.value)" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-3.5 py-2.5 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-pink-500 focus:outline-none">
               <option value="">Memuat event...</option>
             </select>
           </div>
 
           <!-- Selfie Avatar Dropzone -->
           <div class="space-y-3">
-            <div id="selfieZone" onclick="document.getElementById('selfieFileInput').click()" class="relative group cursor-pointer border-2 border-dashed border-slate-200 hover:border-brand-500 rounded-3xl p-6 text-center bg-gradient-to-b from-slate-50/50 to-white/70 hover:from-blue-50/40 hover:to-white transition-all duration-300 flex flex-col items-center justify-center">
+            <div id="selfieZone" onclick="document.getElementById('selfieFileInput').click()" class="relative group cursor-pointer border-2 border-dashed border-slate-200 hover:border-pink-500 rounded-3xl p-6 text-center bg-gradient-to-b from-slate-50/50 to-white/70 hover:from-pink-50/30 hover:to-white transition-all duration-300 flex flex-col items-center justify-center">
               <input type="file" id="selfieFileInput" accept="image/*" capture="user" class="hidden" onchange="onSelfieSelected(event)">
               
               <!-- Empty State Avatar Prompt -->
               <div id="selfiePrompt" class="space-y-3 flex flex-col items-center">
                 <div class="relative">
-                  <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-slate-100 to-slate-200 border-4 border-white shadow-soft flex items-center justify-center text-slate-400 group-hover:text-blue-600 group-hover:scale-105 transition-all duration-300">
+                  <div class="w-24 h-24 rounded-full bg-gradient-to-tr from-slate-100 to-slate-200 border-4 border-white shadow-soft flex items-center justify-center text-slate-400 group-hover:text-pink-600 group-hover:scale-105 transition-all duration-300">
                     <i class="ph-bold ph-user text-4xl"></i>
                   </div>
-                  <div class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-brand-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-white">
+                  <div class="absolute bottom-0 right-0 w-8 h-8 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-white flex items-center justify-center text-sm shadow-md ring-2 ring-white">
                     <i class="ph-bold ph-camera"></i>
                   </div>
                 </div>
                 <div>
-                  <p class="text-sm font-bold text-slate-800">Ambil Selfie / Pilih Foto</p>
-                  <p class="text-[11px] text-slate-400 max-w-[200px]">Cukup satu foto wajah jelas untuk memindai ribuan dokumentasi</p>
+                  <p class="text-sm font-bold text-slate-800">Ambil Selfie / Foto Kamu</p>
+                  <p class="text-[11px] text-slate-400 max-w-[210px]">AI mengenali wajahmu meski di kerumunan konser atau pencahayaan panggung</p>
                 </div>
               </div>
 
-              <!-- Preview State with Quality Check Review (FotoYu Inspired) -->
+              <!-- Preview State with Quality Check Review -->
               <div id="selfiePreviewBox" class="hidden flex flex-col items-center space-y-3 w-full">
                 <div class="relative">
-                  <img id="selfieImg" class="w-28 h-28 object-cover rounded-full border-4 border-brand-500 shadow-glow">
+                  <img id="selfieImg" class="w-28 h-28 object-cover rounded-full border-4 border-pink-500 shadow-neon">
                   <span class="absolute bottom-1 right-1 w-6 h-6 rounded-full bg-emerald-500 text-white flex items-center justify-center text-xs ring-2 ring-white">
                     <i class="ph-bold ph-check"></i>
                   </span>
                 </div>
                 <div class="bg-amber-50 border border-amber-200/80 rounded-2xl p-3 text-left w-full space-y-1">
                   <p class="text-xs font-bold text-amber-900 flex items-center gap-1.5">
-                    <i class="ph-bold ph-info"></i>Apakah wajah terlihat jelas?
+                    <i class="ph-bold ph-info"></i>Tips untuk Foto Konser
                   </p>
                   <p class="text-[11px] text-amber-700 leading-relaxed">
-                    Pencahayaan yang buruk dan wajah buram akan mempersulit AI menemukan foto Anda.
+                    Pastikan wajah terlihat jelas tanpa tertutup kacamata hitam pekat agar pencocokan AI maksimal.
                   </p>
                 </div>
-                <button type="button" onclick="event.stopPropagation(); document.getElementById('selfieFileInput').click()" class="text-xs font-bold text-slate-600 hover:text-brand-600 flex items-center gap-1">
+                <button type="button" onclick="event.stopPropagation(); document.getElementById('selfieFileInput').click()" class="text-xs font-bold text-slate-600 hover:text-pink-600 flex items-center gap-1">
                   <i class="ph-bold ph-arrow-counter-clockwise"></i>Ambil Ulang Selfie
                 </button>
               </div>
@@ -223,72 +231,80 @@
             <span class="flex items-center gap-1.5 font-medium">
               <i class="ph-bold ph-sliders"></i>Akurasi AI Match
             </span>
-            <span class="font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full">Optimal (36%)</span>
+            <span class="font-bold text-slate-700 bg-slate-100 px-2.5 py-0.5 rounded-full">Stage & Crowd Mode</span>
           </div>
 
           <!-- Big Glowing Pill Action Button -->
-          <button id="btnSearchSubmit" onclick="triggerFaceSearch()" class="mt-5 w-full bg-gradient-to-r from-brand-900 via-brand-700 to-blue-600 hover:from-slate-900 hover:to-brand-800 text-white font-bold py-4 px-6 rounded-full shadow-glass hover:shadow-glow transition-all duration-300 flex items-center justify-center gap-2 group">
+          <button id="btnSearchSubmit" onclick="triggerFaceSearch()" class="mt-5 w-full bg-gradient-to-r from-slate-900 via-purple-900 to-pink-600 hover:from-black hover:to-pink-700 text-white font-bold py-4 px-6 rounded-full shadow-glass hover:shadow-neon transition-all duration-300 flex items-center justify-center gap-2 group">
             <i class="ph-bold ph-magnifying-glass text-lg group-hover:scale-110 transition-transform"></i>
-            <span class="text-sm">Mulai Pindai Foto Saya</span>
+            <span class="text-sm">Pindai Foto Saya di Festival Ini</span>
           </button>
 
           <!-- Free Guarantee Micro Copy -->
           <div class="mt-4 text-center">
             <p class="text-[11px] text-slate-400 flex items-center justify-center gap-1">
-              <i class="ph-bold ph-shield-check text-emerald-500"></i>
-              Bebas watermark, download resolusi asli tanpa bayar
+              <i class="ph-bold ph-sparkle text-pink-500"></i>
+              Download Full-HD langsung dari fotografer panggung
             </p>
           </div>
 
         </div>
 
-        <!-- Mini Stats & Storage Status Card (Desktop GuruShots style) -->
+        <!-- Mini Stats & Storage Status Card -->
         <div class="glass-card rounded-3xl p-5 shadow-soft space-y-4">
           <div class="flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-2xl bg-brand-50 text-brand-600 flex items-center justify-center text-xl">
-                <i class="ph-bold ph-cloud"></i>
+              <div class="w-10 h-10 rounded-2xl bg-pink-50 text-pink-600 flex items-center justify-center text-xl">
+                <i class="ph-bold ph-music-notes"></i>
               </div>
               <div>
-                <p class="text-xs font-bold text-slate-800">Penyimpanan Cloud</p>
-                <p class="text-[11px] text-slate-400">Akun Free Tier</p>
+                <p class="text-xs font-bold text-slate-800">Festival Gallery Hub</p>
+                <p class="text-[11px] text-slate-400">Live Stage & Crowd Coverage</p>
               </div>
             </div>
-            <span class="text-xs font-bold text-brand-600 bg-blue-50 px-2.5 py-1 rounded-full">0.50 GB Tersedia</span>
-          </div>
-
-          <!-- Progress bar -->
-          <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
-            <div class="bg-brand-600 h-2 rounded-full w-[8%]"></div>
+            <span class="text-xs font-bold text-pink-600 bg-pink-50 px-2.5 py-1 rounded-full">Official Photos</span>
           </div>
           
           <div class="grid grid-cols-2 gap-3 pt-1">
             <div class="bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Foto Terindeks</span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Foto Konser</span>
               <span id="statTotalPhotos" class="text-lg font-extrabold text-slate-900">0</span>
             </div>
             <div class="bg-slate-50/70 p-3 rounded-2xl border border-slate-100">
-              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Total Wajah</span>
-              <span id="statTotalFaces" class="text-lg font-extrabold text-brand-600">0</span>
+              <span class="text-[10px] font-bold text-slate-400 uppercase tracking-wider block">Wajah Terindeks</span>
+              <span id="statTotalFaces" class="text-lg font-extrabold text-pink-600">0</span>
             </div>
           </div>
         </div>
 
       </aside>
 
-      <!-- RIGHT COLUMN: Hero Banner + Expansive Masonry Gallery (8 Cols on Desktop) -->
-      <section class="lg:col-span-8 xl:col-span-8 w-full space-y-7">
+      <!-- RIGHT COLUMN: Hero Banner + Category Pills + Masonry Gallery (8 Cols on Desktop) -->
+      <section class="lg:col-span-8 xl:col-span-8 w-full space-y-6">
         
+        <!-- Category Filter Pills (Music Concerts vs Sports vs Others) -->
+        <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none">
+          <button onclick="filterByCategory('all')" id="catBtn-all" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-slate-900 text-white shadow-sm flex items-center gap-1.5 shrink-0 transition">
+            <i class="ph-bold ph-squares-four"></i>Semua Event
+          </button>
+          <button onclick="filterByCategory('music')" id="catBtn-music" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white hover:bg-pink-50 text-slate-700 hover:text-pink-600 border border-slate-200/80 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+            <i class="ph-bold ph-speaker-hifi text-pink-600"></i>Konser & Festival Musik
+          </button>
+          <button onclick="filterByCategory('sports')" id="catBtn-sports" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white hover:bg-blue-50 text-slate-700 hover:text-blue-600 border border-slate-200/80 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+            <i class="ph-bold ph-sneaker-move text-blue-600"></i>Lari & Olahraga
+          </button>
+        </div>
+
         <!-- Hero Editorial Banner -->
-        <div id="eventHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-tr from-brand-900 via-brand-800 to-blue-600 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]">
-          <div class="absolute -right-12 -bottom-12 w-64 h-64 rounded-full bg-white/5 blur-2xl pointer-events-none"></div>
+        <div id="eventHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[230px]">
+          <div class="absolute -right-12 -bottom-12 w-72 h-72 rounded-full bg-pink-500/20 blur-3xl pointer-events-none"></div>
           
           <div class="flex items-center justify-between z-10">
             <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold tracking-wide border border-white/20">
-              <i class="ph-bold ph-flag-checkered text-amber-300"></i>
-              <span id="heroCategory">Running & Marathon</span>
+              <i id="heroCategoryIcon" class="ph-bold ph-music-note text-pink-300"></i>
+              <span id="heroCategory">Music Festival</span>
             </span>
-            <span class="text-xs font-medium text-blue-200 flex items-center gap-1">
+            <span class="text-xs font-medium text-pink-200 flex items-center gap-1">
               <i class="ph-bold ph-map-pin"></i>
               <span id="heroLocation">Jakarta, Indonesia</span>
             </span>
@@ -296,13 +312,13 @@
 
           <div class="mt-8 z-10 space-y-2">
             <h1 id="heroTitle" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
-              Jakarta Marathon 2026
+              We The Fest 2026
             </h1>
-            <p id="heroDate" class="text-xs sm:text-sm text-blue-100/90 font-medium flex items-center gap-2">
+            <p id="heroDate" class="text-xs sm:text-sm text-pink-100/90 font-medium flex items-center gap-2">
               <i class="ph-bold ph-calendar"></i>
-              <span>25 Oktober 2026</span>
+              <span>14 Agustus 2026</span>
               <span class="text-white/40">•</span>
-              <span>Dokumentasi Resmi Terverifikasi</span>
+              <span>Main Stage, Barrier & Crowd Coverage</span>
             </p>
           </div>
         </div>
@@ -314,7 +330,7 @@
               <h3 id="galleryTitle" class="text-xl font-extrabold text-slate-900">Semua Foto Event</h3>
               <span id="badgeResultCount" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-slate-200/80 text-slate-700">0</span>
             </div>
-            <p id="gallerySubtitle" class="text-xs text-slate-400 mt-0.5">Unggah selfie Anda di sebelah kiri untuk menyaring foto wajah Anda.</p>
+            <p id="gallerySubtitle" class="text-xs text-slate-400 mt-0.5">Unggah selfie kamu di sebelah kiri untuk menemukan foto kamu di konser ini.</p>
           </div>
 
           <div class="flex items-center gap-2">
@@ -333,10 +349,10 @@
         <!-- Empty State Placeholder -->
         <div id="emptyGalleryState" class="hidden text-center py-16 bg-white rounded-3xl border border-dashed border-slate-200 p-8">
           <div class="w-16 h-16 mx-auto rounded-full bg-slate-100 text-slate-400 flex items-center justify-center text-3xl mb-3">
-            <i class="ph-bold ph-image"></i>
+            <i class="ph-bold ph-camera"></i>
           </div>
           <h4 class="text-base font-bold text-slate-800">Belum Ada Foto untuk Event Ini</h4>
-          <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Beralih ke tab <b>Fotografer</b> di pojok kanan atas untuk mengunggah foto dokumentasi event.</p>
+          <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Beralih ke tab <b>Fotografer</b> di pojok kanan atas untuk mengunggah foto dokumentasi konser/festival.</p>
         </div>
 
       </section>
@@ -352,21 +368,21 @@
     <!-- Header with Action -->
     <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
       <div>
-        <span class="text-[11px] font-bold tracking-wider uppercase text-brand-600">Creator Workspace</span>
-        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Portal Fotografer & Galeri</h1>
-        <p class="text-sm text-slate-500 mt-1">Unggah dokumentasi Anda, sistem AI akan otomatis mengekstrak & mencocokkan wajah setiap peserta.</p>
+        <span class="text-[11px] font-bold tracking-wider uppercase text-pink-600">Creator Workspace</span>
+        <h1 class="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">Portal Fotografer Panggung & Festival</h1>
+        <p class="text-sm text-slate-500 mt-1">Unggah hasil jepretan konser & festival Anda. AI otomatis mengekstrak & mengenali wajah penonton.</p>
       </div>
 
-      <button onclick="toggleModal('modalNewEvent', true)" class="self-start sm:self-auto bg-slate-900 hover:bg-brand-600 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-full flex items-center gap-2 shadow-soft hover:shadow-glass transition-all duration-200">
+      <button onclick="toggleModal('modalNewEvent', true)" class="self-start sm:self-auto bg-slate-900 hover:bg-pink-600 text-white font-bold text-xs sm:text-sm px-5 py-3 rounded-full flex items-center gap-2 shadow-soft hover:shadow-glass transition-all duration-200">
         <i class="ph-bold ph-plus-circle text-base"></i>
-        <span>Buat Event Baru</span>
+        <span>Buat Event Konser Baru</span>
       </button>
     </div>
 
-    <!-- Creator Subtabs: Jual (Upload & Events) vs Postingan (Community Feed) -->
+    <!-- Creator Subtabs: Jual vs Postingan -->
     <div class="flex border-b border-slate-200 mb-8 gap-8">
-      <button class="pb-3 border-b-2 border-brand-600 text-brand-600 font-extrabold text-sm flex items-center gap-2">
-        <i class="ph-bold ph-tag"></i>Jual / Dokumentasi Event
+      <button class="pb-3 border-b-2 border-pink-600 text-pink-600 font-extrabold text-sm flex items-center gap-2">
+        <i class="ph-bold ph-tag"></i>Dokumentasi Konser & Event
       </button>
       <button class="pb-3 text-slate-400 hover:text-slate-600 font-semibold text-sm flex items-center gap-2">
         <i class="ph-bold ph-cards"></i>Postingan Sosial
@@ -382,8 +398,8 @@
         <div class="glass-card rounded-3xl p-6 sm:p-8 shadow-soft space-y-6">
           <div class="flex items-center justify-between">
             <h3 class="font-extrabold text-lg text-slate-900 flex items-center gap-2">
-              <i class="ph-bold ph-cloud-arrow-up text-brand-600 text-xl"></i>
-              Bulk Ingest Foto Event
+              <i class="ph-bold ph-cloud-arrow-up text-pink-600 text-xl"></i>
+              Bulk Ingest Foto Konser / Event
             </h3>
             <span class="text-[11px] font-semibold text-slate-400 bg-slate-100 px-3 py-1 rounded-full">Multi-Upload Ready</span>
           </div>
@@ -391,30 +407,29 @@
           <!-- Select Target Event -->
           <div>
             <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Target Event</label>
-            <select id="creatorTargetEvent" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            <select id="creatorTargetEvent" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-pink-500 focus:outline-none">
               <option value="">Memuat event...</option>
             </select>
           </div>
 
           <!-- Drag and Drop Large Box -->
-          <div id="creatorDropzone" onclick="document.getElementById('creatorFilesInput').click()" class="border-2 border-dashed border-slate-300 hover:border-brand-500 rounded-3xl p-8 sm:p-12 text-center cursor-pointer bg-slate-50/50 hover:bg-brand-50/30 transition-all duration-300 group">
+          <div id="creatorDropzone" onclick="document.getElementById('creatorFilesInput').click()" class="border-2 border-dashed border-slate-300 hover:border-pink-500 rounded-3xl p-8 sm:p-12 text-center cursor-pointer bg-slate-50/50 hover:bg-pink-50/30 transition-all duration-300 group">
             <input type="file" id="creatorFilesInput" multiple accept="image/*" class="hidden" onchange="onCreatorFilesPicked(event)">
             
-            <div class="w-16 h-16 mx-auto rounded-full bg-brand-50 text-brand-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
+            <div class="w-16 h-16 mx-auto rounded-full bg-pink-50 text-pink-600 flex items-center justify-center text-3xl mb-4 group-hover:scale-110 transition-transform">
               <i class="ph-bold ph-images-square"></i>
             </div>
             <h4 class="text-base font-extrabold text-slate-800">Tarik & Lepas Foto di Sini, atau Klik untuk Browse</h4>
-            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Mendukung file JPG, PNG, WEBP resolusi tinggi. Pilih puluhan foto sekaligus untuk pemrosesan AI otomatis.</p>
+            <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">Mendukung file JPG, PNG, WEBP resolusi tinggi. Unggah foto crowd, front row, atau stage sekaligus.</p>
             
-            <!-- File selected badge -->
-            <div id="creatorFilesBadge" class="hidden mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-brand-100/70 text-brand-700 text-xs font-bold">
+            <div id="creatorFilesBadge" class="hidden mt-4 inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-pink-100 text-pink-700 text-xs font-bold">
               <i class="ph-bold ph-check-circle"></i>
               <span id="creatorFilesCountText">0 Foto Dipilih</span>
             </div>
           </div>
 
           <!-- Process Button -->
-          <button id="btnCreatorProcess" onclick="submitCreatorUpload()" disabled class="w-full bg-gradient-to-r from-brand-900 to-brand-700 hover:from-slate-900 hover:to-brand-800 text-white font-bold py-4 px-6 rounded-full shadow-glass transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
+          <button id="btnCreatorProcess" onclick="submitCreatorUpload()" disabled class="w-full bg-gradient-to-r from-slate-900 to-pink-600 hover:from-black hover:to-pink-700 text-white font-bold py-4 px-6 rounded-full shadow-glass transition-all duration-300 flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
             <i class="ph-bold ph-cpu text-lg"></i>
             <span id="btnCreatorText">Mulai Ekstraksi AI & Simpan Foto</span>
           </button>
@@ -426,8 +441,8 @@
       <div class="lg:col-span-5 space-y-6">
         <div class="glass-card rounded-3xl p-6 sm:p-7 shadow-soft space-y-5">
           <h3 class="font-extrabold text-lg text-slate-900 flex items-center gap-2">
-            <i class="ph-bold ph-calendar-check text-brand-600"></i>
-            Daftar Event Anda
+            <i class="ph-bold ph-calendar-check text-pink-600"></i>
+            Daftar Event Terdaftar
           </h3>
           
           <div id="creatorEventList" class="space-y-3 max-h-[500px] overflow-y-auto pr-1">
@@ -441,14 +456,14 @@
   </main>
 
 
-  <!-- ==================== MODAL: PERSETUJUAN BIOMETRIK & PRIVASI (UU PDP SHIELD) ==================== -->
+  <!-- ==================== MODAL: PERSETUJUAN BIOMETRIK & PRIVASI ==================== -->
   <div id="modalConsent" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/50 backdrop-blur-md" onclick="toggleModal('modalConsent', false)"></div>
     <div class="glass-card bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full relative z-10 shadow-2xl space-y-5 border border-slate-100">
       
       <div class="flex items-center justify-between border-b border-slate-100 pb-4">
         <h3 class="text-xl font-extrabold text-slate-900 flex items-center gap-2">
-          <i class="ph-bold ph-shield-check text-purpleTheme-700 text-2xl"></i>
+          <i class="ph-bold ph-shield-check text-pink-600 text-2xl"></i>
           Ketentuan Penggunaan & Privasi
         </h3>
         <button onclick="toggleModal('modalConsent', false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition">
@@ -458,17 +473,16 @@
 
       <div class="text-xs text-slate-600 space-y-3 leading-relaxed max-h-60 overflow-y-auto pr-2">
         <p>
-          Selamat datang di <b>PixMe</b>. Platform pencarian dan marketplace dokumentasi personal dengan teknologi AI yang mempertemukan fotografer dengan peserta event.
+          Selamat datang di <b>PixMe</b>. Platform pencarian dan galeri foto event musik, konser, dan olahraga dengan teknologi AI yang mempertemukan fotografer dengan penonton dan peserta.
         </p>
         <p>
           Sesuai dengan <b>Undang-Undang Perlindungan Data Pribadi (UU PDP No. 27 Tahun 2022)</b>, kami menjamin bahwa foto wajah dan representasi vektor biometrik Anda diproteksi dengan enkripsi dan hanya digunakan untuk mencocokkan foto dokumentasi Anda pada event yang dipilih.
         </p>
       </div>
 
-      <!-- Checkbox Persetujuan (Seperti di screenshot FotoYu) -->
-      <div class="p-4 rounded-2xl bg-purpleTheme-50 border border-purpleTheme-200/60 space-y-3">
+      <div class="p-4 rounded-2xl bg-pink-50 border border-pink-200/60 space-y-3">
         <label class="flex items-start gap-3 cursor-pointer">
-          <input type="checkbox" id="checkConsent" class="mt-0.5 w-4 h-4 rounded text-purpleTheme-700 focus:ring-purpleTheme-600 border-slate-300">
+          <input type="checkbox" id="checkConsent" class="mt-0.5 w-4 h-4 rounded text-pink-600 focus:ring-pink-500 border-slate-300">
           <span class="text-xs text-slate-700 leading-snug">
             Saya memberikan persetujuan saya kepada <b>PixMe</b> untuk mengumpulkan, menyimpan, dan memproses Pengenal Biometrik Wajah saya (data diproteksi enkripsi).
           </span>
@@ -477,41 +491,40 @@
 
       <div class="flex justify-end gap-3 pt-2">
         <button onclick="toggleModal('modalConsent', false)" class="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Batal</button>
-        <button id="btnSubmitConsent" onclick="confirmConsent()" class="px-6 py-2.5 rounded-full text-xs font-bold bg-purpleTheme-800 hover:bg-purpleTheme-900 text-white shadow-soft transition">Saya Setuju</button>
+        <button id="btnSubmitConsent" onclick="confirmConsent()" class="px-6 py-2.5 rounded-full text-xs font-bold bg-pink-600 hover:bg-pink-700 text-white shadow-soft transition">Saya Setuju</button>
       </div>
 
     </div>
   </div>
 
 
-  <!-- ==================== MODAL: PROGRESS SCANNING (Seperti di Screenshot FotoYu) ==================== -->
+  <!-- ==================== MODAL: PROGRESS SCANNING ==================== -->
   <div id="modalUploadProgress" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md"></div>
     <div class="glass-card bg-white rounded-3xl p-7 max-w-sm w-full relative z-10 shadow-2xl text-center space-y-4">
-      <div class="w-14 h-14 mx-auto rounded-full bg-purpleTheme-100 text-purpleTheme-800 flex items-center justify-center text-2xl animate-spin">
+      <div class="w-14 h-14 mx-auto rounded-full bg-pink-100 text-pink-600 flex items-center justify-center text-2xl animate-spin">
         <i class="ph-bold ph-spinner"></i>
       </div>
       <div>
         <h4 class="font-extrabold text-base text-slate-900">Memproses AI Wajah...</h4>
-        <p id="progressSubtitle" class="text-xs text-slate-500 mt-1">Mengekstrak 128 titik biometrik wajah Anda</p>
+        <p id="progressSubtitle" class="text-xs text-slate-500 mt-1">Mencocokkan wajahmu di antara ribuan foto konser</p>
       </div>
       <div class="w-full bg-slate-100 rounded-full h-2.5 overflow-hidden">
-        <div id="progressBarFill" class="bg-purpleTheme-700 h-2.5 rounded-full transition-all duration-300 w-2/3"></div>
+        <div id="progressBarFill" class="bg-gradient-to-r from-pink-500 to-purple-600 h-2.5 rounded-full transition-all duration-300 w-2/3"></div>
       </div>
       <p class="text-[11px] text-slate-400">Mohon tunggu sebentar dan jangan tutup halaman ini.</p>
     </div>
   </div>
 
 
-  <!-- ==================== MODAL: PENGATURAN AKUN (Menu Lengkap FotoYu) ==================== -->
+  <!-- ==================== MODAL: PENGATURAN AKUN ==================== -->
   <div id="modalAccountSettings" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-md" onclick="toggleModal('modalAccountSettings', false)"></div>
     <div class="glass-card bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full relative z-10 shadow-2xl space-y-6 max-h-[90vh] overflow-y-auto">
       
-      <!-- Header -->
       <div class="flex items-center justify-between border-b border-slate-100 pb-3">
         <div class="flex items-center gap-2">
-          <i class="ph-bold ph-user-circle text-2xl text-brand-600"></i>
+          <i class="ph-bold ph-user-circle text-2xl text-pink-600"></i>
           <h3 class="text-lg font-extrabold text-slate-900">Pengaturan Akun</h3>
         </div>
         <button onclick="toggleModal('modalAccountSettings', false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition">
@@ -519,64 +532,57 @@
         </button>
       </div>
 
-      <!-- Referral Banner (FotoYu Inspired) -->
-      <div class="rounded-2xl p-4 bg-gradient-to-r from-sky-50 to-blue-50 border border-sky-100 flex items-start gap-3">
-        <div class="w-9 h-9 rounded-xl bg-blue-600 text-white flex items-center justify-center text-lg shrink-0">
-          <i class="ph-bold ph-robot"></i>
+      <div class="rounded-2xl p-4 bg-gradient-to-r from-pink-50 to-purple-50 border border-pink-100 flex items-start gap-3">
+        <div class="w-9 h-9 rounded-xl bg-pink-600 text-white flex items-center justify-center text-lg shrink-0">
+          <i class="ph-bold ph-speaker-hifi"></i>
         </div>
         <div class="space-y-0.5">
-          <h5 class="font-bold text-xs text-slate-900">Program Rujukan Komunitas</h5>
-          <p class="text-[11px] text-slate-500 leading-snug">Ajak sesama pelari & teman Anda untuk mendapatkan tambahan kuota penyimpanan cloud gratis.</p>
+          <h5 class="font-bold text-xs text-slate-900">Komunitas Konser & Festival</h5>
+          <p class="text-[11px] text-slate-500 leading-snug">Ajak teman nonton konser bareng untuk mendapatkan tambahan kuota penyimpanan cloud gratis.</p>
         </div>
       </div>
 
-      <!-- Storage Breakdown -->
       <div class="bg-slate-50 p-4 rounded-2xl border border-slate-100 space-y-2">
         <div class="flex items-center justify-between text-xs font-bold text-slate-700">
           <span class="flex items-center gap-1.5"><i class="ph-bold ph-cloud"></i>Penyimpanan • ibobatsuga</span>
-          <span class="text-brand-600 font-extrabold">0.50 GB tersisa</span>
+          <span class="text-pink-600 font-extrabold">0.50 GB tersisa</span>
         </div>
         <div class="w-full bg-slate-200 rounded-full h-2 overflow-hidden">
-          <div class="bg-brand-600 h-2 rounded-full w-[4%]"></div>
+          <div class="bg-pink-600 h-2 rounded-full w-[4%]"></div>
         </div>
         <p class="text-[10px] text-slate-400">0.00 GB digunakan dari total 0.50 GB (Free Tier)</p>
       </div>
 
-      <!-- Menu Navigation List -->
       <div class="space-y-1 text-sm font-semibold text-slate-700 divide-y divide-slate-100">
-        
-        <a href="javascript:void(0)" onclick="alert('Fitur Sunting Profil')" class="pt-2 flex items-center justify-between py-2.5 hover:text-brand-600 transition">
+        <a href="javascript:void(0)" onclick="alert('Fitur Sunting Profil')" class="pt-2 flex items-center justify-between py-2.5 hover:text-pink-600 transition">
           <span class="flex items-center gap-3"><i class="ph-bold ph-user text-slate-400"></i>Sunting Profil</span>
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
 
-        <a href="javascript:void(0)" onclick="alert('Bagikan link profil Anda: https://pixme.pages.dev/@ibobatsuga')" class="flex items-center justify-between py-2.5 hover:text-brand-600 transition">
+        <a href="javascript:void(0)" onclick="alert('Bagikan link profil Anda: https://pixme.pages.dev/@ibobatsuga')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
           <span class="flex items-center gap-3"><i class="ph-bold ph-share-network text-slate-400"></i>Bagikan Profil</span>
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
 
-        <!-- Tambah Akun Anak (Family Tagging - Sesuai FotoYu) -->
-        <a href="javascript:void(0)" onclick="alert('Fitur Akun Anak/Keluarga: Anda dapat memindai foto anak/keluarga di event yang sama.')" class="flex items-center justify-between py-2.5 hover:text-brand-600 transition">
-          <span class="flex items-center gap-3"><i class="ph-bold ph-baby text-slate-400"></i>Tambah Akun Anak / Keluarga</span>
-          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-blue-100 text-blue-700">Family</span>
+        <a href="javascript:void(0)" onclick="alert('Fitur Teman / Partner Konser: Pindai foto teman kamu dalam konser yang sama.')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
+          <span class="flex items-center gap-3"><i class="ph-bold ph-users-three text-slate-400"></i>Cari Teman / Akun Keluarga</span>
+          <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-100 text-pink-700">Concert Squad</span>
         </a>
 
-        <a href="javascript:void(0)" onclick="alert('Panduan: Cukup ambil foto selfie Anda, pilih event, dan sistem otomatis mencocokkan wajah.')" class="flex items-center justify-between py-2.5 hover:text-brand-600 transition">
+        <a href="javascript:void(0)" onclick="alert('Panduan: Ambil selfie kamu, pilih konser/festival musik yang dihadiri, dan AI otomatis menampilkan foto kamu!')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
           <span class="flex items-center gap-3"><i class="ph-bold ph-question text-slate-400"></i>Cara Kerja & Panduan</span>
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
 
-        <a href="javascript:void(0)" onclick="alert('Kerja sama fotografer resmi & event organizer: hubungi partner@pixme.id')" class="flex items-center justify-between py-2.5 hover:text-brand-600 transition">
-          <span class="flex items-center gap-3"><i class="ph-bold ph-handshake text-slate-400"></i>Kerja Sama Event Organizer</span>
+        <a href="javascript:void(0)" onclick="alert('Kerja sama promotor musik & event organizer: hubungi partner@pixme.id')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
+          <span class="flex items-center gap-3"><i class="ph-bold ph-handshake text-slate-400"></i>Kerja Sama Promotor Musik</span>
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
-
       </div>
 
-      <!-- Support Footer (WhatsApp & Instagram seperti di Screenshot FotoYu) -->
       <div class="pt-3 border-t border-slate-100 space-y-2">
         <p class="text-xs font-bold text-slate-700">Punya pertanyaan?</p>
-        <p class="text-[11px] text-slate-400">Hubungi tim support PixMe melalui saluran resmi:</p>
+        <p class="text-[11px] text-slate-400">Hubungi tim support PixMe:</p>
         <div class="flex items-center gap-3 pt-1">
           <a href="https://wa.me/" target="_blank" class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl hover:scale-105 transition shadow-sm border border-emerald-100" title="WhatsApp Support">
             <i class="ph-bold ph-whatsapp-logo"></i>
@@ -597,8 +603,8 @@
     <div class="glass-card bg-white rounded-3xl p-6 sm:p-8 max-w-lg w-full relative z-10 shadow-2xl space-y-5 border border-slate-100">
       <div class="flex items-center justify-between border-b border-slate-100 pb-4">
         <div>
-          <span class="text-[10px] font-bold uppercase tracking-wider text-brand-600">Event Registry</span>
-          <h3 class="text-xl font-extrabold text-slate-900">Buat Event Olahraga Baru</h3>
+          <span class="text-[10px] font-bold uppercase tracking-wider text-pink-600">Event Registry</span>
+          <h3 class="text-xl font-extrabold text-slate-900">Buat Event / Konser Baru</h3>
         </div>
         <button onclick="toggleModal('modalNewEvent', false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition">
           <i class="ph-bold ph-x"></i>
@@ -607,30 +613,40 @@
 
       <div class="space-y-4">
         <div>
-          <label class="block text-xs font-bold text-slate-700 mb-1">Nama Event</label>
-          <input type="text" id="newEventTitle" placeholder="Contoh: Borobudur 10K Marathon 2026" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+          <label class="block text-xs font-bold text-slate-700 mb-1">Nama Event / Konser</label>
+          <input type="text" id="newEventTitle" placeholder="Contoh: Djakarta Warehouse Project (DWP) 2026" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none">
+        </div>
+
+        <div>
+          <label class="block text-xs font-bold text-slate-700 mb-1">Kategori Acara</label>
+          <select id="newEventCategory" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm font-semibold text-slate-800 focus:ring-2 focus:ring-pink-500 focus:outline-none">
+            <option value="music" selected>🎵 Konser & Festival Musik</option>
+            <option value="sports">🏃 Marathon & Olahraga</option>
+            <option value="graduation">🎓 Wisuda & Kampus</option>
+            <option value="party">🎉 Pameran & Festival Lainnya</option>
+          </select>
         </div>
 
         <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
           <div>
-            <label class="block text-xs font-bold text-slate-700 mb-1">Lokasi</label>
-            <input type="text" id="newEventLocation" placeholder="Contoh: Magelang, Jawa Tengah" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            <label class="block text-xs font-bold text-slate-700 mb-1">Lokasi / Venue</label>
+            <input type="text" id="newEventLocation" placeholder="Contoh: JIExpo Kemayoran, Jakarta" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none">
           </div>
           <div>
             <label class="block text-xs font-bold text-slate-700 mb-1">Tanggal Event</label>
-            <input type="date" id="newEventDate" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none">
+            <input type="date" id="newEventDate" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none">
           </div>
         </div>
 
         <div>
           <label class="block text-xs font-bold text-slate-700 mb-1">Deskripsi Singkat</label>
-          <textarea id="newEventDesc" rows="3" placeholder="Informasi rute, fotografer resmi, atau ketentuan..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-brand-500 focus:outline-none"></textarea>
+          <textarea id="newEventDesc" rows="3" placeholder="Informasi lineup artis, stage, atau ketentuan fotografer..." class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-sm focus:ring-2 focus:ring-pink-500 focus:outline-none"></textarea>
         </div>
       </div>
 
       <div class="flex items-center justify-end gap-3 pt-4 border-t border-slate-100">
         <button onclick="toggleModal('modalNewEvent', false)" class="px-5 py-2.5 rounded-full text-xs font-bold text-slate-600 hover:bg-slate-100 transition">Batal</button>
-        <button onclick="submitCreateEvent()" class="px-6 py-2.5 rounded-full text-xs font-bold bg-brand-900 hover:bg-brand-700 text-white shadow-soft transition">Simpan & Terbitkan</button>
+        <button onclick="submitCreateEvent()" class="px-6 py-2.5 rounded-full text-xs font-bold bg-pink-600 hover:bg-pink-700 text-white shadow-soft transition">Simpan & Terbitkan</button>
       </div>
     </div>
   </div>
@@ -643,6 +659,7 @@
     let selectedSelfieFile = null;
     let selectedCreatorFiles = [];
     let allCurrentEventPhotos = [];
+    let currentCategoryFilter = 'all';
     let hasGivenConsent = localStorage.getItem('pixme_biometric_consent') === 'true';
 
     window.addEventListener('DOMContentLoaded', async () => {
@@ -650,47 +667,73 @@
     });
 
     // 1. Fetch Events List
-    async function fetchEvents() {
+    async function fetchEvents(category = null) {
       try {
-        const res = await fetch('/api/events');
+        const url = category && category !== 'all' ? `/api/events?category=${category}` : '/api/events';
+        const res = await fetch(url);
         const data = await res.json();
         eventsList = data.events || [];
 
         renderEventSelectors();
         renderCreatorEventList();
 
-        if (eventsList.length > 0 && !currentEventId) {
-          syncEventSelection(eventsList[0].id);
+        if (eventsList.length > 0) {
+          // If current selected event is not in filtered list, select first available
+          if (!currentEventId || !eventsList.some(e => e.id === currentEventId)) {
+            syncEventSelection(eventsList[0].id);
+          }
         }
       } catch (err) {
         console.error('Failed to load events:', err);
       }
     }
 
-    // 2. Render Select Dropdowns
+    // 2. Filter Category Pills
+    async function filterByCategory(cat) {
+      currentCategoryFilter = cat;
+      document.querySelectorAll('.cat-pill').forEach(btn => {
+        btn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 shadow-sm flex items-center gap-1.5 shrink-0 transition';
+      });
+
+      const activeBtn = document.getElementById(`catBtn-${cat}`);
+      if (activeBtn) {
+        if (cat === 'music') {
+          activeBtn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md flex items-center gap-1.5 shrink-0 transition';
+        } else if (cat === 'sports') {
+          activeBtn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-blue-600 text-white shadow-md flex items-center gap-1.5 shrink-0 transition';
+        } else {
+          activeBtn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-slate-900 text-white shadow-md flex items-center gap-1.5 shrink-0 transition';
+        }
+      }
+
+      await fetchEvents(cat);
+    }
+
+    // 3. Render Select Dropdowns
     function renderEventSelectors() {
       const globalSel = document.getElementById('globalEventSelect');
       const mobileSel = document.getElementById('mobileEventSelect');
       const creatorSel = document.getElementById('creatorTargetEvent');
 
       if (eventsList.length === 0) {
-        const emptyOpt = '<option value="">Belum ada event (buat di portal fotografer)</option>';
+        const emptyOpt = '<option value="">Belum ada event di kategori ini</option>';
         globalSel.innerHTML = emptyOpt;
         mobileSel.innerHTML = emptyOpt;
         creatorSel.innerHTML = emptyOpt;
         return;
       }
 
-      const options = eventsList.map(ev => 
-        `<option value="${ev.id}">${ev.title} (${ev.location})</option>`
-      ).join('');
+      const options = eventsList.map(ev => {
+        const icon = ev.category === 'sports' ? '🏃' : '🎵';
+        return `<option value="${ev.id}">${icon} ${ev.title} (${ev.location})</option>`;
+      }).join('');
 
       globalSel.innerHTML = options;
       mobileSel.innerHTML = options;
       creatorSel.innerHTML = options;
     }
 
-    // 3. Render Creator Event Inventory List
+    // 4. Render Creator Event Inventory List
     function renderCreatorEventList() {
       const container = document.getElementById('creatorEventList');
       if (eventsList.length === 0) {
@@ -698,24 +741,34 @@
         return;
       }
 
-      container.innerHTML = eventsList.map(ev => `
-        <div class="p-4 rounded-2xl bg-slate-50/70 border border-slate-100 hover:border-brand-300 transition flex items-center justify-between">
-          <div>
-            <h5 class="font-bold text-sm text-slate-800">${ev.title}</h5>
-            <p class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
-              <span><i class="ph-bold ph-calendar"></i> ${ev.event_date}</span>
-              <span>•</span>
-              <span><i class="ph-bold ph-map-pin"></i> ${ev.location}</span>
-            </p>
+      container.innerHTML = eventsList.map(ev => {
+        const isMusic = ev.category !== 'sports';
+        const iconBg = isMusic ? 'bg-pink-50 text-pink-600' : 'bg-blue-50 text-blue-600';
+        const iconPh = isMusic ? 'ph-bold ph-music-notes' : 'ph-bold ph-sneaker-move';
+        return `
+          <div class="p-4 rounded-2xl bg-slate-50/70 border border-slate-100 hover:border-pink-300 transition flex items-center justify-between">
+            <div class="flex items-center gap-3">
+              <div class="w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center text-lg shrink-0">
+                <i class="${iconPh}"></i>
+              </div>
+              <div>
+                <h5 class="font-bold text-sm text-slate-800">${ev.title}</h5>
+                <p class="text-[11px] text-slate-400 flex items-center gap-2 mt-0.5">
+                  <span><i class="ph-bold ph-calendar"></i> ${ev.event_date}</span>
+                  <span>•</span>
+                  <span><i class="ph-bold ph-map-pin"></i> ${ev.location}</span>
+                </p>
+              </div>
+            </div>
+            <button onclick="syncEventSelection('${ev.id}'); switchMode('user');" class="text-xs font-bold text-pink-600 hover:text-pink-800 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm shrink-0">
+              Lihat
+            </button>
           </div>
-          <button onclick="syncEventSelection('${ev.id}'); switchMode('user');" class="text-xs font-bold text-brand-600 hover:text-brand-800 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm">
-            Lihat
-          </button>
-        </div>
-      `).join('');
+        `;
+      }).join('');
     }
 
-    // 4. Synchronize Selected Event Across All Components
+    // 5. Synchronize Selected Event Across All Components
     async function syncEventSelection(eventId) {
       if (!eventId) return;
       currentEventId = eventId;
@@ -726,15 +779,26 @@
 
       const ev = eventsList.find(e => e.id === eventId);
       if (ev) {
+        const isMusic = ev.category !== 'sports';
         document.getElementById('heroTitle').innerText = ev.title;
         document.getElementById('heroLocation').innerText = ev.location;
+        document.getElementById('heroCategory').innerText = isMusic ? 'Music Festival & Concert' : 'Marathon & Sports';
+        document.getElementById('heroCategoryIcon').className = isMusic ? 'ph-bold ph-music-note text-pink-300' : 'ph-bold ph-flag-checkered text-amber-300';
+        
+        const banner = document.getElementById('eventHeroBanner');
+        if (isMusic) {
+          banner.className = 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[230px]';
+        } else {
+          banner.className = 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-brand-900 via-brand-800 to-blue-600 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[230px]';
+        }
+
         document.getElementById('heroDate').innerHTML = `<i class="ph-bold ph-calendar"></i> <span>${ev.event_date}</span> <span class="text-white/40">•</span> <span>Dokumentasi Resmi Terverifikasi</span>`;
       }
 
       await loadEventPhotos(eventId);
     }
 
-    // 5. Load All Photos for Current Event
+    // 6. Load All Photos for Current Event
     async function loadEventPhotos(eventId) {
       try {
         const res = await fetch(`/api/events/${eventId}/photos`);
@@ -751,7 +815,7 @@
       }
     }
 
-    // 6. Render Photo Gallery Grid
+    // 7. Render Photo Gallery Grid
     function renderGallery(photos, isSearchResult = false) {
       const grid = document.getElementById('photosMasonryGrid');
       const emptyState = document.getElementById('emptyGalleryState');
@@ -763,12 +827,12 @@
       badgeCount.innerText = photos.length;
 
       if (isSearchResult) {
-        galleryTitle.innerText = 'Foto Anda yang Cocok';
-        gallerySubtitle.innerText = `AI menemukan ${photos.length} foto yang cocok dengan wajah Anda.`;
+        galleryTitle.innerText = 'Foto Kamu yang Cocok';
+        gallerySubtitle.innerText = `AI menemukan ${photos.length} foto kamu di konser/event ini.`;
         btnShowAll.classList.remove('hidden');
       } else {
         galleryTitle.innerText = 'Semua Foto Event';
-        gallerySubtitle.innerText = 'Unggah selfie Anda di sebelah kiri untuk menyaring foto wajah Anda.';
+        gallerySubtitle.innerText = 'Unggah selfie kamu di sebelah kiri untuk menemukan foto kamu di konser ini.';
         btnShowAll.classList.add('hidden');
       }
 
@@ -780,7 +844,7 @@
 
       emptyState.classList.add('hidden');
 
-      grid.innerHTML = photos.map((item, idx) => {
+      grid.innerHTML = photos.map((item) => {
         const isMatch = isSearchResult;
         const matchScore = isMatch ? Math.round((item.similarity || (1 - item.distance)) * 100) : null;
 
@@ -808,10 +872,10 @@
             </div>
 
             <div class="p-3.5 bg-white flex items-center justify-between gap-2 border-t border-slate-100">
-              <span class="text-[11px] font-bold text-emerald-600 bg-emerald-50 px-2 py-0.5 rounded-full">
+              <span class="text-[11px] font-bold text-pink-600 bg-pink-50 px-2 py-0.5 rounded-full">
                 Gratis HD
               </span>
-              <a href="${item.file_url}" download="${item.filename}" class="flex items-center gap-1.5 bg-slate-900 hover:bg-brand-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-sm hover:shadow-md transition">
+              <a href="${item.file_url}" download="${item.filename}" class="flex items-center gap-1.5 bg-slate-900 hover:bg-pink-600 text-white text-xs font-bold px-4 py-2 rounded-full shadow-sm hover:shadow-md transition">
                 <i class="ph-bold ph-download-simple"></i>
                 <span>Download</span>
               </a>
@@ -822,12 +886,12 @@
       }).join('');
     }
 
-    // 7. Reset Search Filter
+    // 8. Reset Search Filter
     function resetSearchFilter() {
       renderGallery(allCurrentEventPhotos, false);
     }
 
-    // 8. Handle Selfie Selection
+    // 9. Handle Selfie Selection
     function onSelfieSelected(event) {
       const file = event.target.files[0];
       if (!file) return;
@@ -842,7 +906,7 @@
       reader.readAsDataURL(file);
     }
 
-    // 9. Confirm Consent (UU PDP Shield)
+    // 10. Confirm Consent
     function confirmConsent() {
       const checkbox = document.getElementById('checkConsent');
       if (!checkbox.checked) {
@@ -855,7 +919,7 @@
       proceedFaceSearch();
     }
 
-    // 10. Trigger Face Search with Consent Check
+    // 11. Trigger Face Search with Consent Check
     function triggerFaceSearch() {
       if (!currentEventId) {
         alert('Harap pilih event terlebih dahulu');
@@ -866,7 +930,6 @@
         return;
       }
 
-      // If user hasn't accepted biometric terms yet, show Consent Modal (FotoYu Style)
       if (!hasGivenConsent) {
         toggleModal('modalConsent', true);
         return;
@@ -875,7 +938,7 @@
       proceedFaceSearch();
     }
 
-    // 11. Execute Face Search with Progress Modal
+    // 12. Execute Face Search with Progress Modal
     async function proceedFaceSearch() {
       toggleModal('modalUploadProgress', true);
       const progressBar = document.getElementById('progressBarFill');
@@ -910,7 +973,7 @@
       }
     }
 
-    // 12. Creator Mode: File Selection
+    // 13. Creator Mode: File Selection
     function onCreatorFilesPicked(event) {
       selectedCreatorFiles = Array.from(event.target.files);
       const badge = document.getElementById('creatorFilesBadge');
@@ -927,7 +990,7 @@
       }
     }
 
-    // 13. Creator Mode: Submit Upload
+    // 14. Creator Mode: Submit Upload
     async function submitCreatorUpload() {
       const eventId = document.getElementById('creatorTargetEvent').value;
       if (!eventId) {
@@ -969,9 +1032,10 @@
       }
     }
 
-    // 14. Submit Create Event
+    // 15. Submit Create Event
     async function submitCreateEvent() {
       const title = document.getElementById('newEventTitle').value.trim();
+      const category = document.getElementById('newEventCategory').value;
       const location = document.getElementById('newEventLocation').value.trim();
       const date = document.getElementById('newEventDate').value;
       const desc = document.getElementById('newEventDesc').value.trim();
@@ -985,7 +1049,7 @@
         const res = await fetch('/api/events', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ title, location, event_date: date, description: desc })
+          body: JSON.stringify({ title, category, location, event_date: date, description: desc })
         });
         if (res.ok) {
           toggleModal('modalNewEvent', false);
@@ -1002,7 +1066,7 @@
       }
     }
 
-    // 15. Switch Modes (User vs Creator)
+    // 16. Switch Modes (User vs Creator)
     function switchMode(mode) {
       const userView = document.getElementById('userView');
       const creatorView = document.getElementById('creatorView');
@@ -1022,7 +1086,7 @@
       }
     }
 
-    // 16. Modal Toggle Helper
+    // 17. Modal Toggle Helper
     function toggleModal(modalId, show) {
       const modal = document.getElementById(modalId);
       if (show) {
