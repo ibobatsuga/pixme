@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>PixMe — Temukan Foto Kamu di Konser Musik & Event</title>
+  <title>PicMe — Temukan Foto Kamu di Konser Musik & Event</title>
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Phosphor Icons -->
@@ -15,6 +15,7 @@
   
   <script>
     tailwind.config = {
+      darkMode: 'class',
       theme: {
         extend: {
           fontFamily: {
@@ -86,16 +87,79 @@
       backdrop-filter: blur(24px);
       -webkit-backdrop-filter: blur(24px);
       border: 1px solid rgba(255, 255, 255, 0.9);
+      transition: background-color 0.25s, border-color 0.25s;
     }
     .glass-nav {
       background: rgba(255, 255, 255, 0.85);
       backdrop-filter: blur(20px);
       -webkit-backdrop-filter: blur(20px);
       border-bottom: 1px solid rgba(226, 232, 240, 0.7);
+      transition: background-color 0.25s, border-color 0.25s;
+    }
+    /* Dark Mode Transitions & Overrides */
+    html.dark {
+      color-scheme: dark;
+    }
+    html.dark body {
+      background-color: #090a0f !important;
+      color: #f1f5f9 !important;
+    }
+    html.dark .glass-card {
+      background: rgba(18, 20, 29, 0.92) !important;
+      border: 1px solid rgba(255, 255, 255, 0.08) !important;
+      color: #f1f5f9 !important;
+    }
+    html.dark .glass-nav {
+      background: rgba(13, 14, 21, 0.92) !important;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark nav.fixed {
+      background: rgba(13, 14, 21, 0.96) !important;
+      border-top: 1px solid rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark #headerCityLabel,
+    html.dark #galleryTitle,
+    html.dark h2, html.dark h3, html.dark h4, html.dark h5 {
+      color: #f8fafc !important;
+    }
+    html.dark .text-slate-900,
+    html.dark .text-slate-800 {
+      color: #f1f5f9 !important;
+    }
+    html.dark .text-slate-700,
+    html.dark .text-slate-600 {
+      color: #cbd5e1 !important;
+    }
+    html.dark .text-slate-500,
+    html.dark .text-slate-400 {
+      color: #94a3b8 !important;
+    }
+    html.dark .bg-white {
+      background-color: #13141f !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark .bg-slate-50,
+    html.dark .bg-slate-50\/70,
+    html.dark .bg-slate-50\/50 {
+      background-color: #1a1c2b !important;
+      border-color: rgba(255, 255, 255, 0.08) !important;
+    }
+    html.dark .bg-slate-100,
+    html.dark .bg-slate-100\/80,
+    html.dark .bg-slate-100\/90 {
+      background-color: #212437 !important;
+      border-color: rgba(255, 255, 255, 0.1) !important;
+    }
+    html.dark select,
+    html.dark input,
+    html.dark textarea {
+      background-color: #1a1c2b !important;
+      color: #f1f5f9 !important;
+      border-color: rgba(255, 255, 255, 0.12) !important;
     }
   </style>
 </head>
-<body class="bg-[#f8fafc] text-slate-800 font-sans min-h-screen flex flex-col relative overflow-x-hidden selection:bg-brand-500 selection:text-white">
+<body class="bg-[#f8fafc] text-slate-800 font-sans min-h-screen flex flex-col relative overflow-x-hidden selection:bg-brand-500 selection:text-white transition-colors duration-250">
 
   <!-- Ambient Light Blobs (Safely bounded in overflow-hidden container) -->
   <div class="fixed inset-0 overflow-hidden pointer-events-none -z-10">
@@ -107,7 +171,7 @@
   <header class="glass-nav sticky top-0 z-40 transition-all duration-300 w-full overflow-hidden">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 sm:h-20 flex items-center justify-between gap-2 sm:gap-4">
       
-      <!-- LEFT SECTION: FotoYu Style "Temuan RoboYu kamu di Semua Kota" + PixMe Brand on Desktop -->
+      <!-- LEFT SECTION: FotoYu Style "Temuan RoboYu kamu di Semua Kota" + PicMe Brand on Desktop -->
       <div class="flex items-center gap-3 sm:gap-4 shrink-0">
         
         <!-- Desktop Brand Logo -->
@@ -117,7 +181,7 @@
           </div>
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="font-extrabold text-2xl tracking-tight text-slate-900">Pix<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
+              <span class="font-extrabold text-2xl tracking-tight text-slate-900">Pic<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
               <span class="text-[10px] font-bold px-2 py-0.5 rounded-full bg-pink-50 text-pink-600 border border-pink-200/60 shadow-sm flex items-center gap-1">
                 <span class="w-1.5 h-1.5 rounded-full bg-pink-500 animate-pulse"></span>
                 Festival AI
@@ -126,10 +190,10 @@
           </div>
         </div>
 
-        <!-- FotoYu 1:1 Reference Header: "Temuan PixBot kamu 🤖 di Semua Kota" (Interactive City Dropdown) -->
+        <!-- FotoYu 1:1 Reference Header: "Temuan PicMe kamu 🤖 di Semua Kota" (Interactive City Dropdown) -->
         <div onclick="toggleModal('modalCityPicker', true)" class="flex flex-col cursor-pointer select-none group pr-1">
           <span class="text-[11px] sm:text-xs font-bold text-purple-700 flex items-center gap-1 group-hover:text-purple-900 transition">
-            Temuan PixBot kamu <span class="text-xs">🤖</span>
+            Temuan PicMe kamu <span class="text-xs">🤖</span>
           </span>
           <div class="flex items-center gap-1 mt-0.5">
             <h2 id="headerCityLabel" class="text-base sm:text-lg font-extrabold text-slate-900 tracking-tight leading-none group-hover:text-purple-900 transition">
@@ -149,27 +213,32 @@
         </select>
       </div>
 
-      <!-- RIGHT SECTION: FotoYu 1:1 Reference Cart 🛒 & Chat 💬 Icons + Profile -->
+      <!-- RIGHT SECTION: Theme Toggle ☀️/🌙, Cart 🛒, Chat 💬, & Profile -->
       <div class="flex items-center gap-1 sm:gap-2.5 shrink-0">
         
+        <!-- Theme Toggle Button (Dark / Light Mode with Sun or Moon icon) -->
+        <button id="themeToggleBtn" onclick="toggleTheme()" class="w-10 h-10 rounded-full hover:bg-purple-50 dark:hover:bg-slate-800 flex items-center justify-center text-purple-950 dark:text-amber-400 transition" title="Ganti Tema Gelap / Terang">
+          <i id="themeToggleIcon" class="ph-bold ph-moon text-xl"></i>
+        </button>
+
         <!-- 1:1 FotoYu Cart Icon (Troli / Koleksi Saya) -->
-        <button onclick="toggleModal('modalCartCollection', true)" class="w-10 h-10 rounded-full hover:bg-purple-50 flex items-center justify-center text-purple-950 hover:text-purple-700 transition relative" title="Koleksi Foto & Keranjang">
-          <i class="ph-fill ph-shopping-cart-simple text-2xl text-purple-900"></i>
+        <button onclick="toggleModal('modalCartCollection', true)" class="w-10 h-10 rounded-full hover:bg-purple-50 dark:hover:bg-slate-800 flex items-center justify-center text-purple-950 dark:text-purple-300 hover:text-purple-700 transition relative" title="Koleksi Foto & Keranjang">
+          <i class="ph-fill ph-shopping-cart-simple text-2xl text-purple-900 dark:text-purple-300"></i>
           <span id="badgeCartCount" class="hidden absolute top-1.5 right-1.5 w-4 h-4 bg-pink-600 text-white text-[9px] font-black rounded-full flex items-center justify-center">0</span>
         </button>
 
         <!-- 1:1 FotoYu Chat Bubble Icon (Pesan & Notifikasi Event) -->
-        <button onclick="toggleModal('modalChatNotifications', true)" class="w-10 h-10 rounded-full hover:bg-purple-50 flex items-center justify-center text-purple-950 hover:text-purple-700 transition relative" title="Pesan & Notifikasi">
-          <i class="ph-fill ph-chat-teardrop-dots text-2xl text-purple-900"></i>
+        <button onclick="toggleModal('modalChatNotifications', true)" class="w-10 h-10 rounded-full hover:bg-purple-50 dark:hover:bg-slate-800 flex items-center justify-center text-purple-950 dark:text-purple-300 hover:text-purple-700 transition relative" title="Pesan & Notifikasi">
+          <i class="ph-fill ph-chat-teardrop-dots text-2xl text-purple-900 dark:text-purple-300"></i>
           <span class="absolute top-2.5 right-2.5 w-2 h-2 bg-pink-500 rounded-full"></span>
         </button>
 
         <!-- User Profile Pill Button (Leads to Akun Saya) -->
-        <button onclick="navGoTo('akun')" class="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 border border-slate-200/80 transition text-slate-800 ml-1" title="Buka Profil & Akun Saya">
-          <div class="w-8 h-8 rounded-full bg-slate-200 border border-slate-300 flex items-center justify-center text-slate-500 font-bold text-xs shrink-0">
+        <button onclick="navGoTo('akun')" class="flex items-center gap-2 p-1 rounded-full hover:bg-slate-100 dark:hover:bg-slate-800 border border-slate-200/80 dark:border-slate-700 transition text-slate-800 dark:text-slate-200 ml-1" title="Buka Profil & Akun Saya">
+          <div class="w-8 h-8 rounded-full bg-slate-200 dark:bg-slate-700 border border-slate-300 dark:border-slate-600 flex items-center justify-center text-slate-500 dark:text-slate-300 font-bold text-xs shrink-0">
             <i class="ph-fill ph-user text-sm"></i>
           </div>
-          <span class="hidden sm:inline text-xs font-bold text-slate-800 pr-2">ibobatsuga</span>
+          <span class="hidden sm:inline text-xs font-bold text-slate-800 dark:text-slate-200 pr-2">ibobatsuga</span>
         </button>
 
       </div>
@@ -177,9 +246,8 @@
     </div>
   </header>
 
-
   <!-- ==================== PESERTA / RUNNER VIEW ==================== -->
-  <main id="userView" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 transition-opacity duration-300 overflow-x-hidden">
+  <main id="userView" class="flex-1 max-w-7xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 pb-36 sm:pb-44 transition-opacity duration-300 overflow-x-hidden">
     
     <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 sm:gap-8 items-start w-full max-w-full">
       
@@ -310,16 +378,16 @@
       <!-- RIGHT COLUMN: Hero Banner + Category Pills + Masonry Gallery (8 Cols on Desktop) -->
       <section class="lg:col-span-8 xl:col-span-8 w-full space-y-6">
         
-        <!-- Category Filter Pills (Music Concerts vs Sports vs Others) -->
+        <!-- Category Filter Pills (Uniform Colors: Pink-Purple Gradient Active) -->
         <div class="flex items-center gap-2 overflow-x-auto pb-1 scrollbar-none w-full max-w-full">
-          <button onclick="filterByCategory('all')" id="catBtn-all" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-slate-900 text-white shadow-sm flex items-center gap-1.5 shrink-0 transition">
-            <i class="ph-bold ph-squares-four"></i>Semua Event
+          <button onclick="filterByCategory('all')" id="catBtn-all" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md flex items-center gap-1.5 shrink-0 transition border border-transparent">
+            <i class="ph-bold ph-squares-four text-white"></i>Semua Event
           </button>
-          <button onclick="filterByCategory('music')" id="catBtn-music" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white hover:bg-pink-50 text-slate-700 hover:text-pink-600 border border-slate-200/80 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+          <button onclick="filterByCategory('music')" id="catBtn-music" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
             <i class="ph-bold ph-speaker-hifi text-pink-600"></i>Konser & Festival Musik
           </button>
-          <button onclick="filterByCategory('sports')" id="catBtn-sports" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white hover:bg-purple-950 hover:text-white text-slate-700 border border-slate-200/80 shadow-sm flex items-center gap-1.5 shrink-0 transition">
-            <i class="ph-bold ph-sneaker-move text-purple-600"></i>Lari & Olahraga
+          <button onclick="filterByCategory('sports')" id="catBtn-sports" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+            <i class="ph-bold ph-sneaker-move text-pink-600"></i>Lari & Olahraga
           </button>
         </div>
 
@@ -387,18 +455,21 @@
 
     </div>
 
+    <!-- Extra Bottom Padding Spacer so fixed bottom bar never cuts off text -->
+    <div class="h-28 md:hidden"></div>
+
   </main>
 
 
   <!-- ==================== 1:1 FOTOYU AKUN SAYA & ROLE SELECTION VIEW ==================== -->
-  <main id="accountView" class="hidden flex-1 max-w-5xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 transition-opacity duration-300 overflow-x-hidden pb-24 md:pb-12">
+  <main id="accountView" class="hidden flex-1 max-w-5xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-4 sm:py-6 pb-36 sm:pb-44 transition-opacity duration-300 overflow-x-hidden">
     
     <!-- 1:1 FotoYu Profile Header Card (Dark Slate Theme) -->
     <div class="bg-[#18181b] text-white rounded-3xl p-5 sm:p-7 shadow-glass border border-slate-800 space-y-5">
       
       <!-- Top Row: Tingkatkan Pill & Action Icons -->
       <div class="flex items-center justify-between">
-        <button onclick="alert('PixMe 100% Free: Anda memiliki penyimpanan cloud tanpa biaya langganan!')" class="px-3.5 py-1 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition">
+        <button onclick="alert('PicMe 100% Free: Anda memiliki penyimpanan cloud tanpa biaya langganan!')" class="px-3.5 py-1 rounded-full text-xs font-bold bg-white/10 hover:bg-white/20 text-white border border-white/20 transition">
           Tingkatkan
         </button>
 
@@ -519,7 +590,7 @@
         <div>
           <span class="text-[10px] font-bold tracking-wider uppercase text-purple-700">Fotografer & Creator Portal</span>
           <h2 class="text-xl font-extrabold text-slate-900">Dokumentasi & Upload Foto Konser</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Unggah foto panggung & penonton. AI PixBot mengekstrak wajah otomatis.</p>
+          <p class="text-xs text-slate-500 mt-0.5">Unggah foto panggung & penonton. AI PicMe mengekstrak wajah otomatis.</p>
         </div>
         <button onclick="toggleModal('modalNewEvent', true)" class="bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs px-5 py-2.5 rounded-full flex items-center gap-2 shadow-sm transition">
           <i class="ph-bold ph-plus-circle text-base"></i>
@@ -592,6 +663,9 @@
 
     </div>
 
+    <!-- Extra Bottom Padding Spacer so fixed bottom bar never cuts off text -->
+    <div class="h-28 md:hidden"></div>
+
   </main>
 
 
@@ -612,7 +686,7 @@
 
       <div class="text-xs text-slate-600 space-y-3 leading-relaxed max-h-60 overflow-y-auto pr-2">
         <p>
-          Selamat datang di <b>PixMe</b>. Platform pencarian dan galeri foto event musik, konser, dan olahraga dengan teknologi AI yang mempertemukan fotografer dengan penonton dan peserta.
+          Selamat datang di <b>PicMe</b>. Platform pencarian dan galeri foto event musik, konser, dan olahraga dengan teknologi AI yang mempertemukan fotografer dengan penonton dan peserta.
         </p>
         <p>
           Sesuai dengan <b>Undang-Undang Perlindungan Data Pribadi (UU PDP No. 27 Tahun 2022)</b>, kami menjamin bahwa foto wajah dan representasi vektor biometrik Anda diproteksi dengan enkripsi dan hanya digunakan untuk mencocokkan foto dokumentasi Anda pada event yang dipilih.
@@ -623,7 +697,7 @@
         <label class="flex items-start gap-3 cursor-pointer">
           <input type="checkbox" id="checkConsent" class="mt-0.5 w-4 h-4 rounded text-pink-600 focus:ring-pink-500 border-slate-300">
           <span class="text-xs text-slate-700 leading-snug">
-            Saya memberikan persetujuan saya kepada <b>PixMe</b> untuk mengumpulkan, menyimpan, dan memproses Pengenal Biometrik Wajah saya (data diproteksi enkripsi).
+            Saya memberikan persetujuan saya kepada <b>PicMe</b> untuk mengumpulkan, menyimpan, dan memproses Pengenal Biometrik Wajah saya (data diproteksi enkripsi).
           </span>
         </label>
       </div>
@@ -698,7 +772,7 @@
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
 
-        <a href="javascript:void(0)" onclick="alert('Bagikan link profil Anda: https://pixme.pages.dev/@ibobatsuga')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
+        <a href="javascript:void(0)" onclick="alert('Bagikan link profil Anda: https://picme.pages.dev/@ibobatsuga')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
           <span class="flex items-center gap-3"><i class="ph-bold ph-share-network text-slate-400"></i>Bagikan Profil</span>
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
@@ -713,7 +787,7 @@
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
 
-        <a href="javascript:void(0)" onclick="alert('Kerja sama promotor musik & event organizer: hubungi partner@pixme.id')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
+        <a href="javascript:void(0)" onclick="alert('Kerja sama promotor musik & event organizer: hubungi partner@picme.id')" class="flex items-center justify-between py-2.5 hover:text-pink-600 transition">
           <span class="flex items-center gap-3"><i class="ph-bold ph-handshake text-slate-400"></i>Kerja Sama Promotor Musik</span>
           <i class="ph-bold ph-caret-right text-slate-300"></i>
         </a>
@@ -721,7 +795,7 @@
 
       <div class="pt-3 border-t border-slate-100 space-y-2">
         <p class="text-xs font-bold text-slate-700">Punya pertanyaan?</p>
-        <p class="text-[11px] text-slate-400">Hubungi tim support PixMe:</p>
+        <p class="text-[11px] text-slate-400">Hubungi tim support PicMe:</p>
         <div class="flex items-center gap-3 pt-1">
           <a href="https://wa.me/" target="_blank" class="w-10 h-10 rounded-2xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-xl hover:scale-105 transition shadow-sm border border-emerald-100" title="WhatsApp Support">
             <i class="ph-bold ph-whatsapp-logo"></i>
@@ -906,14 +980,14 @@
       </div>
 
       <!-- Free Model Pill Notification -->
-      <div class="p-3.5 rounded-2xl bg-purple-50 border border-purple-200/60 text-left flex items-start gap-3">
-        <i class="ph-bold ph-sparkle text-purple-700 text-lg shrink-0 mt-0.5"></i>
-        <div class="text-xs text-purple-900 leading-snug">
-          <b>Gratis 100% di PixMe:</b> Semua foto dokumentasi konser resolusi penuh dapat langsung diunduh tanpa biaya checkout.
+      <div class="p-3.5 rounded-2xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200/60 dark:border-purple-800/40 text-left flex items-start gap-3">
+        <i class="ph-bold ph-sparkle text-purple-700 dark:text-purple-300 text-lg shrink-0 mt-0.5"></i>
+        <div class="text-xs text-purple-900 dark:text-purple-200 leading-snug">
+          <b>Gratis 100% di PicMe:</b> Semua foto dokumentasi konser resolusi penuh dapat langsung diunduh tanpa biaya checkout.
         </div>
       </div>
 
-      <button onclick="toggleModal('modalCartCollection', false); navGoTo('pixme');" class="w-full bg-slate-900 hover:bg-purple-900 text-white font-bold py-3.5 rounded-full text-xs shadow-soft transition flex items-center justify-center gap-2">
+      <button onclick="toggleModal('modalCartCollection', false); navGoTo('picme');" class="w-full bg-slate-900 hover:bg-purple-900 text-white font-bold py-3.5 rounded-full text-xs shadow-soft transition flex items-center justify-center gap-2">
         <i class="ph-bold ph-magnifying-glass"></i>
         <span>Pindai Selfie & Temukan Foto Saya</span>
       </button>
@@ -932,7 +1006,7 @@
           <i class="ph-fill ph-chat-teardrop-dots text-2xl text-purple-700"></i>
           <div>
             <h3 class="text-base font-extrabold text-slate-900">Pesan & Notifikasi</h3>
-            <p class="text-[11px] text-slate-400">Pemberitahuan event & deteksi AI PixBot</p>
+            <p class="text-[11px] text-slate-400">Pemberitahuan event & deteksi AI PicMe</p>
           </div>
         </div>
         <button onclick="toggleModal('modalChatNotifications', false)" class="w-8 h-8 rounded-full bg-slate-100 hover:bg-slate-200 text-slate-500 flex items-center justify-center text-sm transition">
@@ -946,7 +1020,7 @@
             🤖
           </div>
           <div class="text-left space-y-0.5">
-            <h5 class="text-xs font-bold text-slate-800">PixBot AI Siap Memindai Wajah</h5>
+            <h5 class="text-xs font-bold text-slate-800">PicMe AI Siap Memindai Wajah</h5>
             <p class="text-[11px] text-slate-500 leading-relaxed">Ambil selfie sekali, AI kami akan otomatis mencari foto kamu di semua festival konser.</p>
             <span class="text-[10px] text-slate-400">Baru saja</span>
           </div>
@@ -979,30 +1053,29 @@
   </div>
 
 
-  <!-- ==================== 1:1 FOTOYU MOBILE BOTTOM APP BAR ==================== -->
-  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 backdrop-blur-md border-t border-slate-200/90 shadow-[0_-4px_25px_rgba(0,0,0,0.06)] md:hidden">
+  <!-- ==================== 1:1 FOTOYU MOBILE BOTTOM APP BAR (UNIFIED ICONS & GAP) ==================== -->
+  <nav class="fixed bottom-0 left-0 right-0 z-40 bg-white/95 dark:bg-[#13141f]/95 backdrop-blur-md border-t border-slate-200/90 dark:border-slate-800 shadow-[0_-4px_25px_rgba(0,0,0,0.06)] md:hidden">
     <div class="max-w-md mx-auto grid grid-cols-3 h-16 items-center px-4">
       
       <!-- Tab 1: Beranda -->
-      <button onclick="navGoTo('beranda')" id="bottomNavBeranda" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-purple-700 transition">
+      <button onclick="navGoTo('beranda')" id="bottomNavBeranda" class="flex flex-col items-center justify-center gap-1 text-purple-700 transition">
         <i class="ph-bold ph-house text-2xl"></i>
         <span class="text-[11px] font-semibold">Beranda</span>
       </button>
 
-      <!-- Tab 2: PixMe (Central Stylized Logo 1:1 FotoYu) -->
-      <button onclick="navGoTo('pixme')" id="bottomNavPixme" class="flex flex-col items-center justify-center gap-0.5 text-purple-700 transition group">
-        <div class="relative flex items-center justify-center w-7 h-7">
-          <!-- Stylized dual overlapping tilted photo frames matching FotoYu's iconic logo -->
-          <svg class="w-6 h-6 text-purple-700 group-hover:scale-110 transition-transform" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.3" stroke-linecap="round" stroke-linejoin="round">
-            <rect x="7" y="2.5" width="13" height="15" rx="2" transform="rotate(14 13.5 10)" class="stroke-purple-700 fill-purple-100" />
-            <rect x="3.5" y="6" width="13" height="15" rx="2" class="stroke-purple-700 fill-white" />
+      <!-- Tab 2: PicMe (Central Icon matching exact Phosphor bold weight & uniform gap) -->
+      <button onclick="navGoTo('picme')" id="bottomNavPicme" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition group">
+        <div class="w-6 h-6 flex items-center justify-center">
+          <svg class="w-6 h-6 text-current transition-transform group-hover:scale-105" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+            <rect x="7" y="2.5" width="12" height="14.5" rx="2" transform="rotate(14 13 9.75)" class="stroke-current fill-purple-100/60 dark:fill-purple-900/40" />
+            <rect x="3.5" y="6" width="12" height="14.5" rx="2" class="stroke-current fill-white dark:fill-[#13141f]" />
           </svg>
         </div>
-        <span class="text-[11px] font-extrabold text-purple-700">PixMe</span>
+        <span class="text-[11px] font-semibold">PicMe</span>
       </button>
 
       <!-- Tab 3: Akun Saya -->
-      <button onclick="navGoTo('akun')" id="bottomNavAkun" class="flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-purple-700 transition">
+      <button onclick="navGoTo('akun')" id="bottomNavAkun" class="flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition">
         <i class="ph-bold ph-user text-2xl"></i>
         <span class="text-[11px] font-semibold">Akun Saya</span>
       </button>
@@ -1019,9 +1092,35 @@
     let selectedCreatorFiles = [];
     let allCurrentEventPhotos = [];
     let currentCategoryFilter = 'all';
-    let hasGivenConsent = localStorage.getItem('pixme_biometric_consent') === 'true';
+    let hasGivenConsent = localStorage.getItem('picme_biometric_consent') === 'true';
+
+    // 0. Dark / Light Theme Controller
+    function initTheme() {
+      const savedTheme = localStorage.getItem('picme_theme');
+      if (savedTheme === 'dark' || (!savedTheme && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+        document.documentElement.classList.add('dark');
+        updateThemeIcon(true);
+      } else {
+        document.documentElement.classList.remove('dark');
+        updateThemeIcon(false);
+      }
+    }
+
+    function toggleTheme() {
+      const isDark = document.documentElement.classList.toggle('dark');
+      localStorage.setItem('picme_theme', isDark ? 'dark' : 'light');
+      updateThemeIcon(isDark);
+    }
+
+    function updateThemeIcon(isDark) {
+      const icon = document.getElementById('themeToggleIcon');
+      if (icon) {
+        icon.className = isDark ? 'ph-bold ph-sun text-xl text-amber-400' : 'ph-bold ph-moon text-xl text-purple-900';
+      }
+    }
 
     window.addEventListener('DOMContentLoaded', async () => {
+      initTheme();
       await fetchEvents();
     });
 
@@ -1047,21 +1146,25 @@
       }
     }
 
-    // 2. Filter Category Pills
+    // 2. Filter Category Pills (All 3 Buttons Unified with Same Colors & Gradient Active State)
     async function filterByCategory(cat) {
       currentCategoryFilter = cat;
       document.querySelectorAll('.cat-pill').forEach(btn => {
-        btn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white hover:bg-slate-50 text-slate-700 border border-slate-200/80 shadow-sm flex items-center gap-1.5 shrink-0 transition';
+        btn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition';
+        const icon = btn.querySelector('i');
+        if (icon) {
+          icon.classList.remove('text-white');
+          icon.classList.add('text-pink-600');
+        }
       });
 
       const activeBtn = document.getElementById(`catBtn-${cat}`);
       if (activeBtn) {
-        if (cat === 'music') {
-          activeBtn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md flex items-center gap-1.5 shrink-0 transition';
-        } else if (cat === 'sports') {
-          activeBtn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-slate-950 via-purple-950 to-slate-900 text-white shadow-md flex items-center gap-1.5 shrink-0 transition';
-        } else {
-          activeBtn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-slate-900 text-white shadow-md flex items-center gap-1.5 shrink-0 transition';
+        activeBtn.className = 'cat-pill px-4 py-2 rounded-full text-xs font-bold bg-gradient-to-r from-pink-600 to-purple-600 text-white shadow-md flex items-center gap-1.5 shrink-0 transition border border-transparent';
+        const icon = activeBtn.querySelector('i');
+        if (icon) {
+          icon.classList.remove('text-pink-600');
+          icon.classList.add('text-white');
         }
       }
 
@@ -1273,7 +1376,7 @@
         return;
       }
       hasGivenConsent = true;
-      localStorage.setItem('pixme_biometric_consent', 'true');
+      localStorage.setItem('picme_biometric_consent', 'true');
       toggleModal('modalConsent', false);
       proceedFaceSearch();
     }
@@ -1425,12 +1528,12 @@
       }
     }
 
-    // 16. Navigation Controller (Beranda, PixMe, Akun Saya)
+    // 16. Navigation Controller (Beranda, PicMe, Akun Saya)
     function navGoTo(tab) {
       const userView = document.getElementById('userView');
       const accountView = document.getElementById('accountView');
       const tabBeranda = document.getElementById('bottomNavBeranda');
-      const tabPixme = document.getElementById('bottomNavPixme');
+      const tabPicme = document.getElementById('bottomNavPicme');
       const tabAkun = document.getElementById('bottomNavAkun');
 
       if (tab === 'beranda') {
@@ -1439,12 +1542,14 @@
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
         if (tabBeranda) tabBeranda.className = 'flex flex-col items-center justify-center gap-1 text-purple-700 transition';
-        if (tabAkun) tabAkun.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-purple-700 transition';
-      } else if (tab === 'pixme') {
+        if (tabPicme) tabPicme.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition';
+        if (tabAkun) tabAkun.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition';
+      } else if (tab === 'picme' || tab === 'pixme') {
         userView.classList.remove('hidden');
         accountView.classList.add('hidden');
-        if (tabBeranda) tabBeranda.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-purple-700 transition';
-        if (tabAkun) tabAkun.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-purple-700 transition';
+        if (tabBeranda) tabBeranda.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition';
+        if (tabPicme) tabPicme.className = 'flex flex-col items-center justify-center gap-1 text-purple-700 transition';
+        if (tabAkun) tabAkun.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition';
         
         const selfieZone = document.getElementById('selfieZone');
         if (selfieZone) {
@@ -1457,7 +1562,8 @@
         accountView.classList.remove('hidden');
         window.scrollTo({ top: 0, behavior: 'smooth' });
 
-        if (tabBeranda) tabBeranda.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 hover:text-purple-700 transition';
+        if (tabBeranda) tabBeranda.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition';
+        if (tabPicme) tabPicme.className = 'flex flex-col items-center justify-center gap-1 text-slate-500 dark:text-slate-400 hover:text-purple-700 transition';
         if (tabAkun) tabAkun.className = 'flex flex-col items-center justify-center gap-1 text-purple-700 transition';
       }
     }
