@@ -1,0 +1,1667 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PicMe Creator Studio • Portal Fotografer Resmi</title>
+  <link rel="icon" type="image/png" href="/assets/picme-logo.png">
+  <link rel="apple-touch-icon" href="/assets/picme-logo.png">
+
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            picme: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+              DEFAULT: '#7e22ce',
+            },
+            music: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+            },
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
+            }
+          },
+          boxShadow: {
+            'soft': '0 2px 8px -1px rgba(0, 0, 0, 0.05), 0 1px 3px -1px rgba(0, 0, 0, 0.03)',
+            'card': '0 1px 3px rgba(0,0,0,0.05)',
+            'glow-purple': '0 4px 20px -2px rgba(126, 34, 206, 0.25)',
+            'glow-pink': '0 4px 20px -2px rgba(236, 72, 153, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Phosphor Icons & Lucide Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #F8FAFC;
+      color: #0F172A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+    .picme-bar-anim {
+      transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+</head>
+<body class="min-h-screen flex antialiased selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden">
+
+  <!-- ==================== MOBILE SIDEBAR BACKDROP ==================== -->
+  <div id="sidebarBackdrop" onclick="toggleSidebar(false)" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
+
+  <!-- ==================== LEFT SIDEBAR NAVIGATION ==================== -->
+  <aside id="photographerSidebar" class="fixed top-0 bottom-0 left-0 w-64 bg-white border-r border-slate-200 z-50 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 shadow-sm">
+    
+    <!-- Sidebar Brand Header -->
+    <div class="h-16 px-5 flex items-center justify-between border-b border-slate-100 shrink-0">
+      <a href="/photographer" class="flex items-center gap-2.5">
+        <img src="/assets/picme-logo.png" alt="PicMe Logo" class="w-9 h-9 rounded-xl shadow-glow-purple object-contain shrink-0">
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-base tracking-tight text-slate-900">Pic<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
+            <span class="text-[9px] font-black uppercase tracking-wider bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">Studio</span>
+          </div>
+          <span class="text-[10px] font-semibold text-slate-400 block -mt-0.5">Creator & Photographer</span>
+        </div>
+      </a>
+      <button onclick="toggleSidebar(false)" class="lg:hidden text-slate-400 hover:text-slate-700 p-1">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Active Photographer Profile Card in Sidebar -->
+    <div class="px-4 py-3 bg-purple-50/60 border-b border-purple-100 flex items-center gap-3 shrink-0">
+      <div class="w-10 h-10 rounded-full bg-gradient-to-tr from-purple-700 to-pink-500 text-white font-extrabold flex items-center justify-center text-sm shadow-sm shrink-0">
+        <i class="ph-bold ph-camera"></i>
+      </div>
+      <div class="truncate flex-1">
+        <div class="flex items-center gap-1">
+          <span id="sidebarPhotographerName" class="font-bold text-xs text-slate-900 truncate">Rian Santoso Photo</span>
+          <i class="ph-fill ph-seal-check text-blue-500 text-sm shrink-0" title="Terverifikasi KYC"></i>
+        </div>
+        <span class="text-[10px] text-purple-700 font-semibold block truncate">Pro Event Photographer</span>
+      </div>
+    </div>
+
+    <!-- Navigation Menu Items (5 Core Menus) -->
+    <div class="flex-1 overflow-y-auto custom-scrollbar px-3 py-4 space-y-1.5">
+      
+      <!-- 1. Dashboard -->
+      <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-purple-700 bg-purple-50/90 shadow-2xs">
+        <i class="ph-bold ph-chart-pie text-lg shrink-0"></i>
+        <span>Dashboard</span>
+      </button>
+
+      <!-- 2. Analytics -->
+      <button onclick="switchView('analytics')" id="nav-analytics" class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+        <i class="ph-bold ph-trend-up text-lg shrink-0"></i>
+        <span>Analytics</span>
+      </button>
+
+      <!-- 3. Upload Photo -->
+      <button onclick="switchView('upload')" id="nav-upload" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+        <div class="flex items-center gap-3">
+          <i class="ph-bold ph-cloud-arrow-up text-lg shrink-0 text-purple-600"></i>
+          <span>Upload Photo</span>
+        </div>
+        <span class="text-[9px] font-black bg-pink-100 text-pink-700 px-1.5 py-0.5 rounded-full">AI Index</span>
+      </button>
+
+      <!-- 4. Commission Fee -->
+      <button onclick="switchView('commissions')" id="nav-commissions" class="nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+        <div class="flex items-center gap-3">
+          <i class="ph-bold ph-wallet text-lg shrink-0 text-emerald-600"></i>
+          <span>Commission Fee</span>
+        </div>
+        <span class="text-[9px] font-black bg-emerald-100 text-emerald-700 px-1.5 py-0.5 rounded-full">50%</span>
+      </button>
+
+      <!-- 5. Account -->
+      <button onclick="switchView('account')" id="nav-account" class="nav-item w-full flex items-center gap-3 px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+        <i class="ph-bold ph-gear text-lg shrink-0"></i>
+        <span>Account & KYC</span>
+      </button>
+
+    </div>
+
+    <!-- Quick Switch Section (Admin <-> Studio & Back to Public) -->
+    <div class="p-3 border-t border-slate-100 space-y-1.5 shrink-0 bg-slate-50/50">
+      
+      <!-- Switch to Admin Console (if Admin/Superadmin) -->
+      <a href="/admin" id="linkSwitchToAdmin" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-purple-700 bg-purple-50 hover:bg-purple-100 border border-purple-200 transition">
+        <i class="ph-bold ph-shield-check text-sm"></i>
+        <span>Beralih ke Admin Master</span>
+      </a>
+
+      <!-- Return to Public App -->
+      <a href="/" class="w-full flex items-center justify-center gap-2 px-3 py-2 rounded-xl text-xs font-bold text-slate-600 hover:text-purple-700 bg-white border border-slate-200 hover:border-purple-200 shadow-2xs transition">
+        <i class="ph-bold ph-arrow-left text-sm"></i>
+        <span>Kembali ke PicMe</span>
+      </a>
+
+    </div>
+
+  </aside>
+
+  <!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+  <div class="lg:pl-64 flex flex-col flex-1 min-w-0">
+    
+    <!-- Top Global Header -->
+    <header class="h-16 bg-white border-b border-slate-200 sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between gap-4">
+      
+      <!-- Left: Mobile Toggle & Page Title -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar(true)" class="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100">
+          <i class="ph-bold ph-list text-xl"></i>
+        </button>
+        <img src="/assets/picme-logo.png" alt="PicMe" class="w-8 h-8 rounded-lg object-contain lg:hidden">
+        <div>
+          <h1 id="headerViewTitle" class="text-sm sm:text-base font-extrabold text-slate-900">Dashboard Fotografer</h1>
+          <p id="headerViewSubtitle" class="text-[10px] text-slate-400 font-medium hidden sm:block">Ringkasan penjualan foto, kecocokan wajah AI, dan saldo komisi</p>
+        </div>
+      </div>
+
+      <!-- Center / Right Actions -->
+      <div class="flex items-center gap-2.5">
+        
+        <!-- Quick Action: Upload Button -->
+        <button onclick="switchView('upload')" class="hidden sm:flex items-center gap-1.5 px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
+          <i class="ph-bold ph-plus-circle text-sm"></i>
+          <span>Upload Foto</span>
+        </button>
+
+        <!-- Switch Mode Badge (Header Pill) -->
+        <a href="/admin" id="headerSwitchAdminPill" class="hidden md:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-xl bg-slate-100 hover:bg-purple-50 text-slate-700 hover:text-purple-700 text-xs font-bold border border-slate-200 hover:border-purple-200 transition">
+          <i class="ph-bold ph-shield-check text-purple-600"></i>
+          <span>Mode Admin</span>
+        </a>
+
+        <!-- Notifications Bell -->
+        <button onclick="alert('Notifikasi: 3 Foto Anda baru saja dibeli oleh peserta!')" class="w-9 h-9 rounded-xl border border-slate-200 hover:bg-slate-50 flex items-center justify-center text-slate-600 relative transition">
+          <i class="ph-bold ph-bell text-base"></i>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-pink-500 ring-2 ring-white"></span>
+        </button>
+
+        <!-- Profile Avatar & Payout Button -->
+        <div class="flex items-center gap-2 pl-1 border-l border-slate-200">
+          <button onclick="openModalWithdraw()" class="px-3 py-1.5 rounded-xl bg-emerald-50 hover:bg-emerald-100 border border-emerald-200 text-emerald-700 text-xs font-extrabold flex items-center gap-1.5 transition">
+            <i class="ph-bold ph-hand-coins text-sm"></i>
+            <span class="hidden sm:inline">Tarik Dana</span>
+          </button>
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- Content Container -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
+      
+      <!-- =================================================================================== -->
+      <!-- VIEW 1: DASHBOARD (/photographer/dashboard) -->
+      <!-- =================================================================================== -->
+      <section id="view-dashboard" class="space-y-6">
+        
+        <!-- Top Status Banner -->
+        <div class="p-4 sm:p-5 rounded-2xl bg-gradient-to-r from-purple-900 via-indigo-900 to-slate-900 text-white shadow-md flex flex-col md:flex-row md:items-center justify-between gap-4">
+          <div class="flex items-center gap-3.5">
+            <div class="w-12 h-12 rounded-2xl bg-white/10 backdrop-blur-sm border border-white/20 flex items-center justify-center text-2xl text-purple-300 shrink-0">
+              <i class="ph-bold ph-shield-check"></i>
+            </div>
+            <div>
+              <div class="flex items-center gap-2">
+                <h3 class="font-black text-sm sm:text-base">Studio Fotografer Resmi Terverifikasi</h3>
+                <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-400/40">
+                  KYC Verified
+                </span>
+              </div>
+              <p class="text-xs text-slate-300 mt-0.5">
+                Kapasitas Cloud S3: <b>142.5 GB</b> dari <b>500 GB</b> terpakai (28.5% aman) • AI Indexing aktif
+              </p>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-2.5 shrink-0">
+            <button onclick="switchView('upload')" class="px-4 py-2 rounded-xl bg-white text-purple-950 hover:bg-purple-50 font-black text-xs shadow-sm transition flex items-center gap-1.5">
+              <i class="ph-bold ph-plus-circle text-purple-700"></i>
+              <span>+ Upload Foto Event Baru</span>
+            </button>
+          </div>
+        </div>
+
+        <!-- 4 Main KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          
+          <!-- KPI 1: Saldo Bisa Ditarik -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Saldo Siap Tarik</span>
+              <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-wallet"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900" id="cardAvailableBalance">Rp 4.250.000</div>
+            <div class="flex items-center justify-between pt-1">
+              <span class="text-[11px] text-slate-400">Settled & siap cair</span>
+              <button onclick="openModalWithdraw()" class="text-xs font-extrabold text-purple-700 hover:text-purple-800 underline">Tarik Dana →</button>
+            </div>
+          </div>
+
+          <!-- KPI 2: Total Foto Terjual -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Foto Terjual (30 Hari)</span>
+              <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-base">
+                <i class="ph-bold ph-shopping-cart-simple"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900">318 Unduhan</div>
+            <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600">
+              <i class="ph-bold ph-arrow-up-right"></i>
+              <span>+18.4% dibanding bulan lalu</span>
+            </div>
+          </div>
+
+          <!-- KPI 3: Wajah Cocok (AI Match) -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Kecocokan Wajah AI</span>
+              <div class="w-8 h-8 rounded-xl bg-pink-50 text-pink-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-scan"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900">1.482 Match</div>
+            <div class="text-[11px] text-slate-400">Muncul di hasil selfie peserta</div>
+          </div>
+
+          <!-- KPI 4: Total Koleksi Aktif -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Koleksi Foto Aktif</span>
+              <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-images"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900">3.840 Foto</div>
+            <div class="text-[11px] text-slate-400">Terbit di 14 spot & album</div>
+          </div>
+
+        </div>
+
+        <!-- Split View: Chart (65%) & Status Antrean AI (35%) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          <!-- Left: Penjualan Harian 30 Hari -->
+          <div class="lg:col-span-8 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
+              <div>
+                <h3 class="font-extrabold text-sm sm:text-base text-slate-900 flex items-center gap-2">
+                  <i class="ph-bold ph-chart-bar text-purple-700"></i>
+                  <span>Grafik Penjualan Foto Harian (30 Hari Terakhir)</span>
+                </h3>
+                <p class="text-xs text-slate-400">Akumulasi komisi bersih fotografer (50% dari harga jual)</p>
+              </div>
+              <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200 self-start sm:self-auto">
+                Total Komisi 30 Hari: Rp 4.250.000
+              </span>
+            </div>
+
+            <!-- Interactive Bar Chart Container -->
+            <div class="h-56 pt-6 flex items-end gap-1.5 sm:gap-2 px-1 border-b border-slate-100" id="photographerSalesChart">
+              <!-- Rendered via JS -->
+            </div>
+
+            <div class="flex items-center justify-between text-[11px] text-slate-400 pt-1">
+              <span>30 hari lalu</span>
+              <div class="flex items-center gap-3">
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-gradient-to-tr from-purple-600 to-pink-500"></span> Weekend Spike</span>
+                <span class="flex items-center gap-1.5"><span class="w-3 h-3 rounded-md bg-purple-200"></span> Hari Kerja</span>
+              </div>
+              <span>Hari Ini</span>
+            </div>
+          </div>
+
+          <!-- Right: Status Antrean AI Terkini -->
+          <div class="lg:col-span-4 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <i class="ph-bold ph-cpu text-pink-600"></i>
+                <span>Status Antrean AI Terkini</span>
+              </h3>
+              <span class="w-2 h-2 rounded-full bg-emerald-500 animate-pulse"></span>
+            </div>
+
+            <div class="space-y-3">
+              
+              <!-- Terbit di Katalog -->
+              <div class="p-3.5 rounded-xl bg-emerald-50/70 border border-emerald-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center font-bold">
+                    <i class="ph-bold ph-check"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block">3.840 Foto Terbit</span>
+                    <span class="text-[10px] text-emerald-700">Wajah & BIB terindeks katalog</span>
+                  </div>
+                </div>
+                <span class="text-xs font-black text-emerald-700">100%</span>
+              </div>
+
+              <!-- Sedang Diproses AI -->
+              <div class="p-3.5 rounded-xl bg-purple-50/70 border border-purple-100 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-700 flex items-center justify-center font-bold animate-spin">
+                    <i class="ph-bold ph-spinner-gap"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block">0 Foto Indexing</span>
+                    <span class="text-[10px] text-purple-700">Semua foto selesai diproses</span>
+                  </div>
+                </div>
+                <span class="text-xs font-black text-purple-700">Idle</span>
+              </div>
+
+              <!-- Gagal / Blur -->
+              <div class="p-3.5 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+                <div class="flex items-center gap-3">
+                  <div class="w-8 h-8 rounded-lg bg-slate-200 text-slate-600 flex items-center justify-center font-bold">
+                    <i class="ph-bold ph-warning-circle"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block">3 File Ditolak/Blur</span>
+                    <span class="text-[10px] text-slate-400">Pencahayaan rendah</span>
+                  </div>
+                </div>
+                <button onclick="switchView('upload')" class="text-xs font-bold text-purple-700 hover:underline">Detail →</button>
+              </div>
+
+            </div>
+
+            <div class="p-3 rounded-xl bg-slate-50 border border-slate-200/80 text-[11px] text-slate-500 leading-relaxed">
+              <i class="ph-bold ph-lightning text-amber-500 mr-1"></i> Kecepatan AI rata-rata: <b>0.45 detik / foto</b> menggunakan Biznet GIO GPU ArcFace.
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom Grid: 2 Columns (Penjualan Terbaru vs Event Terlaris) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          <!-- Col 1: Penjualan Foto Terbaru (7 Kolom) -->
+          <div class="lg:col-span-7 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <i class="ph-bold ph-receipt text-purple-700"></i>
+                <span>Penjualan Foto Terbaru</span>
+              </h3>
+              <button onclick="switchView('commissions')" class="text-xs font-bold text-purple-700 hover:underline">Semua Transaksi →</button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
+                    <th class="py-2.5 px-2">Foto / ID</th>
+                    <th class="py-2.5 px-2">Event & Spot</th>
+                    <th class="py-2.5 px-2 text-right">Harga Jual</th>
+                    <th class="py-2.5 px-2 text-right">Komisi Bersih (50%)</th>
+                    <th class="py-2.5 px-2 text-right">Waktu</th>
+                  </tr>
+                </thead>
+                <tbody id="tableRecentSales" class="divide-y divide-slate-100 font-medium">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Col 2: Event & Spot Terlaris (5 Kolom) -->
+          <div class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+            <div class="flex items-center justify-between">
+              <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <i class="ph-bold ph-fire text-pink-600"></i>
+                <span>Event & Spot Terlaris</span>
+              </h3>
+              <span class="text-xs text-slate-400 font-bold">Rasio Konversi</span>
+            </div>
+
+            <div class="space-y-3" id="listTopEvents">
+              <!-- Rendered via JS -->
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================================================== -->
+      <!-- VIEW 2: ANALYTICS (/photographer/analytics) -->
+      <!-- =================================================================================== -->
+      <section id="view-analytics" class="hidden space-y-6">
+        
+        <!-- 4 Performance Metric Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-1.5">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Rasio Konversi Foto</span>
+            <div class="text-2xl font-black text-purple-700">21.4%</div>
+            <p class="text-[11px] text-slate-500">Scan wajah berujung beli foto</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-1.5">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Rata-rata Nilai Transaksi (AOV)</span>
+            <div class="text-2xl font-black text-slate-900">Rp 31.500</div>
+            <p class="text-[11px] text-slate-500">Dominasi Master High-Res 50MP</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-1.5">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Watermark Preview Views</span>
+            <div class="text-2xl font-black text-slate-900">12.490x</div>
+            <p class="text-[11px] text-slate-500">Dilihat oleh peserta di web</p>
+          </div>
+
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-1.5">
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Pendapatan Tip Pembeli</span>
+            <div class="text-2xl font-black text-emerald-600">Rp 280.000</div>
+            <p class="text-[11px] text-emerald-700 font-bold">100% hak fotografer tanpa potongan</p>
+          </div>
+
+        </div>
+
+        <!-- Funnel Performa Katalog -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-5">
+          <div class="flex items-center justify-between">
+            <div>
+              <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
+                <i class="ph-bold ph-funnel text-purple-700"></i>
+                <span>Funnel Performa Katalog (Perjalanan Pembelian Foto)</span>
+              </h3>
+              <p class="text-xs text-slate-400">Dari foto terindeks AI hingga dana masuk ke dompet Anda</p>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-4 gap-4">
+            
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-slate-400">Tahap 1</span>
+              <div class="text-lg font-black text-slate-900">3.840 Foto</div>
+              <p class="text-xs text-slate-500">Diunggah & Wajah/BIB terindeks</p>
+              <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-purple-600 h-full w-full"></div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-purple-50/70 border border-purple-200 space-y-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-purple-600">Tahap 2</span>
+              <div class="text-lg font-black text-purple-700">1.482 Match (38.5%)</div>
+              <p class="text-xs text-slate-500">Ditemukan dari scan selfie user</p>
+              <div class="w-full bg-purple-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-purple-600 h-full" style="width: 38.5%"></div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-pink-50/70 border border-pink-200 space-y-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-pink-600">Tahap 3</span>
+              <div class="text-lg font-black text-pink-700">890 Klik Preview</div>
+              <p class="text-xs text-slate-500">Peserta membuka detail watermark</p>
+              <div class="w-full bg-pink-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-pink-600 h-full" style="width: 60%"></div>
+              </div>
+            </div>
+
+            <div class="p-4 rounded-xl bg-emerald-50/70 border border-emerald-200 space-y-2">
+              <span class="text-[10px] font-black uppercase tracking-wider text-emerald-600">Tahap 4 (Konversi)</span>
+              <div class="text-lg font-black text-emerald-700">318 Beli Lunas (21.4%)</div>
+              <p class="text-xs text-slate-500">Pembayaran selesai lewat QRIS/VA</p>
+              <div class="w-full bg-emerald-200 h-2 rounded-full overflow-hidden">
+                <div class="bg-emerald-600 h-full" style="width: 21.4%"></div>
+              </div>
+            </div>
+
+          </div>
+        </div>
+
+        <!-- Breakdown Analitik: 2 Kolom -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-5 items-start">
+          
+          <!-- Breakdown Kategori / Spot -->
+          <div class="lg:col-span-7 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+            <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+              <i class="ph-bold ph-map-pin text-purple-700"></i>
+              <span>Performa Berdasarkan Kategori & Spot</span>
+            </h3>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
+                    <th class="py-2.5 px-2">Spot / Event</th>
+                    <th class="py-2.5 px-2">Kategori</th>
+                    <th class="py-2.5 px-2 text-right">Foto Diunggah</th>
+                    <th class="py-2.5 px-2 text-right">Terjual</th>
+                    <th class="py-2.5 px-2 text-right">Komisi Diterima</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                  <tr>
+                    <td class="py-3 px-2 font-bold text-slate-900">Jogja Marathon 2026 - KM 10</td>
+                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold">Marathon</span></td>
+                    <td class="py-3 px-2 text-right">1.240</td>
+                    <td class="py-3 px-2 text-right font-bold text-emerald-600">142 foto</td>
+                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 1.950.000</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-2 font-bold text-slate-900">We The Fest 2026 - Main Stage</td>
+                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-pink-100 text-pink-700 text-[10px] font-bold">Musik</span></td>
+                    <td class="py-3 px-2 text-right">980</td>
+                    <td class="py-3 px-2 text-right font-bold text-emerald-600">98 foto</td>
+                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 1.340.000</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-2 font-bold text-slate-900">Sunmori Kaliurang - Tikungan 4</td>
+                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">Sunmori</span></td>
+                    <td class="py-3 px-2 text-right">720</td>
+                    <td class="py-3 px-2 text-right font-bold text-emerald-600">46 foto</td>
+                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 580.000</td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-2 font-bold text-slate-900">Wisuda UGM Periode II 2026</td>
+                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-bold">Wisuda</span></td>
+                    <td class="py-3 px-2 text-right">900</td>
+                    <td class="py-3 px-2 text-right font-bold text-emerald-600">32 foto</td>
+                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 380.000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Waktu & Hari Pembelian Tertinggi -->
+          <div class="lg:col-span-5 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+            <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+              <i class="ph-bold ph-clock text-purple-700"></i>
+              <span>Jam Sibuk Pembelian (Peak Hours)</span>
+            </h3>
+
+            <div class="space-y-3">
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span>Minggu, 10:00 - 14:00 (Pasca Lari & Event)</span>
+                  <span class="text-purple-700 font-black">44% Transaksi</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-purple-700 to-pink-500 h-full rounded-full" style="width: 44%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span>Senin Siang, 12:00 - 13:00 (Istirahat Kantor)</span>
+                  <span class="text-purple-700 font-black">28% Transaksi</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-purple-700 to-pink-500 h-full rounded-full" style="width: 28%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span>Malam Hari, 20:00 - 22:00</span>
+                  <span class="text-purple-700 font-black">18% Transaksi</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-purple-700 to-pink-500 h-full rounded-full" style="width: 18%"></div>
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span>Waktu Lainnya</span>
+                  <span class="text-slate-400 font-black">10% Transaksi</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-slate-300 h-full rounded-full" style="width: 10%"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="p-3 rounded-xl bg-purple-50 text-[11px] text-purple-900 border border-purple-200">
+              💡 <b>Tips Fotografer:</b> Upload foto dalam kurun waktu <b>1-3 jam setelah event selesai</b> untuk mendapatkan rasio pembelian tertinggi sebelum animo peserta turun.
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================================================== -->
+      <!-- VIEW 3: UPLOAD PHOTO (/photographer/upload) -->
+      <!-- =================================================================================== -->
+      <section id="view-upload" class="hidden space-y-6">
+        
+        <!-- Upload Form Container -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Left: Metadata & Pricing Form (5 Kolom) -->
+          <div class="lg:col-span-5 space-y-5">
+            
+            <!-- Metadata & Event Tagging -->
+            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+              <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <i class="ph-bold ph-tag text-purple-700"></i>
+                <span>Metadata & Tagging Event</span>
+              </h3>
+
+              <div class="space-y-3">
+                <div class="space-y-1">
+                  <label class="block text-xs font-bold text-slate-700">Nama Event / Spot Foto</label>
+                  <select id="uploadSelectEvent" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                    <option value="evt-001">Jogja Marathon 2026 (KM 10 - Titik Nol)</option>
+                    <option value="evt-002">We The Fest 2026 (Main Stage & Barrier)</option>
+                    <option value="evt-003">CFD Sudirman Jakarta (Bundaran HI)</option>
+                    <option value="evt-004">Sunmori Kaliurang Jogja (Tikungan 4)</option>
+                    <option value="new">+ Buat Spot / Event Baru</option>
+                  </select>
+                </div>
+
+                <div class="grid grid-cols-2 gap-3">
+                  <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-700">Tanggal Pemotretan</label>
+                    <input type="date" id="uploadDate" value="2026-10-29" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                  </div>
+                  <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-700">Kategori</label>
+                    <select id="uploadCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                      <option value="Lari / Marathon">Lari / Marathon</option>
+                      <option value="Konser & Festival">Konser & Festival</option>
+                      <option value="Sepeda & Sunmori">Sepeda & Sunmori</option>
+                      <option value="Wisuda / Kampus">Wisuda / Kampus</option>
+                      <option value="Street Photography">Street</option>
+                    </select>
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="block text-xs font-bold text-slate-700">Lokasi / Kota</label>
+                  <input type="text" id="uploadLocation" value="Yogyakarta, D.I. Yogyakarta" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                </div>
+              </div>
+            </div>
+
+            <!-- Pricing & Watermark Configuration -->
+            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+              <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                <i class="ph-bold ph-currency-circle-dollar text-purple-700"></i>
+                <span>Pengaturan Harga & Watermark</span>
+              </h3>
+
+              <div class="space-y-3 text-xs">
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">Harga Foto Master High-Res (50MP)</label>
+                  <div class="relative">
+                    <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">Rp</span>
+                    <input type="number" id="uploadPriceMaster" value="35000" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 font-black text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                  </div>
+                  <span class="text-[10px] text-slate-400">Hak fotografer 50%: <b>Rp 17.500 / foto</b></span>
+                </div>
+
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">Harga Foto Web Compressed (1080p - 2K)</label>
+                  <div class="relative">
+                    <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">Rp</span>
+                    <input type="number" id="uploadPriceCompressed" value="25000" class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2 font-black text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                  </div>
+                  <span class="text-[10px] text-slate-400">Hak fotografer 50%: <b>Rp 12.500 / foto</b></span>
+                </div>
+
+                <div class="pt-2 border-t border-slate-100 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-800 block">Diskon Bundling 3+ Foto</span>
+                    <span class="text-[10px] text-slate-400">Potongan 15% jika beli minimal 3 foto</span>
+                  </div>
+                  <input type="checkbox" checked class="w-4 h-4 text-purple-600 rounded">
+                </div>
+
+                <div class="space-y-1 pt-1">
+                  <label class="block font-bold text-slate-700">Watermark Otomatis</label>
+                  <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                    <option>PicMe Diagonal Grid + Logo Studio (Rekomendasi Aman)</option>
+                    <option>Logo Studio di Pojok Kanan Bawah</option>
+                    <option>Center Overlay Semi-Transparent (50%)</option>
+                  </select>
+                </div>
+              </div>
+            </div>
+
+          </div>
+
+          <!-- Right: Bulk Drag-and-Drop Uploader & Live Queue (7 Kolom) -->
+          <div class="lg:col-span-7 space-y-5">
+            
+            <!-- Drag and Drop Box -->
+            <div class="bg-white p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                    <i class="ph-bold ph-images text-purple-700"></i>
+                    <span>Bulk High-Res Photo Uploader</span>
+                  </h3>
+                  <p class="text-xs text-slate-400">Mendukung ratusan foto JPG/PNG hingga 50MP per file</p>
+                </div>
+                <span class="text-xs font-black bg-purple-100 text-purple-700 px-2.5 py-1 rounded-full">Fast S3 Upload</span>
+              </div>
+
+              <!-- Dropzone -->
+              <div id="dropzoneUploader" onclick="document.getElementById('fileInputBatch').click()" class="border-2 border-dashed border-purple-300 hover:border-purple-600 rounded-2xl p-8 text-center cursor-pointer bg-purple-50/20 hover:bg-purple-50/50 transition group">
+                <input type="file" id="fileInputBatch" multiple accept="image/*" class="hidden" onchange="handleBatchFilesSelected(event)">
+                
+                <div class="w-14 h-14 mx-auto rounded-2xl bg-purple-100 text-purple-700 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition">
+                  <i class="ph-bold ph-cloud-arrow-up"></i>
+                </div>
+                <h4 class="text-sm font-extrabold text-slate-900">Tarik & Lepas Ratusan Foto di Sini</h4>
+                <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto">
+                  Atau klik untuk memilih file dari komputer / SD Card kamera
+                </p>
+                <div class="mt-4 inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-white border border-slate-200 text-xs font-bold text-slate-600 shadow-2xs">
+                  <i class="ph-bold ph-lightning text-amber-500"></i>
+                  <span>AI otomatis mendeteksi wajah & nomor BIB di latar belakang</span>
+                </div>
+              </div>
+
+              <!-- Upload Action & Progress Bar -->
+              <div id="uploadProgressSection" class="hidden space-y-2 pt-2">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span id="uploadProgressLabel" class="text-slate-700">Mengunggah ke Storage S3...</span>
+                  <span id="uploadProgressPct" class="text-purple-700 font-black">0%</span>
+                </div>
+                <div class="w-full bg-slate-100 h-2.5 rounded-full overflow-hidden">
+                  <div id="uploadProgressBar" class="bg-gradient-to-r from-purple-700 to-pink-500 h-full rounded-full transition-all duration-300" style="width: 0%"></div>
+                </div>
+              </div>
+
+              <div class="flex items-center justify-between pt-2">
+                <span class="text-xs text-slate-400" id="fileSelectedCountText">0 file dipilih</span>
+                <button type="button" id="btnStartBatchUpload" onclick="simulateBatchUpload()" disabled class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 text-white font-bold text-xs shadow-sm transition disabled:opacity-40 disabled:cursor-not-allowed flex items-center gap-1.5">
+                  <i class="ph-bold ph-play"></i>
+                  <span>Mulai Proses & Indexing AI</span>
+                </button>
+              </div>
+
+            </div>
+
+            <!-- Live AI Processing Queue Table -->
+            <div class="bg-white p-5 sm:p-6 rounded-2xl border border-slate-200/90 shadow-soft space-y-4">
+              <div class="flex items-center justify-between">
+                <div>
+                  <h3 class="font-extrabold text-sm text-slate-900 flex items-center gap-2">
+                    <i class="ph-bold ph-broadcast text-purple-700"></i>
+                    <span>Antrean Pemrosesan AI Real-Time</span>
+                  </h3>
+                  <p class="text-xs text-slate-400">Status indexing wajah InsightFace & pembacaan nomor dada</p>
+                </div>
+                <button onclick="clearCompletedQueue()" class="text-xs font-bold text-slate-400 hover:text-slate-600">Bersihkan Selesai</button>
+              </div>
+
+              <div class="overflow-x-auto max-h-80 overflow-y-auto">
+                <table class="w-full text-left text-xs">
+                  <thead class="sticky top-0 bg-white border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
+                    <tr>
+                      <th class="py-2 px-2">File Foto</th>
+                      <th class="py-2 px-2">Resolusi</th>
+                      <th class="py-2 px-2">Deteksi Wajah</th>
+                      <th class="py-2 px-2">Deteksi BIB</th>
+                      <th class="py-2 px-2 text-right">Status AI</th>
+                    </tr>
+                  </thead>
+                  <tbody id="tableAiQueue" class="divide-y divide-slate-100 font-medium">
+                    <!-- Rendered via JS -->
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================================================== -->
+      <!-- VIEW 4: COMMISSION FEE (/photographer/commissions) -->
+      <!-- =================================================================================== -->
+      <section id="view-commissions" class="hidden space-y-6">
+        
+        <!-- 4 Wallet Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          
+          <!-- Card 1: Saldo Siap Tarik -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-3">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Saldo Siap Tarik</span>
+              <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-wallet"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900">Rp 4.250.000</div>
+            <button onclick="openModalWithdraw()" class="w-full py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs shadow-sm transition flex items-center justify-center gap-1.5">
+              <i class="ph-bold ph-hand-coins"></i>
+              <span>Tarik Saldo Sekarang</span>
+            </button>
+          </div>
+
+          <!-- Card 2: Saldo Tertahan (Pending Settlement) -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Pending Settlement</span>
+              <div class="w-8 h-8 rounded-xl bg-amber-50 text-amber-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-hourglass-high"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900">Rp 650.000</div>
+            <p class="text-[11px] text-slate-400">Kliring QRIS H+1 (akan cair besok)</p>
+          </div>
+
+          <!-- Card 3: Total Pendapatan -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Total Pendapatan (50%)</span>
+              <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-base">
+                <i class="ph-bold ph-coins"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-purple-700">Rp 12.850.000</div>
+            <p class="text-[11px] text-slate-400">Akumulasi komisi kotor diterima</p>
+          </div>
+
+          <!-- Card 4: Total Dana Sudah Dicairkan -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200/90 shadow-soft space-y-2">
+            <div class="flex items-center justify-between text-slate-500">
+              <span class="text-xs font-bold uppercase tracking-wider">Dana Sudah Dicairkan</span>
+              <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-bank"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900">Rp 8.600.000</div>
+            <p class="text-[11px] text-emerald-600 font-bold">✓ 6x transfer sukses ke BCA</p>
+          </div>
+
+        </div>
+
+        <!-- Sub-Tabs Navigation for Commissions -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-soft overflow-hidden">
+          
+          <div class="flex border-b border-slate-100 px-6 pt-4 gap-6 text-xs font-bold">
+            <button onclick="switchCommissionSubTab('transactions')" id="subtab-transactions" class="pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-list-dashes"></i>
+              <span>Rincian Bagi Hasil per Transaksi</span>
+            </button>
+            <button onclick="switchCommissionSubTab('payouts')" id="subtab-payouts" class="pb-3 text-slate-400 hover:text-slate-700 flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-clock-counter-clockwise"></i>
+              <span>Riwayat Penarikan Dana (Payout History)</span>
+            </button>
+          </div>
+
+          <!-- Content 1: Rincian Bagi Hasil per Transaksi -->
+          <div id="contentCommissionTransactions" class="p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <p class="text-xs text-slate-400">Transparansi potongan platform 40%, EO event 10%, dan hak fotografer 50% + Tip 100%.</p>
+              <button onclick="alert('Export Laporan Excel')" class="text-xs font-bold text-purple-700 hover:underline">Download Rekap CSV →</button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
+                    <th class="py-2.5 px-3">Tanggal & ID</th>
+                    <th class="py-2.5 px-3">Item Foto</th>
+                    <th class="py-2.5 px-3 text-right">Harga Jual</th>
+                    <th class="py-2.5 px-3 text-right">Potongan Platform (40%)</th>
+                    <th class="py-2.5 px-3 text-right">EO Share (10%)</th>
+                    <th class="py-2.5 px-3 text-right">Tip</th>
+                    <th class="py-2.5 px-3 text-right">Komisi Bersih Fotografer</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium" id="tableCommissionDetails">
+                  <!-- Rendered via JS -->
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+          <!-- Content 2: Riwayat Penarikan Dana (Payout History) -->
+          <div id="contentCommissionPayouts" class="hidden p-5 sm:p-6 space-y-4">
+            <div class="flex items-center justify-between">
+              <p class="text-xs text-slate-400">Batas minimum penarikan adalah <b>Rp 50.000</b>. Proses transfer maksimal 1x24 jam kerja.</p>
+              <button onclick="openModalWithdraw()" class="px-3 py-1.5 rounded-xl bg-purple-700 text-white font-bold text-xs hover:bg-purple-800 transition">+ Tarik Saldo</button>
+            </div>
+
+            <div class="overflow-x-auto">
+              <table class="w-full text-left text-xs">
+                <thead>
+                  <tr class="border-b border-slate-100 text-slate-400 font-bold uppercase text-[10px]">
+                    <th class="py-2.5 px-3">ID Payout</th>
+                    <th class="py-2.5 px-3">Tanggal Diajukan</th>
+                    <th class="py-2.5 px-3">Rekening Tujuan</th>
+                    <th class="py-2.5 px-3 text-right">Nominal Pencairan</th>
+                    <th class="py-2.5 px-3 text-center">Status</th>
+                    <th class="py-2.5 px-3 text-right">Bukti Transfer</th>
+                  </tr>
+                </thead>
+                <tbody class="divide-y divide-slate-100 font-medium">
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold text-slate-800">PO-20261022-01</td>
+                    <td class="py-3 px-3">22 Okt 2026, 14:15</td>
+                    <td class="py-3 px-3">BCA • 8492019482 (Rian Santoso)</td>
+                    <td class="py-3 px-3 text-right font-black text-slate-900">Rp 1.450.000</td>
+                    <td class="py-3 px-3 text-center"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Berhasil Ditransfer</span></td>
+                    <td class="py-3 px-3 text-right"><button onclick="alert('Bukti Transfer BCA: No Ref 984918294 (Lunas)')" class="text-purple-700 font-bold hover:underline">Lihat Bukti →</button></td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold text-slate-800">PO-20261015-02</td>
+                    <td class="py-3 px-3">15 Okt 2026, 09:30</td>
+                    <td class="py-3 px-3">BCA • 8492019482 (Rian Santoso)</td>
+                    <td class="py-3 px-3 text-right font-black text-slate-900">Rp 2.150.000</td>
+                    <td class="py-3 px-3 text-center"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Berhasil Ditransfer</span></td>
+                    <td class="py-3 px-3 text-right"><button onclick="alert('Bukti Transfer BCA: No Ref 849219481 (Lunas)')" class="text-purple-700 font-bold hover:underline">Lihat Bukti →</button></td>
+                  </tr>
+                  <tr>
+                    <td class="py-3 px-3 font-mono font-bold text-slate-800">PO-20261001-03</td>
+                    <td class="py-3 px-3">01 Okt 2026, 17:00</td>
+                    <td class="py-3 px-3">BCA • 8492019482 (Rian Santoso)</td>
+                    <td class="py-3 px-3 text-right font-black text-slate-900">Rp 5.000.000</td>
+                    <td class="py-3 px-3 text-center"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Berhasil Ditransfer</span></td>
+                    <td class="py-3 px-3 text-right"><button onclick="alert('Bukti Transfer BCA: No Ref 739182941 (Lunas)')" class="text-purple-700 font-bold hover:underline">Lihat Bukti →</button></td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+
+      <!-- =================================================================================== -->
+      <!-- VIEW 5: ACCOUNT & KYC (/photographer/account) -->
+      <!-- =================================================================================== -->
+      <section id="view-account" class="hidden space-y-6">
+        
+        <!-- Sub-Tabs Navigation for Account -->
+        <div class="bg-white rounded-2xl border border-slate-200/90 shadow-soft overflow-hidden">
+          
+          <div class="flex border-b border-slate-100 px-6 pt-4 gap-6 text-xs font-bold overflow-x-auto">
+            <button onclick="switchAccountSubTab('profile')" id="accsub-profile" class="pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold shrink-0 flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-user-circle"></i>
+              <span>Profil & Portofolio</span>
+            </button>
+            <button onclick="switchAccountSubTab('payout')" id="accsub-payout" class="pb-3 text-slate-400 hover:text-slate-700 shrink-0 flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-bank"></i>
+              <span>Rekening & Pencairan</span>
+            </button>
+            <button onclick="switchAccountSubTab('kyc')" id="accsub-kyc" class="pb-3 text-slate-400 hover:text-slate-700 shrink-0 flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-identification-badge"></i>
+              <span>KYC & Identitas</span>
+            </button>
+            <button onclick="switchAccountSubTab('notifications')" id="accsub-notifications" class="pb-3 text-slate-400 hover:text-slate-700 shrink-0 flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-bell-ringing"></i>
+              <span>Notifikasi WA & Email</span>
+            </button>
+          </div>
+
+          <!-- Sub-Tab 1: Profil & Portofolio -->
+          <div id="accContentProfile" class="p-6 sm:p-8 space-y-6 max-w-2xl">
+            <div class="flex items-center gap-4">
+              <div class="w-16 h-16 rounded-2xl bg-gradient-to-tr from-purple-700 to-pink-500 text-white flex items-center justify-center text-2xl font-black shadow-md shrink-0">
+                <i class="ph-bold ph-camera"></i>
+              </div>
+              <div>
+                <button onclick="alert('Upload Foto Profil')" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs transition">Ganti Foto Studio</button>
+                <p class="text-[10px] text-slate-400 mt-1">Format JPG atau PNG persegi, minimal 500x500px</p>
+              </div>
+            </div>
+
+            <div class="space-y-4 text-xs">
+              <div class="space-y-1">
+                <label class="block font-bold text-slate-700">Nama Studio / Panggilan Fotografer</label>
+                <input type="text" id="accStudioName" value="Rian Santoso Photo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-bold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+              </div>
+
+              <div class="space-y-1">
+                <label class="block font-bold text-slate-700">Bio Singkat (Tampil di Katalog Foto)</label>
+                <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-medium text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">Professional Sport & Stage Photographer. Meliput Jogja Marathon, WTF, dan DBL sejak 2021.</textarea>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">Akun Instagram / Portofolio</label>
+                  <input type="text" value="instagram.com/riansantoso.raw" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                </div>
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">Nomor WhatsApp Aktif</label>
+                  <input type="text" value="0812-9847-1928" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-slate-100 flex items-center justify-between">
+                <button onclick="alert('Buka dialog ubah password')" class="text-xs font-bold text-purple-700 hover:underline">Ganti Kata Sandi Studio</button>
+                <button onclick="alert('Profil berhasil diperbarui!')" class="px-6 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-sm transition">Simpan Perubahan</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sub-Tab 2: Rekening & Pencairan -->
+          <div id="accContentPayout" class="hidden p-6 sm:p-8 space-y-6 max-w-2xl">
+            <div class="p-4 rounded-xl bg-purple-50/70 border border-purple-200 space-y-1 text-xs text-purple-900">
+              <span class="font-extrabold block">Aturan Pencairan Saldo:</span>
+              <p class="text-[11px] text-purple-800">
+                Nama pada rekening bank <b>wajib sama persis dengan KTP</b> yang telah terverifikasi. Permintaan penarikan diproses otomatis setiap hari kerja.
+              </p>
+            </div>
+
+            <div class="space-y-4 text-xs">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">Bank Tujuan</label>
+                  <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 font-bold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                    <option selected>Bank Central Asia (BCA)</option>
+                    <option>Bank Mandiri</option>
+                    <option>Bank Rakyat Indonesia (BRI)</option>
+                    <option>Bank Negara Indonesia (BNI)</option>
+                    <option>Bank Syariah Indonesia (BSI)</option>
+                  </select>
+                </div>
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">Nomor Rekening</label>
+                  <input type="text" value="8492019482" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-mono font-bold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="space-y-1">
+                <label class="block font-bold text-slate-700">Nama Pemilik Rekening (Sesuai KTP)</label>
+                <input type="text" value="RIAN SANTOSO" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 font-bold text-slate-700 cursor-not-allowed">
+                <span class="text-[10px] text-emerald-600 font-bold">✓ Nama rekening cocok dengan identitas KYC</span>
+              </div>
+
+              <!-- Foto Buku Tabungan -->
+              <div class="space-y-1">
+                <label class="block font-bold text-slate-700">Foto Buku Tabungan / Header M-Banking</label>
+                <div class="p-3 rounded-xl border border-dashed border-slate-300 flex items-center justify-between bg-slate-50">
+                  <div class="flex items-center gap-2">
+                    <i class="ph-bold ph-file-image text-purple-700 text-lg"></i>
+                    <span class="text-xs font-semibold text-slate-700">buku_tabungan_bca_rian.jpg (Terverifikasi)</span>
+                  </div>
+                  <button onclick="alert('Unggah ulang buku tabungan')" class="text-xs font-bold text-purple-700 hover:underline">Ganti File</button>
+                </div>
+              </div>
+
+              <!-- Auto-Withdrawal Toggle -->
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-3">
+                <div class="flex items-center justify-between">
+                  <div>
+                    <span class="font-extrabold text-slate-900 block">Fitur Auto-Withdrawal (Pencairan Otomatis)</span>
+                    <span class="text-[11px] text-slate-500">Tarik otomatis setiap hari Senin jika saldo mencapai minimal Rp 100.000</span>
+                  </div>
+                  <input type="checkbox" checked class="w-4 h-4 text-purple-600 rounded">
+                </div>
+              </div>
+
+              <!-- PIN Keamanan Penarikan -->
+              <div class="space-y-1">
+                <label class="block font-bold text-slate-700">PIN Keamanan Penarikan (6 Digit)</label>
+                <input type="password" value="••••••" class="w-48 bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-mono font-bold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+              </div>
+
+              <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button onclick="alert('Pengaturan rekening & PIN berhasil disimpan!')" class="px-6 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-sm transition">Simpan Rekening</button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sub-Tab 3: KYC & Verifikasi Identitas -->
+          <div id="accContentKyc" class="hidden p-6 sm:p-8 space-y-6 max-w-2xl">
+            <div class="flex items-center justify-between p-4 rounded-2xl bg-emerald-50 border border-emerald-200">
+              <div class="flex items-center gap-3">
+                <div class="w-10 h-10 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-xl shrink-0">
+                  <i class="ph-bold ph-seal-check"></i>
+                </div>
+                <div>
+                  <span class="font-black text-slate-900 block text-xs sm:text-sm">Akun Terverifikasi Resmi (Verified Creator)</span>
+                  <p class="text-[11px] text-emerald-800">Identitas KTP & Biometrik Anda telah diverifikasi oleh tim kepatuhan PicMe.</p>
+                </div>
+              </div>
+              <span class="px-2.5 py-1 rounded-full bg-emerald-600 text-white font-extrabold text-[10px]">VERIFIED</span>
+            </div>
+
+            <div class="space-y-4 text-xs">
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">Nomor Induk Kependudukan (NIK KTP)</label>
+                  <input type="text" value="3471081903920002" disabled class="w-full bg-slate-100 border border-slate-200 rounded-xl px-4 py-2.5 font-mono font-bold text-slate-700 cursor-not-allowed">
+                </div>
+                <div class="space-y-1">
+                  <label class="block font-bold text-slate-700">NPWP (Opsional untuk Pajak)</label>
+                  <input type="text" value="84.918.294.1-541.000" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-mono font-semibold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                </div>
+              </div>
+
+              <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 pt-2">
+                <div class="space-y-1">
+                  <span class="font-bold text-slate-700 block">Foto KTP Resmi</span>
+                  <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+                    <span class="text-xs text-slate-600 font-medium">ktp_rian_santoso.jpg</span>
+                    <span class="text-emerald-600 text-xs font-bold">✓ Terverifikasi</span>
+                  </div>
+                </div>
+
+                <div class="space-y-1">
+                  <span class="font-bold text-slate-700 block">Foto Selfie Memegang KTP</span>
+                  <div class="p-3 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+                    <span class="text-xs text-slate-600 font-medium">selfie_ktp_rian.jpg</span>
+                    <span class="text-emerald-600 text-xs font-bold">✓ Terverifikasi</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sub-Tab 4: Notifikasi WhatsApp & Email -->
+          <div id="accContentNotifications" class="hidden p-6 sm:p-8 space-y-6 max-w-2xl">
+            <div class="space-y-4 text-xs">
+              <h4 class="font-extrabold text-slate-900 text-sm">Pengaturan Notifikasi Real-Time</h4>
+
+              <div class="space-y-3">
+                <div class="p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-900 block">Notifikasi Penjualan Foto ke WhatsApp</span>
+                    <span class="text-[11px] text-slate-500">Kirim pesan WhatsApp instan setiap kali foto Anda dibeli peserta</span>
+                  </div>
+                  <input type="checkbox" checked class="w-4 h-4 text-purple-600 rounded">
+                </div>
+
+                <div class="p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-900 block">Notifikasi AI Indexing Selesai</span>
+                    <span class="text-[11px] text-slate-500">Beri tahu ketika ratusan foto selesai di-scan wajah & terbit di katalog</span>
+                  </div>
+                  <input type="checkbox" checked class="w-4 h-4 text-purple-600 rounded">
+                </div>
+
+                <div class="p-3.5 rounded-xl border border-slate-200 flex items-center justify-between">
+                  <div>
+                    <span class="font-bold text-slate-900 block">Notifikasi Pencairan Dana / Transfer Sukses</span>
+                    <span class="text-[11px] text-slate-500">Bukti transfer dari Owner dikirim langsung ke WhatsApp & Email</span>
+                  </div>
+                  <input type="checkbox" checked class="w-4 h-4 text-purple-600 rounded">
+                </div>
+              </div>
+
+              <div class="pt-4 border-t border-slate-100 flex justify-end">
+                <button onclick="alert('Pengaturan notifikasi disimpan!')" class="px-6 py-2.5 rounded-xl bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs shadow-sm transition">Simpan Pengaturan</button>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ==================== MODAL: TARIK DANA / WITHDRAW ==================== -->
+  <div id="modalWithdraw" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="closeModalWithdraw()"></div>
+    <div class="bg-white rounded-3xl p-6 sm:p-8 max-w-md w-full relative z-10 shadow-2xl border border-slate-200 space-y-4">
+      
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <div class="flex items-center gap-2.5">
+          <div class="w-9 h-9 rounded-xl bg-emerald-100 text-emerald-700 flex items-center justify-center text-lg">
+            <i class="ph-bold ph-hand-coins"></i>
+          </div>
+          <div>
+            <h3 class="font-extrabold text-sm sm:text-base text-slate-900">Tarik Saldo Komisi</h3>
+            <p class="text-[11px] text-slate-400">Pencairan dana ke rekening bank terdaftar</p>
+          </div>
+        </div>
+        <button onclick="closeModalWithdraw()" class="text-slate-400 hover:text-slate-600 p-1">
+          <i class="ph-bold ph-x text-lg"></i>
+        </button>
+      </div>
+
+      <div class="p-3.5 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-between text-xs">
+        <span class="text-purple-900 font-bold">Saldo Siap Ditarik:</span>
+        <span class="text-purple-900 font-black text-sm" id="modalWithdrawMaxBalance">Rp 4.250.000</span>
+      </div>
+
+      <form onsubmit="executeWithdrawal(event)" class="space-y-3.5 text-xs">
+        <div class="space-y-1">
+          <label class="block font-bold text-slate-700">Nominal Penarikan (Min. Rp 50.000)</label>
+          <div class="relative">
+            <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">Rp</span>
+            <input type="number" id="inputWithdrawAmount" min="50000" max="4250000" value="1000000" required class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 font-black text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+          </div>
+          <div class="flex justify-between text-[10px] text-slate-400 pt-0.5">
+            <span>Batas Minimal: Rp 50.000</span>
+            <button type="button" onclick="document.getElementById('inputWithdrawAmount').value = 4250000" class="text-purple-700 font-bold hover:underline">Tarik Semua</button>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block font-bold text-slate-700">Rekening Tujuan</label>
+          <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 flex items-center justify-between">
+            <div>
+              <span class="font-extrabold text-slate-900 block">Bank Central Asia (BCA)</span>
+              <span class="text-[11px] text-slate-500 font-mono">8492019482 a/n RIAN SANTOSO</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 font-bold text-[9px]">UTAMA</span>
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block font-bold text-slate-700">PIN Keamanan (6 Digit)</label>
+          <input type="password" maxlength="6" placeholder="Masukkan 6 digit PIN" required class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-mono text-center tracking-widest text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+        </div>
+
+        <button type="submit" class="w-full py-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs shadow-md transition flex items-center justify-center gap-1.5">
+          <i class="ph-bold ph-paper-plane-tilt"></i>
+          <span>Konfirmasi & Ajukan Penarikan</span>
+        </button>
+      </form>
+
+    </div>
+  </div>
+
+
+  <!-- ==================== JAVASCRIPT LOGIC ==================== -->
+  <script>
+    // Mock Photographer Data
+    let availableBalance = 4250000;
+    let selectedBatchFiles = [];
+
+    const mockRecentSales = [
+      { id: 'TRX-894101', photo: 'WTF26_MAIN_STAGE_0842.JPG', event: 'We The Fest 2026', price: 35000, share: 17500, time: '12 menit lalu' },
+      { id: 'TRX-894102', photo: 'WTF26_CROWD_CHEER_1029.JPG', event: 'We The Fest 2026', price: 25000, share: 12500, time: '1 jam lalu' },
+      { id: 'TRX-894103', photo: 'JOGJA_MARATHON_KM21_0441.JPG', event: 'Jogja Marathon 2026', price: 35000, share: 17500, time: '2 jam lalu' },
+      { id: 'TRX-894104', photo: 'CFD_SUDIRMAN_CYCLING_0112.JPG', event: 'CFD Sudirman Jakarta', price: 25000, share: 12500, time: '3 jam lalu' },
+      { id: 'TRX-894105', photo: 'WTF26_BARRIER_FRONT_1184.JPG', event: 'We The Fest 2026', price: 35000, share: 17500, time: '5 jam lalu' }
+    ];
+
+    const mockTopEvents = [
+      { name: 'Jogja Marathon 2026 - KM 10', cat: 'Marathon', sales: 142, revenue: 1950000, conv: '24.2%' },
+      { name: 'We The Fest 2026 - Main Stage', cat: 'Konser', sales: 98, revenue: 1340000, conv: '21.8%' },
+      { name: 'Sunmori Kaliurang - Tikungan 4', cat: 'Sunmori', sales: 46, revenue: 580000, conv: '17.4%' },
+      { name: 'Wisuda UGM Periode II 2026', cat: 'Wisuda', sales: 32, revenue: 380000, conv: '15.1%' }
+    ];
+
+    const mockDailySales = [
+      { day: '01', amount: 80000 }, { day: '02', amount: 120000 }, { day: '03', amount: 65000 },
+      { day: '04', amount: 95000 }, { day: '05', amount: 150000 }, { day: '06', amount: 320000 }, // Sat
+      { day: '07', amount: 480000 }, // Sun
+      { day: '08', amount: 110000 }, { day: '09', amount: 85000 }, { day: '10', amount: 90000 },
+      { day: '11', amount: 140000 }, { day: '12', amount: 160000 }, { day: '13', amount: 350000 }, // Sat
+      { day: '14', amount: 520000 }, // Sun
+      { day: '15', amount: 95000 }, { day: '16', amount: 75000 }, { day: '17', amount: 130000 },
+      { day: '18', amount: 145000 }, { day: '19', amount: 180000 }, { day: '20', amount: 390000 }, // Sat
+      { day: '21', amount: 560000 }, // Sun
+      { day: '22', amount: 120000 }, { day: '23', amount: 95000 }, { day: '24', amount: 110000 },
+      { day: '25', amount: 170000 }, { day: '26', amount: 190000 }, { day: '27', amount: 410000 }, // Sat
+      { day: '28', amount: 610000 }, // Sun
+      { day: '29', amount: 130000 }, { day: '30', amount: 155000 }
+    ];
+
+    let aiQueue = [
+      { filename: 'DSC_8492_FINISH_SPRINT.JPG', res: '6000x4000 (24MP)', faces: '3 Wajah', bib: 'BIB #1042', status: 'Terbit' },
+      { filename: 'DSC_8493_FINISH_SMILE.JPG', res: '8192x5464 (45MP)', faces: '1 Wajah', bib: 'BIB #0849', status: 'Terbit' },
+      { filename: 'DSC_8494_CHEERING_CROWD.JPG', res: '6000x4000 (24MP)', faces: '7 Wajah', bib: 'BIB #2291', status: 'Terbit' },
+      { filename: 'DSC_8495_MEDAL_POSE.JPG', res: '8192x5464 (45MP)', faces: '2 Wajah', bib: 'BIB #1184', status: 'Terbit' }
+    ];
+
+    // 1. Navigation Switcher
+    function switchView(viewName) {
+      const views = ['dashboard', 'analytics', 'upload', 'commissions', 'account'];
+      views.forEach(v => {
+        const el = document.getElementById(`view-${v}`);
+        const nav = document.getElementById(`nav-${v}`);
+        if (el) el.classList.add('hidden');
+        if (nav) {
+          nav.className = 'nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition';
+        }
+      });
+
+      const activeView = document.getElementById(`view-${viewName}`);
+      const activeNav = document.getElementById(`nav-${viewName}`);
+      if (activeView) activeView.classList.remove('hidden');
+      if (activeNav) {
+        activeNav.className = 'nav-item w-full flex items-center justify-between px-3.5 py-2.5 rounded-xl text-xs font-bold transition text-purple-700 bg-purple-50/90 shadow-2xs';
+      }
+
+      // Title mapping
+      const titles = {
+        'dashboard': { title: 'Dashboard Fotografer', sub: 'Ringkasan penjualan foto, kecocokan wajah AI, dan saldo komisi' },
+        'analytics': { title: 'Analytics & Konversi', sub: 'Metrik performa katalog, funnel pembelian, dan jam sibuk peserta' },
+        'upload': { title: 'Upload & Indexing AI', sub: 'Unggah foto event massal dengan ekstraksi wajah & nomor dada otomatis' },
+        'commissions': { title: 'Commission Fee & Payout', sub: 'Laporan bagi hasil transparan 50% dan pencairan saldo ke rekening' },
+        'account': { title: 'Account & KYC Studio', sub: 'Pengaturan profil studio, rekening bank pencairan, dan verifikasi identitas' }
+      };
+
+      if (titles[viewName]) {
+        document.getElementById('headerViewTitle').innerText = titles[viewName].title;
+        document.getElementById('headerViewSubtitle').innerText = titles[viewName].sub;
+      }
+
+      toggleSidebar(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // 2. Render Sales Bar Chart
+    function renderSalesChart() {
+      const container = document.getElementById('photographerSalesChart');
+      if (!container) return;
+      const max = Math.max(...mockDailySales.map(d => d.amount));
+
+      container.innerHTML = mockDailySales.map((d, idx) => {
+        const heightPct = Math.round((d.amount / max) * 100);
+        const isWeekend = (idx % 7 === 5 || idx % 7 === 6);
+        const bg = isWeekend 
+          ? 'bg-gradient-to-t from-purple-700 via-purple-600 to-pink-500 hover:from-purple-800 hover:to-pink-600 shadow-sm'
+          : 'bg-purple-300 hover:bg-purple-500';
+
+        return `
+          <div class="flex-1 flex flex-col items-center h-full justify-end group relative cursor-pointer">
+            <div class="absolute -top-8 bg-slate-900 text-white text-[9px] font-bold px-2 py-0.5 rounded opacity-0 group-hover:opacity-100 transition whitespace-nowrap z-20 pointer-events-none">
+              Tgl ${d.day}: Rp ${new Intl.NumberFormat('id-ID').format(d.amount)}
+            </div>
+            <div class="w-full ${bg} rounded-t-sm picme-bar-anim" style="height: ${heightPct}%"></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // 3. Render Dashboard Tables
+    function renderDashboardTables() {
+      const tbSales = document.getElementById('tableRecentSales');
+      if (tbSales) {
+        tbSales.innerHTML = mockRecentSales.map(s => `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3 px-2">
+              <span class="font-bold text-slate-900 block truncate max-w-[160px]">${s.photo}</span>
+              <span class="text-[10px] text-slate-400 font-mono">${s.id}</span>
+            </td>
+            <td class="py-3 px-2 text-slate-600">${s.event}</td>
+            <td class="py-3 px-2 text-right font-bold text-slate-800">Rp ${new Intl.NumberFormat('id-ID').format(s.price)}</td>
+            <td class="py-3 px-2 text-right font-black text-emerald-600">+Rp ${new Intl.NumberFormat('id-ID').format(s.share)}</td>
+            <td class="py-3 px-2 text-right text-slate-400 text-[10px]">${s.time}</td>
+          </tr>
+        `).join('');
+      }
+
+      const listEvents = document.getElementById('listTopEvents');
+      if (listEvents) {
+        listEvents.innerHTML = mockTopEvents.map(e => `
+          <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center justify-between">
+            <div class="truncate pr-2">
+              <span class="font-bold text-xs text-slate-900 block truncate">${e.name}</span>
+              <span class="text-[10px] text-slate-400">${e.sales} foto terjual • Komisi: Rp ${new Intl.NumberFormat('id-ID').format(e.revenue)}</span>
+            </div>
+            <span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 font-extrabold text-[10px] shrink-0">${e.conv}</span>
+          </div>
+        `).join('');
+      }
+
+      // Commission details table
+      const tbComm = document.getElementById('tableCommissionDetails');
+      if (tbComm) {
+        tbComm.innerHTML = mockRecentSales.map(s => {
+          const platformFee = Math.round(s.price * 0.40);
+          const eoFee = Math.round(s.price * 0.10);
+          return `
+            <tr class="hover:bg-slate-50/80 transition">
+              <td class="py-3 px-3">
+                <span class="font-bold text-slate-900 block font-mono">${s.id}</span>
+                <span class="text-[10px] text-slate-400">${s.time}</span>
+              </td>
+              <td class="py-3 px-3">
+                <span class="font-bold text-slate-800 block">${s.photo}</span>
+                <span class="text-[10px] text-purple-700">${s.event}</span>
+              </td>
+              <td class="py-3 px-3 text-right font-bold text-slate-800">Rp ${new Intl.NumberFormat('id-ID').format(s.price)}</td>
+              <td class="py-3 px-3 text-right text-rose-600">-Rp ${new Intl.NumberFormat('id-ID').format(platformFee)} (40%)</td>
+              <td class="py-3 px-3 text-right text-slate-500">-Rp ${new Intl.NumberFormat('id-ID').format(eoFee)} (10%)</td>
+              <td class="py-3 px-3 text-right font-bold text-emerald-600">Rp 0</td>
+              <td class="py-3 px-3 text-right font-black text-purple-700">+Rp ${new Intl.NumberFormat('id-ID').format(s.share)}</td>
+            </tr>
+          `;
+        }).join('');
+      }
+
+      renderAiQueue();
+    }
+
+    // 4. Render AI Queue
+    function renderAiQueue() {
+      const tbQueue = document.getElementById('tableAiQueue');
+      if (!tbQueue) return;
+      tbQueue.innerHTML = aiQueue.map(item => `
+        <tr class="hover:bg-slate-50/80 transition">
+          <td class="py-2.5 px-2 font-mono font-bold text-slate-800 truncate max-w-[150px]">${item.filename}</td>
+          <td class="py-2.5 px-2 text-slate-500 text-[10px]">${item.res}</td>
+          <td class="py-2.5 px-2"><span class="px-2 py-0.5 rounded-full bg-purple-50 text-purple-700 font-bold text-[10px]">${item.faces}</span></td>
+          <td class="py-2.5 px-2"><span class="px-2 py-0.5 rounded-full bg-blue-50 text-blue-700 font-bold text-[10px]">${item.bib}</span></td>
+          <td class="py-2.5 px-2 text-right"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-700 font-extrabold text-[10px]">${item.status}</span></td>
+        </tr>
+      `).join('');
+    }
+
+    // 5. Batch File Selection Simulator
+    function handleBatchFilesSelected(e) {
+      selectedBatchFiles = Array.from(e.target.files);
+      const countEl = document.getElementById('fileSelectedCountText');
+      const btnEl = document.getElementById('btnStartBatchUpload');
+      if (selectedBatchFiles.length > 0) {
+        countEl.innerText = `${selectedBatchFiles.length} file dipilih siap unggah`;
+        btnEl.disabled = false;
+      }
+    }
+
+    function simulateBatchUpload() {
+      const progressSec = document.getElementById('uploadProgressSection');
+      const bar = document.getElementById('uploadProgressBar');
+      const pct = document.getElementById('uploadProgressPct');
+      const label = document.getElementById('uploadProgressLabel');
+      const btn = document.getElementById('btnStartBatchUpload');
+
+      progressSec.classList.remove('hidden');
+      btn.disabled = true;
+
+      let currentPct = 0;
+      const interval = setInterval(() => {
+        currentPct += 15;
+        if (currentPct > 100) currentPct = 100;
+
+        bar.style.width = currentPct + '%';
+        pct.innerText = currentPct + '%';
+
+        if (currentPct < 40) {
+          label.innerText = 'Mengunggah file original ke Cloud Storage S3...';
+        } else if (currentPct < 80) {
+          label.innerText = 'Mendeteksi Wajah (InsightFace) & Nomor Dada (BIB)...';
+        } else if (currentPct < 100) {
+          label.innerText = 'Memasang Watermark Grid Studio & Menerbitkan Katalog...';
+        } else {
+          clearInterval(interval);
+          label.innerText = '✓ Berhasil! Semua foto terindeks & tayang di katalog PicMe.';
+          
+          // Add dummy to queue
+          aiQueue.unshift({
+            filename: `IMG_BATCH_${Date.now().toString().slice(-4)}.JPG`,
+            res: '6000x4000 (24MP)',
+            faces: '4 Wajah Terdeteksi',
+            bib: 'BIB #3018',
+            status: 'Terbit'
+          });
+          renderAiQueue();
+          alert(`Sukses mengunggah dan memproses ${selectedBatchFiles.length || 12} foto! Foto kini dapat dicocokkan oleh selfie peserta.`);
+        }
+      }, 350);
+    }
+
+    function clearCompletedQueue() {
+      aiQueue = [];
+      renderAiQueue();
+    }
+
+    // 6. Sub-Tab Switchers
+    function switchCommissionSubTab(tab) {
+      const btnTrans = document.getElementById('subtab-transactions');
+      const btnPayouts = document.getElementById('subtab-payouts');
+      const cTrans = document.getElementById('contentCommissionTransactions');
+      const cPayouts = document.getElementById('contentCommissionPayouts');
+
+      if (tab === 'transactions') {
+        btnTrans.className = 'pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold flex items-center gap-1.5 transition';
+        btnPayouts.className = 'pb-3 text-slate-400 hover:text-slate-700 flex items-center gap-1.5 transition';
+        cTrans.classList.remove('hidden');
+        cPayouts.classList.add('hidden');
+      } else {
+        btnPayouts.className = 'pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold flex items-center gap-1.5 transition';
+        btnTrans.className = 'pb-3 text-slate-400 hover:text-slate-700 flex items-center gap-1.5 transition';
+        cPayouts.classList.remove('hidden');
+        cTrans.classList.add('hidden');
+      }
+    }
+
+    function switchAccountSubTab(tab) {
+      const tabs = ['profile', 'payout', 'kyc', 'notifications'];
+      tabs.forEach(t => {
+        const btn = document.getElementById(`accsub-${t}`);
+        const c = document.getElementById(`accContent${t.charAt(0).toUpperCase() + t.slice(1)}`);
+        if (btn) btn.className = 'pb-3 text-slate-400 hover:text-slate-700 shrink-0 flex items-center gap-1.5 transition';
+        if (c) c.classList.add('hidden');
+      });
+
+      const activeBtn = document.getElementById(`accsub-${tab}`);
+      const activeContent = document.getElementById(`accContent${tab.charAt(0).toUpperCase() + tab.slice(1)}`);
+      if (activeBtn) activeBtn.className = 'pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold shrink-0 flex items-center gap-1.5 transition';
+      if (activeContent) activeContent.classList.remove('hidden');
+    }
+
+    // 7. Withdraw Modal Logic
+    function openModalWithdraw() {
+      document.getElementById('modalWithdrawMaxBalance').innerText = `Rp ${new Intl.NumberFormat('id-ID').format(availableBalance)}`;
+      document.getElementById('modalWithdraw').classList.remove('hidden');
+    }
+
+    function closeModalWithdraw() {
+      document.getElementById('modalWithdraw').classList.add('hidden');
+    }
+
+    function executeWithdrawal(e) {
+      e.preventDefault();
+      const amount = parseInt(document.getElementById('inputWithdrawAmount').value);
+      if (amount < 50000) {
+        alert('Batas penarikan minimum adalah Rp 50.000');
+        return;
+      }
+      if (amount > availableBalance) {
+        alert('Nominal penarikan melebihi saldo tersedia.');
+        return;
+      }
+
+      availableBalance -= amount;
+      document.getElementById('cardAvailableBalance').innerText = `Rp ${new Intl.NumberFormat('id-ID').format(availableBalance)}`;
+      closeModalWithdraw();
+      alert(`Permintaan penarikan Rp ${new Intl.NumberFormat('id-ID').format(amount)} berhasil diajukan! Dana akan ditransfer ke rekening BCA Rian Santoso dalam 1x24 jam.`);
+    }
+
+    // 8. Toggle Mobile Sidebar
+    function toggleSidebar(open) {
+      const sb = document.getElementById('photographerSidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (open) {
+        sb.classList.remove('-translate-x-full');
+        bd.classList.remove('hidden');
+      } else {
+        sb.classList.add('-translate-x-full');
+        bd.classList.add('hidden');
+      }
+    }
+
+    // Check user auth to see if admin button should be visible
+    function checkUserRole() {
+      try {
+        const u = JSON.parse(localStorage.getItem('picme_current_user') || 'null');
+        if (u && (u.role === 'superadmin' || u.role === 'admin')) {
+          document.getElementById('linkSwitchToAdmin')?.classList.remove('hidden');
+          document.getElementById('headerSwitchAdminPill')?.classList.remove('hidden');
+        } else {
+          // If photographer is logged in
+          if (u && u.full_name) {
+            document.getElementById('sidebarPhotographerName').innerText = u.full_name;
+            document.getElementById('accStudioName').value = u.full_name;
+          }
+        }
+      } catch (e) {}
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkUserRole();
+      renderSalesChart();
+      renderDashboardTables();
+    });
+  </script>
+</body>
+</html>

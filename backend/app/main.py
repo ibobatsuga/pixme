@@ -249,3 +249,13 @@ def admin_page(path: Optional[str] = None):
         with open(admin_html, "r", encoding="utf-8") as f:
             return f.read()
     return "<h1>PixMe Master Admin Dashboard not found.</h1>"
+
+
+@app.get("/photographer", response_class=HTMLResponse)
+@app.get("/photographer/{path:path}", response_class=HTMLResponse)
+def photographer_page(path: Optional[str] = None):
+    photographer_html = os.path.join(frontend_path, "photographer.html")
+    if os.path.exists(photographer_html):
+        with open(photographer_html, "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>PixMe Photographer Dashboard not found.</h1>"

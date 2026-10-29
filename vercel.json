@@ -4,6 +4,14 @@
   "trailingSlash": false,
   "routes": [
     {
+      "src": "/photographer",
+      "dest": "/frontend/photographer.html"
+    },
+    {
+      "src": "/photographer/(.*)",
+      "dest": "/frontend/photographer.html"
+    },
+    {
       "src": "/admin",
       "dest": "/frontend/admin.html"
     },
