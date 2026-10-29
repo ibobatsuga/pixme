@@ -208,12 +208,13 @@
 
       </div>
 
-      <!-- Quick Event Selector (Desktop / Tablet) -->
-      <div class="hidden lg:flex items-center bg-slate-100/80 p-1.5 rounded-full border border-slate-200/80 max-w-sm w-full mx-4">
-        <i class="ph-bold ph-guitar text-pink-500 ml-3 mr-2"></i>
-        <select id="globalEventSelect" onchange="syncEventSelection(this.value)" class="bg-transparent text-xs font-semibold text-slate-700 w-full focus:outline-none cursor-pointer pr-3 truncate">
-          <option value="">Pilih Konser / Festival Musik...</option>
-        </select>
+      <!-- Quick Search Box (Desktop / Tablet) -->
+      <div class="hidden sm:flex items-center bg-slate-100/90 dark:bg-[#1a1c2b] px-3.5 py-2 rounded-full border border-slate-200/80 dark:border-slate-800 max-w-sm w-full mx-3 sm:mx-4 shadow-inner focus-within:ring-2 focus-within:ring-pink-500/50 transition">
+        <i class="ph-bold ph-magnifying-glass text-slate-400 dark:text-slate-500 text-sm mr-2 shrink-0"></i>
+        <input type="text" id="headerSearchInput" oninput="handleSearchEvents(this.value)" placeholder="Cari nama event, lokasi, atau kategori..." class="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 w-full focus:outline-none">
+        <button id="headerSearchClear" onclick="clearSearchEvents()" class="hidden text-slate-400 hover:text-slate-600 dark:hover:text-slate-200 text-xs ml-1 shrink-0" title="Hapus pencarian">
+          <i class="ph-bold ph-x-circle"></i>
+        </button>
       </div>
 
       <!-- RIGHT SECTION: Theme Toggle ☀️/🌙, Cart 🛒, Chat 💬, & Profile -->
@@ -254,12 +255,15 @@
   <!-- ==================== PESERTA / RUNNER VIEW (FULL-WIDTH MODERN FEED) ==================== -->
   <main id="userView" class="flex-1 max-w-5xl w-full mx-auto px-3 sm:px-6 lg:px-8 py-5 sm:py-8 pb-36 sm:pb-44 transition-opacity duration-300 overflow-x-hidden space-y-6">
     
-    <!-- Mobile Event Selector (Visible on Mobile) -->
-    <div class="md:hidden">
-      <label class="block text-xs font-bold text-slate-600 dark:text-slate-400 mb-1.5">Pilih Konser / Acara</label>
-      <select id="mobileEventSelect" onchange="syncEventSelection(this.value)" class="w-full bg-white dark:bg-[#1a1c2b] border border-slate-200 dark:border-slate-800 rounded-2xl px-4 py-2.5 text-xs font-semibold text-slate-800 dark:text-slate-200 focus:ring-2 focus:ring-purple-600 focus:outline-none shadow-sm">
-        <option value="">Memuat event...</option>
-      </select>
+    <!-- Mobile Search Box (Visible on Mobile) -->
+    <div class="sm:hidden">
+      <div class="flex items-center bg-white dark:bg-[#1a1c2b] px-3.5 py-2.5 rounded-2xl border border-slate-200 dark:border-slate-800 shadow-sm focus-within:ring-2 focus-within:ring-pink-500/50 transition">
+        <i class="ph-bold ph-magnifying-glass text-slate-400 text-sm mr-2 shrink-0"></i>
+        <input type="text" id="mobileSearchInput" oninput="handleSearchEvents(this.value)" placeholder="Cari event, lokasi, atau kategori..." class="bg-transparent text-xs font-semibold text-slate-800 dark:text-slate-100 placeholder:text-slate-400 w-full focus:outline-none">
+        <button id="mobileSearchClear" onclick="clearSearchEvents()" class="hidden text-slate-400 hover:text-slate-600 text-xs ml-1 shrink-0">
+          <i class="ph-bold ph-x-circle"></i>
+        </button>
+      </div>
     </div>
 
     <!-- Category Filter Pills (Uniform Colors: Pink-Purple Gradient Active) -->
@@ -293,8 +297,41 @@
       </button>
     </div>
 
-    <!-- Hero Editorial Banner -->
-    <div id="eventHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]">
+    <!-- Event Cards Grid Section (Chronologically Sorted by Date) -->
+    <div class="space-y-3.5 pt-2">
+      <div class="flex items-center justify-between flex-wrap gap-2">
+        <div class="flex items-center gap-2">
+          <h2 class="text-base sm:text-lg font-extrabold text-slate-900 dark:text-white flex items-center gap-2">
+            <span>Daftar Event & Festival</span>
+            <span id="eventCountBadge" class="text-xs font-bold px-2.5 py-0.5 rounded-full bg-pink-100 dark:bg-pink-950/50 text-pink-700 dark:text-pink-300">16 Event</span>
+          </h2>
+        </div>
+        <span class="text-[11px] font-bold text-slate-500 dark:text-slate-400 flex items-center gap-1.5 bg-slate-100 dark:bg-slate-800/80 px-3 py-1 rounded-full border border-slate-200/60 dark:border-slate-800">
+          <i class="ph-bold ph-calendar-check text-pink-600"></i>Diurutkan Sesuai Tanggal
+        </span>
+      </div>
+
+      <!-- Grid of Event Cards -->
+      <div id="eventsCardsGrid" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+        <!-- Dynamically rendered via renderEventCards() -->
+      </div>
+    </div>
+
+    <!-- Active Event Showcase Anchor & Gallery Section -->
+    <div id="eventShowcaseSection" class="pt-6 space-y-6">
+      <div class="flex items-center justify-between">
+        <div class="flex items-center gap-2">
+          <span class="relative flex h-2.5 w-2.5">
+            <span class="animate-ping absolute inline-flex h-full w-full rounded-full bg-pink-400 opacity-75"></span>
+            <span class="relative inline-flex rounded-full h-2.5 w-2.5 bg-pink-600"></span>
+          </span>
+          <h3 class="text-sm sm:text-base font-extrabold text-slate-900 dark:text-white">Dokumentasi Event Terpilih</h3>
+        </div>
+        <span class="text-[11px] font-semibold text-slate-400">Klik kartu event di atas untuk melihat detail</span>
+      </div>
+
+      <!-- Hero Editorial Banner -->
+      <div id="eventHeroBanner" class="relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]">
       <div class="absolute -right-12 -bottom-12 w-72 h-72 rounded-full bg-pink-500/20 blur-3xl pointer-events-none"></div>
       
       <div class="flex items-center justify-between z-10 flex-wrap gap-2">
@@ -378,6 +415,8 @@
       <h4 class="text-base font-bold text-slate-800 dark:text-slate-200">Belum Ada Foto untuk Event Ini</h4>
       <p class="text-xs text-slate-400 max-w-sm mx-auto mt-1">Beralih ke tab <b>Fotografer</b> di pojok kanan atas untuk mengunggah foto dokumentasi konser/festival.</p>
     </div>
+
+    </div> <!-- End of eventShowcaseSection -->
 
     <!-- Extra Bottom Padding Spacer so fixed bottom bar never cuts off text -->
     <div class="h-28 md:hidden"></div>
@@ -1465,24 +1504,200 @@
       await fetchEvents();
     });
 
-    // Catalog of Default Events Across All Categories
+    // Catalog of Default Events Across All Categories - Chronologically Sorted by Date
     const DEFAULT_MOCK_EVENTS = [
-      { id: 'evt-wtf26', title: 'We The Fest 2026', location: 'GBK Senayan, Jakarta', event_date: '14 Agustus 2026', category: 'music', description: 'Main Stage, Barrier & Crowd Coverage' },
-      { id: 'evt-sync26', title: 'Synchronize Fest 2026', location: 'Gambir Expo Kemayoran, Jakarta', event_date: '4 Oktober 2026', category: 'music', description: 'Dynamic Live Stages & Festival Vibe' },
-      { id: 'evt-marathon26', title: 'Maybank Marathon Bali 2026', location: 'Gianyar, Bali', event_date: '23 Agustus 2026', category: 'sports', description: 'Full Marathon & Half Marathon Finishers' },
-      { id: 'evt-borobudur26', title: 'Borobudur Marathon 2026', location: 'Magelang, Jawa Tengah', event_date: '15 November 2026', category: 'sports', description: 'Heritage Track & Runners Crowd' },
-      { id: 'evt-sunmori26', title: 'Sunmori Kaliurang & Merapi Ride', location: 'Kaliurang KM 21, Yogyakarta', event_date: '12 Juli 2026', category: 'automotive', description: 'Biker Convoy, Cornering & Rolling Shots' },
-      { id: 'evt-pik2-meet', title: 'Morning Run & Meet PIK 2 Supercar', location: 'Pantai Indah Kapuk 2, Jakarta', event_date: '28 Juni 2026', category: 'automotive', description: 'Sports Cars, JDM & Automotive Photography' },
-      { id: 'evt-ugm-grad', title: 'Wisuda Periode IV UGM Yogyakarta', location: 'Grha Sabha Pramana UGM', event_date: '26 Agustus 2026', category: 'graduation', description: 'Momen Wisudawan, Toga & Kebersamaan Keluarga' },
-      { id: 'evt-itb-grad', title: 'Wisuda Akbar ITB Bandung', location: 'Sabuga ITB, Bandung', event_date: '18 Juli 2026', category: 'graduation', description: 'Dokumentasi Wisuda & Parade Himpunan Mahasiswa' },
-      { id: 'evt-malioboro-street', title: 'Street Photography Malioboro Night', location: 'Kawasan Malioboro, Yogyakarta', event_date: '5 September 2026', category: 'street', description: 'Candid Street, Wisatawan & Suasana Malam' },
-      { id: 'evt-kotatua-street', title: 'Kota Tua Heritage Walking Tour', location: 'Taman Fatahillah, Jakarta', event_date: '20 September 2026', category: 'street', description: 'Human Interest, Arsitektur Kolonial & Wisatawan' },
-      { id: 'evt-comifuro19', title: 'Comic Frontier (Comifuro) 19', location: 'ICE BSD City, Tangerang', event_date: '10 Oktober 2026', category: 'cosplay', description: 'Cosplayer Parade, Photoshoot Hall & Stage' },
-      { id: 'evt-inacon26', title: 'Indonesia Anime Con (INACON) 2026', location: 'JCC Senayan, Jakarta', event_date: '15 November 2026', category: 'cosplay', description: 'International Cosplay Showcase & Meetup' },
-      { id: 'evt-pialapresiden', title: 'Piala Presiden Esports Grand Final', location: 'Tennis Indoor Senayan, Jakarta', event_date: '8 November 2026', category: 'tournament', description: 'Player Stages, Trophy Ceremony & Fans Arena' },
-      { id: 'evt-kejurnas-badminton', title: 'Kejurnas Bulutangkis Djarum Super', location: 'Istora Senayan, Jakarta', event_date: '12 Desember 2026', category: 'tournament', description: 'Aksi Smash Atlet & Riuh Penonton Istora' },
-      { id: 'evt-jfc26', title: 'Jember Fashion Carnaval (JFC) 2026', location: 'Alun-Alun Jember, Jawa Timur', event_date: '7 Agustus 2026', category: 'culture', description: 'Costume Art Parade Sepanjang 3,6 KM' },
-      { id: 'evt-pkb48', title: 'Pesta Kesenian Bali (PKB) XLVIII', location: 'Art Center Denpasar, Bali', event_date: '22 Juni 2026', category: 'culture', description: 'Pawai Budaya, Penari Tradisional & Tabuh Gamelan' }
+      {
+        id: 'evt-pkb48',
+        title: 'Pesta Kesenian Bali (PKB) XLVIII',
+        location: 'Art Center Denpasar, Bali',
+        event_date: '22 Juni 2026',
+        date_iso: '2026-06-22',
+        category: 'culture',
+        description: 'Pawai Budaya, Penari Tradisional & Tabuh Gamelan',
+        cover_url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&auto=format&fit=crop&q=80',
+        photos_count: '6.420 Foto',
+        creators_count: '18 Fotografer'
+      },
+      {
+        id: 'evt-pik2-meet',
+        title: 'Morning Run & Meet PIK 2 Supercar',
+        location: 'Pantai Indah Kapuk 2, Jakarta',
+        event_date: '28 Juni 2026',
+        date_iso: '2026-06-28',
+        category: 'automotive',
+        description: 'Sports Cars, JDM & Automotive Photography',
+        cover_url: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&auto=format&fit=crop&q=80',
+        photos_count: '4.850 Foto',
+        creators_count: '14 Fotografer'
+      },
+      {
+        id: 'evt-sunmori26',
+        title: 'Sunmori Kaliurang & Merapi Ride',
+        location: 'Kaliurang KM 21, Yogyakarta',
+        event_date: '12 Juli 2026',
+        date_iso: '2026-07-12',
+        category: 'automotive',
+        description: 'Biker Convoy, Cornering & Rolling Shots',
+        cover_url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=800&auto=format&fit=crop&q=80',
+        photos_count: '8.120 Foto',
+        creators_count: '24 Fotografer'
+      },
+      {
+        id: 'evt-itb-grad',
+        title: 'Wisuda Akbar ITB Bandung',
+        location: 'Sabuga ITB, Bandung',
+        event_date: '18 Juli 2026',
+        date_iso: '2026-07-18',
+        category: 'graduation',
+        description: 'Dokumentasi Wisuda & Parade Himpunan Mahasiswa',
+        cover_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80',
+        photos_count: '5.200 Foto',
+        creators_count: '16 Fotografer'
+      },
+      {
+        id: 'evt-jfc26',
+        title: 'Jember Fashion Carnaval (JFC) 2026',
+        location: 'Alun-Alun Jember, Jawa Timur',
+        event_date: '7 Agustus 2026',
+        date_iso: '2026-08-07',
+        category: 'culture',
+        description: 'Costume Art Parade Sepanjang 3,6 KM',
+        cover_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
+        photos_count: '9.800 Foto',
+        creators_count: '31 Fotografer'
+      },
+      {
+        id: 'evt-wtf26',
+        title: 'We The Fest 2026',
+        location: 'GBK Senayan, Jakarta',
+        event_date: '14 Agustus 2026',
+        date_iso: '2026-08-14',
+        category: 'music',
+        description: 'Main Stage, Barrier & Crowd Coverage',
+        cover_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80',
+        photos_count: '14.280 Foto',
+        creators_count: '42 Fotografer'
+      },
+      {
+        id: 'evt-marathon26',
+        title: 'Maybank Marathon Bali 2026',
+        location: 'Gianyar, Bali',
+        event_date: '23 Agustus 2026',
+        date_iso: '2026-08-23',
+        category: 'sports',
+        description: 'Full Marathon & Half Marathon Finishers',
+        cover_url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=800&auto=format&fit=crop&q=80',
+        photos_count: '11.450 Foto',
+        creators_count: '35 Fotografer'
+      },
+      {
+        id: 'evt-ugm-grad',
+        title: 'Wisuda Periode IV UGM Yogyakarta',
+        location: 'Grha Sabha Pramana UGM',
+        event_date: '26 Agustus 2026',
+        date_iso: '2026-08-26',
+        category: 'graduation',
+        description: 'Momen Wisudawan, Toga & Kebersamaan Keluarga',
+        cover_url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80',
+        photos_count: '7.600 Foto',
+        creators_count: '22 Fotografer'
+      },
+      {
+        id: 'evt-malioboro-street',
+        title: 'Street Photography Malioboro Night',
+        location: 'Kawasan Malioboro, Yogyakarta',
+        event_date: '5 September 2026',
+        date_iso: '2026-09-05',
+        category: 'street',
+        description: 'Candid Street, Wisatawan & Suasana Malam',
+        cover_url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&auto=format&fit=crop&q=80',
+        photos_count: '3.900 Foto',
+        creators_count: '12 Fotografer'
+      },
+      {
+        id: 'evt-kotatua-street',
+        title: 'Kota Tua Heritage Walking Tour',
+        location: 'Taman Fatahillah, Jakarta',
+        event_date: '20 September 2026',
+        date_iso: '2026-09-20',
+        category: 'street',
+        description: 'Human Interest, Arsitektur Kolonial & Wisatawan',
+        cover_url: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=800&auto=format&fit=crop&q=80',
+        photos_count: '4.150 Foto',
+        creators_count: '15 Fotografer'
+      },
+      {
+        id: 'evt-sync26',
+        title: 'Synchronize Fest 2026',
+        location: 'Gambir Expo Kemayoran, Jakarta',
+        event_date: '4 Oktober 2026',
+        date_iso: '2026-10-04',
+        category: 'music',
+        description: 'Dynamic Live Stages & Festival Vibe',
+        cover_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
+        photos_count: '12.800 Foto',
+        creators_count: '38 Fotografer'
+      },
+      {
+        id: 'evt-comifuro19',
+        title: 'Comic Frontier (Comifuro) 19',
+        location: 'ICE BSD City, Tangerang',
+        event_date: '10 Oktober 2026',
+        date_iso: '2026-10-10',
+        category: 'cosplay',
+        description: 'Cosplayer Parade, Photoshoot Hall & Stage',
+        cover_url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=800&auto=format&fit=crop&q=80',
+        photos_count: '9.300 Foto',
+        creators_count: '28 Fotografer'
+      },
+      {
+        id: 'evt-pialapresiden',
+        title: 'Piala Presiden Esports Grand Final',
+        location: 'Tennis Indoor Senayan, Jakarta',
+        event_date: '8 November 2026',
+        date_iso: '2026-11-08',
+        category: 'tournament',
+        description: 'Player Stages, Trophy Ceremony & Fans Arena',
+        cover_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80',
+        photos_count: '6.900 Foto',
+        creators_count: '20 Fotografer'
+      },
+      {
+        id: 'evt-borobudur26',
+        title: 'Borobudur Marathon 2026',
+        location: 'Magelang, Jawa Tengah',
+        event_date: '15 November 2026',
+        date_iso: '2026-11-15',
+        category: 'sports',
+        description: 'Heritage Track & Runners Crowd',
+        cover_url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&auto=format&fit=crop&q=80',
+        photos_count: '10.500 Foto',
+        creators_count: '30 Fotografer'
+      },
+      {
+        id: 'evt-inacon26',
+        title: 'Indonesia Anime Con (INACON) 2026',
+        location: 'JCC Senayan, Jakarta',
+        event_date: '15 November 2026',
+        date_iso: '2026-11-15',
+        category: 'cosplay',
+        description: 'International Cosplay Showcase & Meetup',
+        cover_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop&q=80',
+        photos_count: '8.400 Foto',
+        creators_count: '25 Fotografer'
+      },
+      {
+        id: 'evt-kejurnas-badminton',
+        title: 'Kejurnas Bulutangkis Djarum Super',
+        location: 'Istora Senayan, Jakarta',
+        event_date: '12 Desember 2026',
+        date_iso: '2026-12-12',
+        category: 'tournament',
+        description: 'Aksi Smash Atlet & Riuh Penonton Istora',
+        cover_url: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?w=800&auto=format&fit=crop&q=80',
+        photos_count: '7.100 Foto',
+        creators_count: '19 Fotografer'
+      }
     ];
 
     const CATEGORY_META = {
@@ -1552,9 +1767,38 @@
       }
     };
 
+    let currentSearchQuery = '';
+
     function filterDefaultEvents(category) {
-      if (!category || category === 'all') return DEFAULT_MOCK_EVENTS;
-      return DEFAULT_MOCK_EVENTS.filter(e => e.category === category);
+      const list = [...DEFAULT_MOCK_EVENTS].sort((a, b) => (a.date_iso || '').localeCompare(b.date_iso || ''));
+      if (!category || category === 'all') return list;
+      return list.filter(e => e.category === category);
+    }
+
+    // Live Event Search Handler (Header & Mobile Search Box)
+    function handleSearchEvents(query) {
+      currentSearchQuery = (query || '').trim().toLowerCase();
+      
+      const headerInput = document.getElementById('headerSearchInput');
+      const mobileInput = document.getElementById('mobileSearchInput');
+      const headerClear = document.getElementById('headerSearchClear');
+      const mobileClear = document.getElementById('mobileSearchClear');
+
+      if (headerInput && headerInput.value !== query) headerInput.value = query;
+      if (mobileInput && mobileInput.value !== query) mobileInput.value = query;
+
+      if (headerClear) headerClear.classList.toggle('hidden', !currentSearchQuery);
+      if (mobileClear) mobileClear.classList.toggle('hidden', !currentSearchQuery);
+
+      renderEventCards();
+    }
+
+    function clearSearchEvents() {
+      const headerInput = document.getElementById('headerSearchInput');
+      const mobileInput = document.getElementById('mobileSearchInput');
+      if (headerInput) headerInput.value = '';
+      if (mobileInput) mobileInput.value = '';
+      handleSearchEvents('');
     }
 
     // 1. Fetch Events List
@@ -1576,12 +1820,16 @@
         eventsList = filterDefaultEvents(category);
       }
 
+      // Ensure chronological ordering by date_iso
+      eventsList.sort((a, b) => (a.date_iso || '').localeCompare(b.date_iso || ''));
+
+      renderEventCards();
       renderEventSelectors();
       renderCreatorEventList();
 
       if (eventsList.length > 0) {
         if (!currentEventId || !eventsList.some(e => e.id === currentEventId)) {
-          syncEventSelection(eventsList[0].id);
+          syncEventSelection(eventsList[0].id, false);
         }
       }
     }
@@ -1611,17 +1859,138 @@
       await fetchEvents(cat);
     }
 
-    // 3. Render Select Dropdowns
+    // 3. Render Event Cards Grid (All Events Chronologically Sorted by Date)
+    function renderEventCards() {
+      const container = document.getElementById('eventsCardsGrid');
+      const countBadge = document.getElementById('eventCountBadge');
+      if (!container) return;
+
+      // 1. Filter by category
+      let filtered = currentCategoryFilter && currentCategoryFilter !== 'all'
+        ? eventsList.filter(e => e.category === currentCategoryFilter)
+        : [...eventsList];
+
+      // 2. Filter by search query
+      if (currentSearchQuery) {
+        filtered = filtered.filter(e => 
+          (e.title && e.title.toLowerCase().includes(currentSearchQuery)) ||
+          (e.location && e.location.toLowerCase().includes(currentSearchQuery)) ||
+          (e.description && e.description.toLowerCase().includes(currentSearchQuery)) ||
+          (e.category && e.category.toLowerCase().includes(currentSearchQuery))
+        );
+      }
+
+      // 3. Strict Chronological Sort by Date
+      filtered.sort((a, b) => (a.date_iso || '').localeCompare(b.date_iso || ''));
+
+      if (countBadge) {
+        countBadge.innerText = `${filtered.length} Event`;
+      }
+
+      if (filtered.length === 0) {
+        container.innerHTML = `
+          <div class="col-span-full py-12 text-center bg-white dark:bg-[#1a1c2b] rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 p-6">
+            <div class="w-12 h-12 mx-auto rounded-full bg-pink-50 dark:bg-pink-950/40 text-pink-600 flex items-center justify-center text-2xl mb-2">
+              <i class="ph-bold ph-calendar-x"></i>
+            </div>
+            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Tidak ada event yang cocok</h4>
+            <p class="text-xs text-slate-400 mt-1">Coba kata kunci lain atau klik "Semua Event".</p>
+            <button onclick="clearSearchEvents(); filterByCategory('all');" class="mt-3 px-4 py-1.5 rounded-full bg-pink-600 text-white text-xs font-bold shadow-sm hover:bg-pink-700 transition">
+              Reset Pencarian
+            </button>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = filtered.map(ev => {
+        const isSelected = ev.id === currentEventId;
+        const meta = CATEGORY_META[ev.category] || CATEGORY_META.music;
+        return `
+          <div onclick="selectEventCard('${ev.id}')" id="eventCard-${ev.id}" class="group relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 bg-white dark:bg-[#1a1c2b] border ${isSelected ? 'border-pink-500 ring-2 ring-pink-500/60 shadow-xl -translate-y-1' : 'border-slate-200/80 dark:border-slate-800 hover:border-pink-300 dark:hover:border-slate-700 hover:shadow-lg hover:-translate-y-0.5'} flex flex-col justify-between">
+            <!-- Card Header & Cover Image -->
+            <div class="relative h-44 w-full overflow-hidden bg-slate-900">
+              <img src="${ev.cover_url || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800'}" alt="${ev.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">
+              <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10"></div>
+              
+              <!-- Top Floating Badges -->
+              <div class="absolute top-3 left-3 right-3 flex items-center justify-between gap-2">
+                <!-- Date Pill (Strictly Chronological) -->
+                <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/95 dark:bg-slate-900/90 backdrop-blur-md text-[11px] font-black text-slate-900 dark:text-white shadow-sm border border-white/20">
+                  <i class="ph-bold ph-calendar text-pink-600"></i>
+                  <span>${ev.event_date}</span>
+                </span>
+
+                <!-- Category Pill -->
+                <span class="inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-[10px] font-bold text-white shadow-sm backdrop-blur-md bg-black/50 border border-white/20">
+                  <i class="${meta.iconPh} text-pink-300"></i>
+                  <span>${meta.label}</span>
+                </span>
+              </div>
+
+              <!-- Active Selected Badge -->
+              ${isSelected ? `
+                <div class="absolute bottom-3 right-3">
+                  <span class="inline-flex items-center gap-1 px-2.5 py-0.5 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 text-white text-[10px] font-black shadow-md">
+                    <i class="ph-bold ph-check-circle"></i>Event Aktif
+                  </span>
+                </div>
+              ` : ''}
+
+              <!-- Bottom Event Location inside image overlay -->
+              <div class="absolute bottom-3 left-3 right-24">
+                <span class="text-[11px] font-semibold text-pink-200 flex items-center gap-1 drop-shadow truncate">
+                  <i class="ph-bold ph-map-pin text-pink-400 shrink-0"></i>
+                  <span class="truncate">${ev.location}</span>
+                </span>
+              </div>
+            </div>
+
+            <!-- Card Body Content -->
+            <div class="p-4 flex-1 flex flex-col justify-between space-y-3">
+              <div>
+                <h4 class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white group-hover:text-pink-600 dark:group-hover:text-pink-400 transition leading-snug">
+                  ${ev.title}
+                </h4>
+                <p class="text-[11px] text-slate-500 dark:text-slate-400 mt-1 line-clamp-2">
+                  ${ev.description || 'Dokumentasi resmi beresolusi tinggi terverifikasi.'}
+                </p>
+              </div>
+
+              <!-- Card Action Footer -->
+              <div class="pt-2.5 border-t border-slate-100 dark:border-slate-800 flex items-center justify-between">
+                <div class="flex items-center gap-1.5 text-[11px] font-bold text-slate-600 dark:text-slate-400">
+                  <i class="ph-bold ph-camera text-pink-600"></i>
+                  <span>${ev.photos_count || '1.200+ Foto'}</span>
+                </div>
+                <button class="text-xs font-bold px-3 py-1.5 rounded-full transition flex items-center gap-1 ${isSelected ? 'bg-pink-600 text-white shadow-sm' : 'bg-pink-50 dark:bg-slate-800 text-pink-600 dark:text-pink-400 hover:bg-pink-600 hover:text-white'}">
+                  <span>${isSelected ? 'Sedang Dibuka' : 'Lihat Foto'}</span>
+                  <i class="ph-bold ${isSelected ? 'ph-caret-down' : 'ph-arrow-right'} text-xs"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function selectEventCard(eventId, shouldScroll = true) {
+      syncEventSelection(eventId);
+      if (shouldScroll) {
+        const target = document.getElementById('eventShowcaseSection');
+        if (target) {
+          target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+      }
+    }
+
+    // 4. Render Select Dropdowns (For Creator View Upload Selector)
     function renderEventSelectors() {
-      const globalSel = document.getElementById('globalEventSelect');
-      const mobileSel = document.getElementById('mobileEventSelect');
       const creatorSel = document.getElementById('creatorTargetEvent');
+      if (!creatorSel) return;
 
       if (eventsList.length === 0) {
-        const emptyOpt = '<option value="">Belum ada event di kategori ini</option>';
-        globalSel.innerHTML = emptyOpt;
-        mobileSel.innerHTML = emptyOpt;
-        creatorSel.innerHTML = emptyOpt;
+        creatorSel.innerHTML = '<option value="">Belum ada event di kategori ini</option>';
         return;
       }
 
@@ -1631,14 +2000,13 @@
         return `<option value="${ev.id}">${emoji} ${ev.title} (${ev.location})</option>`;
       }).join('');
 
-      globalSel.innerHTML = options;
-      mobileSel.innerHTML = options;
       creatorSel.innerHTML = options;
     }
 
-    // 4. Render Creator Event Inventory List
+    // 5. Render Creator Event Inventory List
     function renderCreatorEventList() {
       const container = document.getElementById('creatorEventList');
+      if (!container) return;
       if (eventsList.length === 0) {
         container.innerHTML = '<p class="text-xs text-slate-400 py-4 text-center">Belum ada event terdaftar.</p>';
         return;
@@ -1661,7 +2029,7 @@
                 </p>
               </div>
             </div>
-            <button onclick="syncEventSelection('${ev.id}'); switchMode('user');" class="text-xs font-bold text-pink-600 hover:text-pink-800 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm shrink-0">
+            <button onclick="selectEventCard('${ev.id}', true); switchMode('user');" class="text-xs font-bold text-pink-600 hover:text-pink-800 px-3 py-1.5 rounded-full bg-white border border-slate-200 shadow-sm shrink-0">
               Lihat
             </button>
           </div>
@@ -1669,27 +2037,36 @@
       }).join('');
     }
 
-    // 5. Synchronize Selected Event Across All Components
-    async function syncEventSelection(eventId) {
+    // 6. Synchronize Selected Event Across All Components
+    async function syncEventSelection(eventId, shouldUpdateCards = true) {
       if (!eventId) return;
       currentEventId = eventId;
 
-      document.getElementById('globalEventSelect').value = eventId;
-      document.getElementById('mobileEventSelect').value = eventId;
-      document.getElementById('creatorTargetEvent').value = eventId;
+      const creatorSel = document.getElementById('creatorTargetEvent');
+      if (creatorSel) creatorSel.value = eventId;
+
+      if (shouldUpdateCards) {
+        renderEventCards();
+      }
 
       const ev = eventsList.find(e => e.id === eventId);
       if (ev) {
         const meta = CATEGORY_META[ev.category] || CATEGORY_META.music;
-        document.getElementById('heroTitle').innerText = ev.title;
-        document.getElementById('heroLocation').innerText = ev.location;
-        document.getElementById('heroCategory').innerText = meta.label;
-        document.getElementById('heroCategoryIcon').className = meta.icon;
-        
-        const banner = document.getElementById('eventHeroBanner');
-        banner.className = meta.banner;
+        const heroTitle = document.getElementById('heroTitle');
+        const heroLocation = document.getElementById('heroLocation');
+        const heroCategory = document.getElementById('heroCategory');
+        const heroCategoryIcon = document.getElementById('heroCategoryIcon');
+        const heroBanner = document.getElementById('eventHeroBanner');
+        const heroDate = document.getElementById('heroDate');
 
-        document.getElementById('heroDate').innerHTML = `<i class="ph-bold ph-calendar"></i> <span>${ev.event_date}</span> <span class="text-white/40">•</span> <span>${ev.description || 'Dokumentasi Resmi Terverifikasi'}</span>`;
+        if (heroTitle) heroTitle.innerText = ev.title;
+        if (heroLocation) heroLocation.innerText = ev.location;
+        if (heroCategory) heroCategory.innerText = meta.label;
+        if (heroCategoryIcon) heroCategoryIcon.className = meta.icon;
+        if (heroBanner) heroBanner.className = meta.banner;
+        if (heroDate) {
+          heroDate.innerHTML = `<i class="ph-bold ph-calendar"></i> <span>${ev.event_date}</span> <span class="text-white/40">•</span> <span>${ev.description || 'Dokumentasi Resmi Terverifikasi'}</span>`;
+        }
       }
 
       await loadEventPhotos(eventId);
