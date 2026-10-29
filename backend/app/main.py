@@ -186,6 +186,52 @@ async def search_faces(
     }
 
 
+class PurchaseRequest(BaseModel):
+    user_id: str
+    tier: str = "high_res"  # "high_res" (Rp 35.000) or "compressed" (Rp 20.000)
+
+
+@app.post("/api/photos/{photo_id}/purchase")
+async def purchase_photo(photo_id: str, req: PurchaseRequest):
+    """
+    Handles tiered photo purchase:
+    - High-Res (Rp 35.000): Preserves high-res original 24-50MP master file in storage.
+      User can download either high-res master or compressed version.
+    - Compressed (Rp 20.000): Automatically deletes raw high-res original
+      from storage to optimize cloud storage COGS, preserving only compressed web version.
+    """
+    photo = db_service.get_photo(photo_id)
+    if not photo:
+        raise HTTPException(status_code=404, detail="Photo not found")
+
+    purchase = db_service.record_purchase(
+        user_id=req.user_id,
+        photo_id=photo_id,
+        tier=req.tier
+    )
+
+    if req.tier == "compressed":
+        # Delete high-resolution original to save storage space!
+        storage_service.delete_raw_photo(photo["file_url"])
+        db_service.mark_photo_raw_deleted(photo_id)
+        download_url = photo["thumbnail_url"]
+        high_res_available = False
+    else:
+        # High-res master preserved
+        download_url = photo["file_url"]
+        high_res_available = True
+
+    return {
+        "success": True,
+        "purchase": purchase,
+        "tier": req.tier,
+        "high_res_available": high_res_available,
+        "download_url": download_url,
+        "compressed_download_url": photo["thumbnail_url"],
+        "message": "Pembelian berhasil!"
+    }
+
+
 @app.get("/", response_class=HTMLResponse)
 def index_page():
     index_html = os.path.join(frontend_path, "index.html")

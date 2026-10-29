@@ -61,6 +61,26 @@ class DatabaseService:
                 FOREIGN KEY (event_id) REFERENCES events (id) ON DELETE CASCADE
             )
             """)
+            cursor.execute("""
+            CREATE TABLE IF NOT EXISTS purchases (
+                id TEXT PRIMARY KEY,
+                user_id TEXT NOT NULL,
+                photo_id TEXT NOT NULL,
+                event_id TEXT NOT NULL,
+                tier TEXT NOT NULL,
+                price_idr INTEGER NOT NULL,
+                photographer_share_idr INTEGER NOT NULL,
+                eo_share_idr INTEGER NOT NULL,
+                platform_share_idr INTEGER NOT NULL,
+                created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                FOREIGN KEY (photo_id) REFERENCES photos (id)
+            )
+            """)
+            # Migration check: add raw_deleted to photos
+            try:
+                cursor.execute("ALTER TABLE photos ADD COLUMN raw_deleted INTEGER DEFAULT 0")
+            except sqlite3.OperationalError:
+                pass
             conn.commit()
 
     def create_event(self, title: str, location: str, event_date: str, description: str = "", category: str = "music") -> Dict[str, Any]:
@@ -208,3 +228,58 @@ class DatabaseService:
 
         sorted_matches = sorted(matches.values(), key=lambda x: x["distance"])
         return sorted_matches[:limit]
+
+    def get_photo(self, photo_id: str) -> Optional[Dict[str, Any]]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM photos WHERE id = ?", (photo_id,))
+            row = cursor.fetchone()
+            return dict(row) if row else None
+
+    def mark_photo_raw_deleted(self, photo_id: str):
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("UPDATE photos SET raw_deleted = 1 WHERE id = ?", (photo_id,))
+            conn.commit()
+
+    def record_purchase(
+        self,
+        user_id: str,
+        photo_id: str,
+        tier: str = "high_res"
+    ) -> Dict[str, Any]:
+        """
+        Records a purchase for high_res (Rp 35.000) or compressed (Rp 20.000).
+        Revenue share: Photographer 50%, Venue/EO 10%, Platform PicMe 40%.
+        """
+        photo = self.get_photo(photo_id)
+        if not photo:
+            raise ValueError(f"Photo {photo_id} not found")
+
+        price = 35000 if tier == "high_res" else 20000
+        photographer_share = int(price * 0.50)
+        eo_share = int(price * 0.10)
+        platform_share = price - photographer_share - eo_share
+
+        purchase_id = str(uuid.uuid4())
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute(
+                """
+                INSERT INTO purchases (id, user_id, photo_id, event_id, tier, price_idr, photographer_share_idr, eo_share_idr, platform_share_idr)
+                VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
+                """,
+                (purchase_id, user_id, photo_id, photo["event_id"], tier, price, photographer_share, eo_share, platform_share)
+            )
+            conn.commit()
+
+        return {
+            "purchase_id": purchase_id,
+            "photo_id": photo_id,
+            "event_id": photo["event_id"],
+            "tier": tier,
+            "price_idr": price,
+            "photographer_share_idr": photographer_share,
+            "eo_share_idr": eo_share,
+            "platform_share_idr": platform_share
+        }

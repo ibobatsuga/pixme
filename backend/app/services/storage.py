@@ -124,3 +124,25 @@ class StorageService:
         thumbnail_url = f"/uploads/thumbnails/{event_id}/thumb_{unique_name}"
 
         return file_url, thumbnail_url, width, height
+
+    def delete_raw_photo(self, file_url: str) -> bool:
+        """
+        Deletes the high-resolution RAW original photo from storage
+        when user purchases the compressed tier to optimize cloud storage COGS.
+        """
+        try:
+            if self.driver == "s3" and self.s3_client:
+                if "/events/" in file_url:
+                    key = "events/" + file_url.split("/events/", 1)[1]
+                    self.s3_client.delete_object(Bucket=self.bucket_name, Key=key)
+                    return True
+            else:
+                if "/uploads/raw/" in file_url:
+                    rel_path = file_url.split("/uploads/raw/", 1)[1]
+                    abs_path = os.path.join(self.raw_dir, rel_path)
+                    if os.path.exists(abs_path):
+                        os.remove(abs_path)
+                        return True
+        except Exception as e:
+            print(f"[StorageService] Error deleting raw photo ({file_url}): {e}")
+        return False
