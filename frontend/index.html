@@ -419,15 +419,16 @@
         </div>
       </div>
 
-      <!-- Action Buttons Row (1:1 with Screenshot) -->
+      <!-- Action Buttons Row (Sunting Profil & Cari Foto) -->
       <div class="flex items-center gap-3 pt-2">
         <button onclick="alert('Fitur Sunting Profil')" class="flex-1 bg-white hover:bg-slate-100 text-slate-900 font-bold py-2.5 px-4 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-sm transition">
           <i class="ph-bold ph-pencil-simple text-sm"></i>
           <span>Sunting Profil</span>
         </button>
         
-        <button onclick="setRole('creator')" class="flex-1 bg-purple-700 hover:bg-purple-800 text-white font-bold py-2.5 px-4 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition">
-          <span>Unggah</span>
+        <button onclick="navGoTo('beranda')" class="flex-1 bg-gradient-to-r from-purple-700 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold py-2.5 px-4 rounded-full text-xs sm:text-sm flex items-center justify-center gap-1.5 shadow-md hover:shadow-lg transition">
+          <i class="ph-bold ph-magnifying-glass text-sm"></i>
+          <span>Cari Foto Saya</span>
         </button>
       </div>
 
@@ -443,34 +444,16 @@
         </button>
       </div>
 
-      <!-- User or Fotografer Role Selector (Directly Inside this Menu) -->
-      <div class="mt-4 pt-4 border-t border-slate-800/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <span class="text-xs font-semibold text-slate-400 flex items-center gap-1.5">
-          <i class="ph-bold ph-identification-card text-purple-400"></i>
-          <span>Pilih Peran Akun Anda:</span>
-        </span>
-        <div class="flex items-center bg-slate-800/90 p-1 rounded-full border border-slate-700 w-full sm:w-auto shadow-inner">
-          <button id="roleBtnUser" onclick="setRole('user')" class="flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5">
-            <i class="ph-bold ph-user-focus"></i>
-            <span>Penonton & Peserta</span>
-          </button>
-          <button id="roleBtnCreator" onclick="setRole('creator')" class="flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5">
-            <i class="ph-bold ph-camera"></i>
-            <span>Fotografer & Creator</span>
-          </button>
-        </div>
-      </div>
-
     </div>
 
-    <!-- Master Biometric Selfie Status Card (Akses & Ambil Ulang Selfie) -->
+    <!-- Foto Selfie Status Card (Akses & Ambil Ulang Selfie) -->
     <div class="mt-5 bg-white dark:bg-[#18181b] rounded-3xl p-5 sm:p-6 border border-slate-200 dark:border-slate-800 shadow-sm">
       <div class="flex flex-col md:flex-row md:items-center justify-between gap-4">
         
         <!-- Left: Avatar + Title & Info (Unified Row) -->
         <div class="flex items-center gap-4">
           <div class="relative shrink-0">
-            <img id="accountMasterSelfieImg" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-purple-500 shadow-md hidden" alt="Master Selfie">
+            <img id="accountMasterSelfieImg" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl object-cover border-2 border-purple-500 shadow-md hidden" alt="Selfie">
             <div id="accountMasterSelfiePlaceholder" class="w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-tr from-purple-100 to-pink-100 dark:from-slate-800 dark:to-slate-700 border-2 border-dashed border-purple-400 flex items-center justify-center text-purple-700 dark:text-purple-300 text-2xl shadow-inner">
               <i class="ph-bold ph-camera"></i>
             </div>
@@ -482,15 +465,15 @@
           <div class="space-y-1">
             <div class="flex items-center gap-2 flex-wrap">
               <h3 class="text-base font-extrabold text-slate-900 dark:text-white flex items-center gap-1.5">
-                <i class="ph-bold ph-scan text-purple-600"></i>
-                <span>Foto Selfie Wajah Master (AI PicMe)</span>
+                <i class="ph-bold ph-user-focus text-purple-600"></i>
+                <span>Foto Selfie</span>
               </h3>
               <span id="accountSelfieBadge" class="px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-amber-100 text-amber-800 dark:bg-amber-950/50 dark:text-amber-400 border border-amber-200 dark:border-amber-800">
                 Belum Ada Selfie
               </span>
             </div>
             <p id="accountMasterSelfieDesc" class="text-xs text-slate-500 dark:text-slate-400 max-w-xl leading-relaxed">
-              Foto acuan biometrik Anda untuk mendeteksi wajah di kerumunan konser & festival musik secara otomatis.
+              Foto selfie Anda untuk mendeteksi dan mencocokkan wajah pada foto acara secara otomatis.
             </p>
           </div>
         </div>
@@ -498,8 +481,8 @@
         <!-- Right: Action Buttons (Aligned across) -->
         <div class="flex items-center gap-2 shrink-0 self-start md:self-center">
           <button onclick="openRetakeModal()" class="bg-gradient-to-r from-purple-700 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold px-4 py-2.5 rounded-full text-xs flex items-center gap-1.5 shadow-sm hover:shadow transition">
-            <i class="ph-bold ph-camera-rotate text-sm"></i>
-            <span id="accountBtnSelfieActionText">Ambil Ulang Selfie</span>
+            <i class="ph-bold ph-camera text-sm"></i>
+            <span id="accountBtnSelfieActionText">Ambil Foto Selfie</span>
           </button>
           <button onclick="document.getElementById('inputAccountSelfieUpload').click()" class="bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 dark:hover:bg-slate-700 text-slate-700 dark:text-slate-200 border border-slate-200 dark:border-slate-700 font-bold px-3.5 py-2.5 rounded-full text-xs flex items-center gap-1.5 transition">
             <i class="ph-bold ph-upload-simple text-sm"></i>
@@ -511,127 +494,65 @@
       </div>
     </div>
 
-    <!-- Subtabs: Jual vs Postingan (1:1 FotoYu) -->
-    <div class="flex border-b border-slate-200 mt-6 mb-6">
-      <button id="accTabJual" onclick="switchAccountTab('jual')" class="pb-3 text-slate-400 hover:text-slate-700 font-bold text-sm flex items-center justify-center gap-2 flex-1 transition">
-        Jual
-      </button>
-      <button id="accTabPostingan" onclick="switchAccountTab('postingan')" class="pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold text-sm flex items-center justify-center gap-2 flex-1 transition">
-        Postingan
-      </button>
-    </div>
-
-    <!-- TAB CONTENT 1: Postingan (1:1 with Screenshot) -->
-    <div id="accContentPostingan" class="space-y-6">
-      <div class="bg-white rounded-3xl p-6 sm:p-10 border border-slate-200/80 shadow-soft">
-        
-        <div class="flex items-center gap-2 text-slate-800 font-bold text-sm mb-12">
-          <i class="ph-bold ph-image text-lg text-purple-700"></i>
-          <span>Postingan</span>
-        </div>
-
-        <div class="text-center py-8 flex flex-col items-center justify-center">
-          <h3 class="text-lg font-extrabold text-slate-900">Momen Kamu</h3>
-          <p class="text-xs text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
-            Kamu belum mengunggah momenmu. Kami bersemangat untuk momen kamu yang mengagumkan.
-          </p>
-
-          <!-- Vertical Purple Indicator Arrows (1:1 from Screenshot) -->
-          <div class="mt-8 text-purple-700 text-2xl font-bold flex flex-col items-center leading-none">
-            <i class="ph-bold ph-arrows-down-up"></i>
-          </div>
-
-          <div class="mt-8 flex flex-col sm:flex-row items-center gap-3">
-            <button onclick="navGoTo('beranda')" class="px-6 py-2.5 rounded-full bg-slate-900 hover:bg-purple-900 text-white text-xs font-bold transition shadow-sm">
-              Cari Foto Saya di Beranda
-            </button>
-            <button onclick="setRole('creator')" class="px-6 py-2.5 rounded-full bg-purple-50 hover:bg-purple-100 text-purple-700 border border-purple-200 text-xs font-bold transition">
-              Beralih ke Unggah Foto Fotografer
-            </button>
-          </div>
-        </div>
-
-      </div>
-    </div>
-
-    <!-- TAB CONTENT 2: Jual (Creator Workspace & Bulk Upload Ingest) -->
-    <div id="accContentJual" class="hidden space-y-6">
-      
-      <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-4 p-5 rounded-3xl bg-purple-50/70 border border-purple-100">
-        <div>
-          <span class="text-[10px] font-bold tracking-wider uppercase text-purple-700">Fotografer & Creator Portal</span>
-          <h2 class="text-xl font-extrabold text-slate-900">Dokumentasi & Upload Foto Konser</h2>
-          <p class="text-xs text-slate-500 mt-0.5">Unggah foto panggung & penonton. AI PicMe mengekstrak wajah otomatis.</p>
-        </div>
-        <button onclick="toggleModal('modalNewEvent', true)" class="bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs px-5 py-2.5 rounded-full flex items-center gap-2 shadow-sm transition">
-          <i class="ph-bold ph-plus-circle text-base"></i>
-          <span>Buat Event Baru</span>
+    <!-- Foto & Pembelian Saya (Unified Attendee Content) -->
+    <div class="mt-6 bg-white dark:bg-[#18181b] rounded-3xl p-6 sm:p-8 border border-slate-200/80 dark:border-slate-800 shadow-sm space-y-4">
+      <div class="flex items-center justify-between">
+        <h4 class="font-extrabold text-sm sm:text-base text-slate-900 dark:text-white flex items-center gap-2">
+          <i class="ph-bold ph-images text-purple-700 dark:text-purple-400"></i>
+          <span>Foto & Pembelian Saya</span>
+        </h4>
+        <button onclick="navGoTo('beranda')" class="text-xs font-bold text-purple-700 dark:text-purple-400 hover:underline">
+          Lihat Semua Foto Acara →
         </button>
       </div>
 
-      <!-- Upload Workspace + Event Inventory -->
-      <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
-        
-        <!-- Left: Upload Box -->
-        <div class="lg:col-span-7 space-y-6">
-          <div class="glass-card bg-white rounded-3xl p-6 sm:p-7 shadow-soft space-y-5 border border-slate-200/80">
-            
-            <div class="flex items-center justify-between">
-              <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
-                <i class="ph-bold ph-cloud-arrow-up text-purple-700 text-xl"></i>
-                Bulk Ingest Foto
-              </h3>
-              <span class="text-[10px] font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-100">Multi-Upload Ready</span>
-            </div>
-
-            <!-- Target Event Selector -->
-            <div>
-              <label class="block text-xs font-bold text-slate-600 mb-1.5 uppercase tracking-wider">Target Event</label>
-              <select id="creatorTargetEvent" class="w-full bg-slate-50 border border-slate-200 rounded-2xl px-4 py-3 text-xs font-semibold text-slate-800 focus:ring-2 focus:ring-purple-500 focus:outline-none">
-                <option value="">Memuat event...</option>
-              </select>
-            </div>
-
-            <!-- Drag and Drop Box -->
-            <div id="creatorDropzone" onclick="document.getElementById('creatorFilesInput').click()" class="border-2 border-dashed border-slate-300 hover:border-purple-600 rounded-3xl p-8 text-center cursor-pointer bg-slate-50/50 hover:bg-purple-50/20 transition-all group">
-              <input type="file" id="creatorFilesInput" multiple accept="image/*" class="hidden" onchange="onCreatorFilesPicked(event)">
-              
-              <div class="w-14 h-14 mx-auto rounded-full bg-purple-50 text-purple-700 flex items-center justify-center text-2xl mb-3 group-hover:scale-110 transition-transform">
-                <i class="ph-bold ph-images-square"></i>
-              </div>
-              <h4 class="text-sm font-extrabold text-slate-800">Tarik & Lepas Foto di Sini, atau Klik untuk Browse</h4>
-              <p class="text-[11px] text-slate-400 mt-1 max-w-sm mx-auto">Mendukung format JPG, PNG, WEBP resolusi tinggi.</p>
-              
-              <div id="creatorFilesBadge" class="hidden mt-3 inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-purple-100 text-purple-800 text-xs font-bold">
-                <i class="ph-bold ph-check-circle"></i>
-                <span id="creatorFilesCountText">0 Foto Dipilih</span>
-              </div>
-            </div>
-
-            <!-- Process Button -->
-            <button id="btnCreatorProcess" onclick="submitCreatorUpload()" disabled class="w-full bg-purple-700 hover:bg-purple-800 text-white font-bold py-3.5 px-6 rounded-full shadow-md transition flex items-center justify-center gap-2 disabled:opacity-40 disabled:cursor-not-allowed">
-              <i class="ph-bold ph-cpu text-lg"></i>
-              <span id="btnCreatorText">Mulai Ekstraksi AI & Simpan Foto</span>
-            </button>
-          </div>
+      <div class="text-center py-8 flex flex-col items-center justify-center">
+        <div class="w-14 h-14 rounded-2xl bg-purple-50 dark:bg-purple-950/40 text-purple-700 dark:text-purple-400 flex items-center justify-center text-2xl mb-3">
+          <i class="ph-bold ph-sparkle"></i>
         </div>
-
-        <!-- Right: Event List & Inventory -->
-        <div class="lg:col-span-5 space-y-6">
-          <div class="glass-card bg-white rounded-3xl p-6 shadow-soft space-y-4 border border-slate-200/80">
-            <h3 class="font-extrabold text-base text-slate-900 flex items-center gap-2">
-              <i class="ph-bold ph-calendar-check text-purple-700"></i>
-              Daftar Event Terdaftar
-            </h3>
-            
-            <div id="creatorEventList" class="space-y-3 max-h-[480px] overflow-y-auto pr-1">
-              <!-- Rendered via JS -->
-            </div>
-          </div>
+        <h4 class="text-base font-extrabold text-slate-900 dark:text-white">Momen Foto Kamu</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 mt-1 max-w-sm mx-auto leading-relaxed">
+          Ambil foto selfie di atas untuk memindai wajah Anda di seluruh album konser & event marathon secara otomatis.
+        </p>
+        <div class="mt-5">
+          <button onclick="navGoTo('beranda')" class="px-6 py-2.5 rounded-full bg-slate-900 hover:bg-purple-900 text-white text-xs font-bold transition shadow-sm">
+            Cari Foto Saya di Beranda
+          </button>
         </div>
-
       </div>
+    </div>
 
+    <!-- ==================== AJUKAN DIRI SEBAGAI FOTOGRAFER ==================== -->
+    <div class="mt-6 bg-gradient-to-br from-slate-900 via-purple-950 to-slate-900 text-white rounded-3xl p-6 sm:p-8 border border-purple-500/30 shadow-xl relative overflow-hidden">
+      <!-- Ambient Glow -->
+      <div class="absolute -right-10 -bottom-10 w-48 h-48 bg-pink-500/20 rounded-full blur-3xl pointer-events-none"></div>
+      
+      <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+        <div class="space-y-2 max-w-xl">
+          <div class="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-purple-500/20 border border-purple-400/30 text-purple-300 text-xs font-bold">
+            <i class="ph-bold ph-camera"></i>
+            <span>Program Fotografer Resmi PicMe</span>
+          </div>
+          <h3 class="text-xl sm:text-2xl font-black text-white tracking-tight">
+            Tertarik Menjadi Fotografer Resmi PicMe?
+          </h3>
+          <p class="text-xs sm:text-sm text-slate-300 leading-relaxed">
+            Fotografer PicMe adalah fotografer profesional terkurasi dan terpilih. Kirimkan portofolio & gear kamera Anda untuk bergabung meliput konser musik, festival, dan marathon besar.
+          </p>
+          <ul class="pt-1 flex flex-wrap gap-x-4 gap-y-1 text-xs text-purple-200 font-medium">
+            <li class="flex items-center gap-1.5"><i class="ph-bold ph-check-circle text-emerald-400"></i> Bagi Hasil Transparan (50%)</li>
+            <li class="flex items-center gap-1.5"><i class="ph-bold ph-check-circle text-emerald-400"></i> AI Auto-Watermark & Auto-Index</li>
+            <li class="flex items-center gap-1.5"><i class="ph-bold ph-check-circle text-emerald-400"></i> Akses Liputan Resmi Event</li>
+          </ul>
+        </div>
+
+        <div class="shrink-0">
+          <button onclick="openApplyPhotographerModal()" class="w-full sm:w-auto px-6 py-3.5 rounded-full bg-gradient-to-r from-purple-600 to-pink-600 hover:from-purple-500 hover:to-pink-500 text-white font-extrabold text-xs sm:text-sm shadow-lg shadow-purple-900/50 flex items-center justify-center gap-2 transition transform hover:scale-105">
+            <i class="ph-bold ph-paper-plane-tilt text-base"></i>
+            <span>Ajukan Diri Sebagai Fotografer</span>
+          </button>
+        </div>
+      </div>
     </div>
 
     <!-- Extra Bottom Padding Spacer so fixed bottom bar never cuts off text -->
@@ -1295,6 +1216,104 @@
 
     </div>
   </nav>
+
+
+  <!-- ==================== MODAL: AJUKAN DIRI SEBAGAI FOTOGRAFER ==================== -->
+  <div id="modalApplyPhotographer" class="hidden fixed inset-0 z-50 flex items-center justify-center p-3 sm:p-4">
+    <div class="absolute inset-0 bg-slate-900/60 backdrop-blur-md" onclick="toggleModal('modalApplyPhotographer', false)"></div>
+    <div class="bg-white dark:bg-[#18181b] rounded-3xl p-6 sm:p-8 max-w-lg w-full relative z-10 shadow-2xl border border-slate-200/80 dark:border-slate-800 space-y-4 max-h-[90vh] overflow-y-auto">
+      
+      <!-- Close Button -->
+      <button onclick="toggleModal('modalApplyPhotographer', false)" class="absolute top-5 right-5 w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 hover:bg-slate-200 text-slate-600 dark:text-slate-300 flex items-center justify-center text-sm transition" title="Tutup">
+        <i class="ph-bold ph-x"></i>
+      </button>
+
+      <!-- Modal Header -->
+      <div class="flex items-center gap-3 border-b border-slate-100 dark:border-slate-800 pb-3">
+        <div class="w-10 h-10 rounded-2xl bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-xl shrink-0">
+          <i class="ph-bold ph-camera"></i>
+        </div>
+        <div>
+          <h3 class="font-extrabold text-base sm:text-lg text-slate-900 dark:text-white">Ajukan Diri Sebagai Fotografer</h3>
+          <p class="text-xs text-slate-500 dark:text-slate-400">Bergabung dengan tim fotografer resmi PicMe</p>
+        </div>
+      </div>
+
+      <!-- Application Form -->
+      <form id="formApplyPhotographer" onsubmit="submitPhotographerApplication(event)" class="space-y-3.5 pt-1">
+        
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Nama Lengkap</label>
+          <input type="text" id="applyFullName" required placeholder="Contoh: Budi Santoso" class="w-full bg-slate-50 dark:bg-[#20222e] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
+          <div class="space-y-1">
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">No. WhatsApp</label>
+            <input type="tel" id="applyWhatsapp" required placeholder="08xxxxxxxxxx" class="w-full bg-slate-50 dark:bg-[#20222e] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+          </div>
+          <div class="space-y-1">
+            <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Email</label>
+            <input type="email" id="applyEmail" required placeholder="nama@email.com" class="w-full bg-slate-50 dark:bg-[#20222e] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Tautan Portofolio / Instagram</label>
+          <div class="relative">
+            <i class="ph-bold ph-link absolute left-3.5 top-3 text-slate-400 text-sm"></i>
+            <input type="text" id="applyPortfolio" required placeholder="instagram.com/fotografer atau drive link" class="w-full bg-slate-50 dark:bg-[#20222e] border border-slate-200 dark:border-slate-700 rounded-xl pl-9 pr-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+          </div>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Gear Kamera & Lensa</label>
+          <input type="text" id="applyGear" required placeholder="Contoh: Sony A7 IV, 70-200mm f/2.8 & 24-70mm" class="w-full bg-slate-50 dark:bg-[#20222e] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Spesialisasi Acara</label>
+          <select id="applyCategory" class="w-full bg-slate-50 dark:bg-[#20222e] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+            <option value="Konser & Festival Musik">Konser & Festival Musik</option>
+            <option value="Olahraga & Marathon / Lari">Olahraga & Marathon / Lari</option>
+            <option value="Street Photography">Street Photography</option>
+            <option value="Wisuda & Acara Kampus">Wisuda & Acara Kampus</option>
+            <option value="Semua Kategori">Semua Kategori</option>
+          </select>
+        </div>
+
+        <div class="space-y-1">
+          <label class="block text-xs font-bold text-slate-700 dark:text-slate-300">Pengalaman Liputan Singkat</label>
+          <textarea id="applyExperience" rows="2" placeholder="Ceritakan event atau festival terbesar yang pernah Anda liput..." class="w-full bg-slate-50 dark:bg-[#20222e] border border-slate-200 dark:border-slate-700 rounded-xl px-4 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none"></textarea>
+        </div>
+
+        <div class="p-3 rounded-xl bg-purple-50 dark:bg-purple-950/40 border border-purple-200 dark:border-purple-800 text-[11px] text-purple-900 dark:text-purple-300 leading-relaxed">
+          <i class="ph-bold ph-info mr-1"></i> Tim kurasi PicMe akan meninjau portofolio Anda dalam 1x24 jam kerja dan menghubungi melalui WhatsApp resmi.
+        </div>
+
+        <button type="submit" id="btnSubmitApplication" class="w-full py-3.5 rounded-full bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-extrabold text-xs sm:text-sm shadow-md transition flex items-center justify-center gap-2">
+          <i class="ph-bold ph-paper-plane-tilt"></i>
+          <span>Kirim Pengajuan</span>
+        </button>
+
+      </form>
+
+      <!-- Success State after Submit -->
+      <div id="applySuccessState" class="hidden text-center py-6 space-y-3">
+        <div class="w-14 h-14 mx-auto rounded-full bg-emerald-100 text-emerald-600 flex items-center justify-center text-3xl">
+          <i class="ph-bold ph-check-circle"></i>
+        </div>
+        <h4 class="text-base font-extrabold text-slate-900 dark:text-white">Pengajuan Berhasil Dikirim!</h4>
+        <p class="text-xs text-slate-500 dark:text-slate-400 max-w-sm mx-auto leading-relaxed">
+          Terima kasih telah mengajukan diri sebagai fotografer resmi PicMe. Tim kurasi kami akan segera meninjau portofolio Anda.
+        </p>
+        <button type="button" onclick="toggleModal('modalApplyPhotographer', false)" class="px-6 py-2.5 rounded-full bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition">
+          Tutup
+        </button>
+      </div>
+
+    </div>
+  </div>
 
 
   <!-- ==================== CLIENT JAVASCRIPT LOGIC ==================== -->
@@ -2456,39 +2475,41 @@
       }
     }
 
-    // 17. Role Selection (Inside Akun Saya)
-    function setRole(role) {
-      const roleBtnUser = document.getElementById('roleBtnUser');
-      const roleBtnCreator = document.getElementById('roleBtnCreator');
-
-      if (role === 'creator') {
-        roleBtnCreator.className = 'flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5';
-        roleBtnUser.className = 'flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5';
-        switchAccountTab('jual');
-      } else {
-        roleBtnUser.className = 'flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-bold transition bg-white text-slate-900 shadow-sm flex items-center justify-center gap-1.5';
-        roleBtnCreator.className = 'flex-1 sm:flex-initial px-4 py-1.5 rounded-full text-xs font-bold text-slate-400 hover:text-white transition flex items-center justify-center gap-1.5';
-        switchAccountTab('postingan');
-      }
+    // 17. Application to Become Official PicMe Photographer
+    function openApplyPhotographerModal() {
+      const form = document.getElementById('formApplyPhotographer');
+      const success = document.getElementById('applySuccessState');
+      if (form) form.classList.remove('hidden');
+      if (success) success.classList.add('hidden');
+      toggleModal('modalApplyPhotographer', true);
     }
 
-    // 18. Switch Account Subtabs (Jual vs Postingan)
-    function switchAccountTab(tab) {
-      const tabJual = document.getElementById('accTabJual');
-      const tabPostingan = document.getElementById('accTabPostingan');
-      const contentJual = document.getElementById('accContentJual');
-      const contentPostingan = document.getElementById('accContentPostingan');
+    function submitPhotographerApplication(event) {
+      event.preventDefault();
+      const app = {
+        name: document.getElementById('applyFullName').value.trim(),
+        whatsapp: document.getElementById('applyWhatsapp').value.trim(),
+        email: document.getElementById('applyEmail').value.trim(),
+        portfolio: document.getElementById('applyPortfolio').value.trim(),
+        gear: document.getElementById('applyGear').value.trim(),
+        category: document.getElementById('applyCategory').value,
+        experience: document.getElementById('applyExperience').value.trim(),
+        submitted_at: new Date().toISOString()
+      };
+      const apps = JSON.parse(localStorage.getItem('picme_photographer_applications') || '[]');
+      apps.push(app);
+      localStorage.setItem('picme_photographer_applications', JSON.stringify(apps));
 
-      if (tab === 'jual') {
-        tabJual.className = 'pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold text-sm flex items-center justify-center gap-2 flex-1 transition';
-        tabPostingan.className = 'pb-3 text-slate-400 hover:text-slate-700 font-semibold text-sm flex items-center justify-center gap-2 flex-1 transition';
-        contentJual.classList.remove('hidden');
-        contentPostingan.classList.add('hidden');
-      } else {
-        tabPostingan.className = 'pb-3 border-b-2 border-purple-700 text-purple-700 font-extrabold text-sm flex items-center justify-center gap-2 flex-1 transition';
-        tabJual.className = 'pb-3 text-slate-400 hover:text-slate-700 font-semibold text-sm flex items-center justify-center gap-2 flex-1 transition';
-        contentPostingan.classList.remove('hidden');
-        contentJual.classList.add('hidden');
+      const form = document.getElementById('formApplyPhotographer');
+      const success = document.getElementById('applySuccessState');
+      if (form) form.classList.add('hidden');
+      if (success) success.classList.remove('hidden');
+    }
+
+    // Role legacy alias helper
+    function setRole(role) {
+      if (role === 'creator') {
+        openApplyPhotographerModal();
       }
     }
 
