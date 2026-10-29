@@ -114,6 +114,19 @@
     <!-- Glassmorphic Auth Card -->
     <div id="authCard" class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl relative border border-slate-200/80 dark:border-slate-800 space-y-5">
       
+      <!-- Unauthorized Admin Access Alert Banner -->
+      <div id="alertUnauthorizedAdmin" class="hidden p-3.5 rounded-2xl bg-rose-50 dark:bg-rose-950/40 border border-rose-200 dark:border-rose-800 text-rose-800 dark:text-rose-200 text-xs flex items-start gap-3">
+        <div class="w-6 h-6 rounded-lg bg-rose-100 dark:bg-rose-900/60 text-rose-600 dark:text-rose-400 flex items-center justify-center shrink-0 mt-0.5">
+          <i class="ph-bold ph-shield-warning text-sm"></i>
+        </div>
+        <div class="space-y-0.5 flex-1">
+          <p class="font-bold text-xs">Akses Terbatas: Master Dashboard</p>
+          <p class="text-[11px] text-rose-700 dark:text-rose-300 leading-relaxed">
+            Halaman <code>/admin</code> hanya dapat diakses oleh akun <strong>Superadmin</strong> atau <strong>Admin PicMe</strong>. Silakan masuk menggunakan akun administratif Anda.
+          </p>
+        </div>
+      </div>
+
       <!-- Top Tabs: Masuk vs Daftar -->
       <div class="grid grid-cols-2 p-1 rounded-2xl bg-slate-100 dark:bg-slate-800/80 text-xs font-bold">
         <button id="tabBtnLogin" onclick="switchAuthTab('login')" class="py-2.5 rounded-xl bg-white dark:bg-[#13141f] text-slate-900 dark:text-white shadow-sm transition">
@@ -553,8 +566,10 @@
           created_at: new Date().toISOString()
         };
         localStorage.setItem('picme_current_user', JSON.stringify(superadminUser));
-        alert('Login Berhasil! Selamat datang, Superadmin.');
-        window.location.href = '/';
+        alert('Login Berhasil! Selamat datang di Master Console, Superadmin.');
+        const urlParams = new URLSearchParams(window.location.search);
+        const redirect = urlParams.get('redirect') || '/admin';
+        window.location.href = redirect;
         return;
       }
 
@@ -611,7 +626,9 @@
         if (savedUser && savedUser.password === password) {
           localStorage.setItem('picme_current_user', JSON.stringify(savedUser));
           alert('Login Berhasil!');
-          window.location.href = '/';
+          const urlParams = new URLSearchParams(window.location.search);
+          const redirect = urlParams.get('redirect') || (savedUser.role === 'superadmin' || savedUser.role === 'admin' ? '/admin' : '/');
+          window.location.href = redirect;
         } else {
           alert('Username atau password yang Anda masukkan salah. Silakan coba lagi.');
         }
@@ -1169,6 +1186,23 @@
     window.addEventListener('DOMContentLoaded', () => {
       initTheme();
       initSupabase();
+
+      const urlParams = new URLSearchParams(window.location.search);
+      if (urlParams.get('error') === 'unauthorized') {
+        const alertBox = document.getElementById('alertUnauthorizedAdmin');
+        if (alertBox) alertBox.classList.remove('hidden');
+      }
+
+      // If already logged in as superadmin or admin and redirect param points to admin, redirect automatically
+      try {
+        const currentUser = JSON.parse(localStorage.getItem('picme_current_user') || 'null');
+        if (currentUser && (currentUser.role === 'superadmin' || currentUser.role === 'admin')) {
+          const redirect = urlParams.get('redirect');
+          if (redirect) {
+            window.location.href = redirect;
+          }
+        }
+      } catch (e) {}
     });
   </script>
 </body>

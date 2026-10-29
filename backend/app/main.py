@@ -239,3 +239,13 @@ def index_page():
         with open(index_html, "r", encoding="utf-8") as f:
             return f.read()
     return "<h1>PixMe Backend is running. Please add frontend/index.html</h1>"
+
+
+@app.get("/admin", response_class=HTMLResponse)
+@app.get("/admin/{path:path}", response_class=HTMLResponse)
+def admin_page(path: Optional[str] = None):
+    admin_html = os.path.join(frontend_path, "admin.html")
+    if os.path.exists(admin_html):
+        with open(admin_html, "r", encoding="utf-8") as f:
+            return f.read()
+    return "<h1>PixMe Master Admin Dashboard not found.</h1>"

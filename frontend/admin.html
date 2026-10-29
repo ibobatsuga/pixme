@@ -1,0 +1,2251 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PicMe Master Console • Owner & Superadmin Dashboard</title>
+  
+  <!-- Google Fonts: Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
+          },
+          colors: {
+            coral: {
+              50: '#fff7ed',
+              100: '#ffedd5',
+              200: '#fed7aa',
+              300: '#fdba74',
+              400: '#fb923c',
+              500: '#f97316',
+              600: '#ea580c',
+              700: '#c2410c',
+              800: '#9a3412',
+              900: '#7c2d12',
+              DEFAULT: '#FF5722',
+            }
+          },
+          boxShadow: {
+            'soft': '0 2px 8px -1px rgba(0, 0, 0, 0.05), 0 1px 3px -1px rgba(0, 0, 0, 0.03)',
+            'card': '0 1px 3px rgba(0,0,0,0.05)',
+            'glow-coral': '0 4px 20px -2px rgba(255, 87, 34, 0.25)',
+          }
+        }
+      }
+    }
+  </script>
+
+  <!-- Phosphor Icons & Lucide Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <script src="https://unpkg.com/lucide@latest"></script>
+
+  <style>
+    body {
+      background-color: #F8FAFC;
+      color: #0F172A;
+      font-family: 'Plus Jakarta Sans', sans-serif;
+    }
+    .custom-scrollbar::-webkit-scrollbar {
+      width: 5px;
+      height: 5px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-track {
+      background: #F1F5F9;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb {
+      background: #CBD5E1;
+      border-radius: 9999px;
+    }
+    .custom-scrollbar::-webkit-scrollbar-thumb:hover {
+      background: #94A3B8;
+    }
+    .coral-bar-anim {
+      transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+  </style>
+
+  <!-- ==================== SECURITY & ROLE-BASED ACCESS CONTROL (RBAC) GUARD ==================== -->
+  <script>
+    (function enforceAdminSecurity() {
+      try {
+        const userStr = localStorage.getItem('picme_current_user');
+        const user = userStr ? JSON.parse(userStr) : null;
+        // Strictly check if user is logged in as superadmin or admin
+        if (!user || (user.role !== 'superadmin' && user.role !== 'admin')) {
+          console.warn('[PicMe Security] Akses ditolak. Halaman master hanya untuk Superadmin / Admin.');
+          window.location.replace('/login.html?redirect=/admin&error=unauthorized');
+        }
+      } catch (e) {
+        window.location.replace('/login.html?redirect=/admin&error=unauthorized');
+      }
+    })();
+  </script>
+</head>
+<body class="min-h-screen flex antialiased selection:bg-coral-100 selection:text-coral-900 overflow-x-hidden">
+
+  <!-- ==================== MOBILE SIDEBAR BACKDROP ==================== -->
+  <div id="sidebarBackdrop" onclick="toggleSidebar(false)" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
+
+  <!-- ==================== LEFT SIDEBAR NAVIGATION ==================== -->
+  <aside id="adminSidebar" class="fixed top-0 bottom-0 left-0 w-64 bg-white border-r border-slate-200 z-50 flex flex-col transition-transform duration-300 -translate-x-full lg:translate-x-0 shadow-sm">
+    
+    <!-- Sidebar Brand Header -->
+    <div class="h-16 px-5 flex items-center justify-between border-b border-slate-100 shrink-0">
+      <a href="/admin" class="flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-coral-600 to-amber-500 flex items-center justify-center text-white text-lg font-black shadow-glow-coral">
+          <i class="ph-bold ph-shield-check"></i>
+        </div>
+        <div>
+          <div class="flex items-center gap-1.5">
+            <span class="font-extrabold text-base tracking-tight text-slate-900">Pic<span class="text-coral-600">Me</span></span>
+            <span class="text-[9px] font-black uppercase tracking-wider bg-coral-100 text-coral-700 px-1.5 py-0.5 rounded">Console</span>
+          </div>
+          <span class="text-[10px] font-semibold text-slate-400 block -mt-0.5">Master Owner Dashboard</span>
+        </div>
+      </a>
+      <button onclick="toggleSidebar(false)" class="lg:hidden text-slate-400 hover:text-slate-700 p-1">
+        <i class="ph-bold ph-x text-lg"></i>
+      </button>
+    </div>
+
+    <!-- Navigation Menu Items (Categorized 1:1) -->
+    <div class="flex-1 overflow-y-auto custom-scrollbar px-3 py-4 space-y-6">
+      
+      <!-- Group 1: RINGKASAN -->
+      <div class="space-y-1">
+        <p class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">Ringkasan</p>
+        <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition text-coral-600 bg-coral-50/80">
+          <i class="ph-bold ph-chart-pie text-base shrink-0"></i>
+          <span>Dashboard</span>
+        </button>
+        <button onclick="switchView('growth')" id="nav-growth" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-trend-up text-base shrink-0"></i>
+          <span>Analitik Pertumbuhan</span>
+        </button>
+      </div>
+
+      <!-- Group 2: PENGGUNA & KREATOR -->
+      <div class="space-y-1">
+        <p class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">Pengguna & Kreator</p>
+        <button onclick="switchView('users')" id="nav-users" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-users text-base shrink-0"></i>
+          <span>Semua Pengguna</span>
+        </button>
+        <button onclick="switchView('kyc')" id="nav-kyc" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <span class="flex items-center gap-2.5">
+            <i class="ph-bold ph-identification-card text-base shrink-0"></i>
+            <span>Verifikasi KYC Fotografer</span>
+          </span>
+          <span class="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-amber-100 text-amber-800 border border-amber-200">3</span>
+        </button>
+        <button onclick="switchView('feedback')" id="nav-feedback" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <span class="flex items-center gap-2.5">
+            <i class="ph-bold ph-chat-teardrop-text text-base shrink-0"></i>
+            <span>Masukan Pengguna</span>
+          </span>
+          <span class="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-blue-100 text-blue-800 border border-blue-200">2</span>
+        </button>
+      </div>
+
+      <!-- Group 3: KATALOG & AI FOTO -->
+      <div class="space-y-1">
+        <p class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">Katalog & AI Foto</p>
+        <button onclick="switchView('photos-monitor')" id="nav-photos-monitor" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <span class="flex items-center gap-2.5">
+            <i class="ph-bold ph-cpu text-base shrink-0"></i>
+            <span>Monitor Upload & AI</span>
+          </span>
+          <span class="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-rose-100 text-rose-700 border border-rose-200 animate-pulse">5 Gagal</span>
+        </button>
+        <button onclick="switchView('events')" id="nav-events" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-map-pin text-base shrink-0"></i>
+          <span>Event & Spot Foto</span>
+        </button>
+      </div>
+
+      <!-- Group 4: KEUANGAN -->
+      <div class="space-y-1">
+        <p class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">Keuangan</p>
+        <button onclick="switchView('purchases')" id="nav-purchases" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-receipt text-base shrink-0"></i>
+          <span>Pembelian Foto</span>
+        </button>
+        <button onclick="switchView('commissions')" id="nav-commissions" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-wallet text-base shrink-0"></i>
+          <span>Komisi Fotografer</span>
+        </button>
+        <button onclick="switchView('payout')" id="nav-payout" class="nav-item w-full flex items-center justify-between px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <span class="flex items-center gap-2.5">
+            <i class="ph-bold ph-bank text-base shrink-0"></i>
+            <span>Payout & Penarikan</span>
+          </span>
+          <span class="px-1.5 py-0.5 rounded-full text-[9px] font-black bg-emerald-100 text-emerald-800 border border-emerald-200">Rp 4.8jt</span>
+        </button>
+        <button onclick="switchView('promo')" id="nav-promo" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-ticket text-base shrink-0"></i>
+          <span>Kode Promo</span>
+        </button>
+        <button onclick="switchView('pricing')" id="nav-pricing" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-sliders-horizontal text-base shrink-0"></i>
+          <span>Harga & Komisi</span>
+        </button>
+      </div>
+
+      <!-- Group 5: SISTEM & OPERASIONAL -->
+      <div class="space-y-1">
+        <p class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">Sistem & Operasional</p>
+        <button onclick="switchView('platform')" id="nav-platform" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-toggle-left text-base shrink-0"></i>
+          <span>Fitur & Maintenance</span>
+        </button>
+        <button onclick="switchView('services')" id="nav-services" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-activity text-base shrink-0"></i>
+          <span>Layanan & Kesehatan</span>
+        </button>
+        <button onclick="switchView('announcements')" id="nav-announcements" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-megaphone-simple text-base shrink-0"></i>
+          <span>Info & Pembaruan</span>
+        </button>
+        <button onclick="switchView('broadcast')" id="nav-broadcast" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-whatsapp-logo text-base shrink-0"></i>
+          <span>Broadcast WA</span>
+        </button>
+        <button onclick="switchView('audit')" id="nav-audit" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition">
+          <i class="ph-bold ph-file-text text-base shrink-0"></i>
+          <span>Audit Log</span>
+        </button>
+      </div>
+
+    </div>
+
+    <!-- Sidebar Footer (Back to Public PicMe App) -->
+    <div class="p-3 border-t border-slate-100 bg-slate-50/50 shrink-0">
+      <a href="/" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-coral-600 bg-white border border-slate-200/90 hover:border-coral-200 shadow-sm transition">
+        <i class="ph-bold ph-arrow-left"></i>
+        <span>Kembali ke Aplikasi PicMe</span>
+      </a>
+    </div>
+
+  </aside>
+
+  <!-- ==================== MAIN CONTENT WRAPPER ==================== -->
+  <div class="flex-1 lg:pl-64 flex flex-col min-w-0">
+    
+    <!-- Top Global Header -->
+    <header class="h-16 bg-white border-b border-slate-200 sticky top-0 z-30 px-4 sm:px-6 flex items-center justify-between gap-4">
+      
+      <!-- Left: Mobile Toggle & Page Title -->
+      <div class="flex items-center gap-3">
+        <button onclick="toggleSidebar(true)" class="lg:hidden p-2 text-slate-600 hover:text-slate-900 rounded-lg hover:bg-slate-100">
+          <i class="ph-bold ph-list text-xl"></i>
+        </button>
+        <div>
+          <h1 id="headerViewTitle" class="text-sm sm:text-base font-extrabold text-slate-900">Dashboard Utama</h1>
+          <p id="headerViewSubtitle" class="text-[10px] text-slate-400 font-medium hidden sm:block">Ringkasan performa penjualan, AI processing, dan omset PicMe</p>
+        </div>
+      </div>
+
+      <!-- Center: Global Search Bar -->
+      <div class="flex-1 max-w-md hidden md:block">
+        <div class="relative">
+          <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-2.5 text-slate-400 text-sm"></i>
+          <input type="text" id="globalAdminSearch" onkeyup="handleGlobalSearch(event)" placeholder="Cari pengguna, fotografer, email, no. WA, ID foto..." class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-9 pr-12 py-2 text-xs font-medium focus:bg-white focus:ring-2 focus:ring-coral-500/20 focus:border-coral-500 focus:outline-none transition">
+          <span class="absolute right-3 top-2 text-[10px] font-mono text-slate-400 bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-2xs">⌘K</span>
+        </div>
+      </div>
+
+      <!-- Right: System Status & User Profile Badge -->
+      <div class="flex items-center gap-2.5 sm:gap-3 shrink-0">
+        
+        <!-- Live System Status Pill -->
+        <div class="hidden xl:flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-emerald-50 border border-emerald-200 text-emerald-800 text-[10px] font-bold">
+          <span class="w-2 h-2 rounded-full bg-emerald-500 animate-ping"></span>
+          <span>Semua Layanan Normal</span>
+        </div>
+
+        <!-- Notification Bell -->
+        <button onclick="openNotificationDrawer()" class="relative p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition" title="Notifikasi Sistem">
+          <i class="ph-bold ph-bell text-lg"></i>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-coral-500 ring-2 ring-white"></span>
+        </button>
+
+        <!-- Divider -->
+        <div class="h-6 w-px bg-slate-200 hidden sm:block"></div>
+
+        <!-- Admin Profile Pill -->
+        <div class="flex items-center gap-2 p-1.5 sm:pr-3 rounded-2xl border border-slate-200/80 bg-slate-50/60 hover:bg-slate-100 transition cursor-pointer">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-coral-600 to-amber-500 text-white font-extrabold flex items-center justify-center text-xs shadow-sm">
+            AP
+          </div>
+          <div class="text-left hidden sm:block">
+            <span class="text-xs font-extrabold text-slate-900 block leading-tight">Superadmin PicMe</span>
+            <span class="text-[9px] font-black uppercase tracking-wider text-coral-600">Owner Access</span>
+          </div>
+          <button onclick="logoutAdmin()" class="text-slate-400 hover:text-rose-600 p-1" title="Keluar dari Console">
+            <i class="ph-bold ph-sign-out text-base"></i>
+          </button>
+        </div>
+
+      </div>
+
+    </header>
+
+    <!-- Global View Container -->
+    <main class="flex-1 p-4 sm:p-6 lg:p-8 space-y-6 max-w-7xl w-full mx-auto">
+      
+      <!-- ==================== VIEW 1: DASHBOARD UTAMA ==================== -->
+      <section id="view-dashboard" class="space-y-6">
+        
+        <!-- Top Alert Strip: AI & Cloud Cost Monitor -->
+        <div class="p-4 rounded-2xl bg-amber-50/90 border border-amber-200/80 flex flex-col sm:flex-row sm:items-center justify-between gap-3 text-xs text-amber-950 shadow-2xs">
+          <div class="flex items-start sm:items-center gap-2.5">
+            <div class="w-8 h-8 rounded-xl bg-amber-200/60 text-amber-800 flex items-center justify-center text-base shrink-0">
+              <i class="ph-bold ph-cloud"></i>
+            </div>
+            <div>
+              <span class="font-extrabold block sm:inline">Saldo Kuota AI & Object Storage:</span>
+              <span class="text-amber-800">Saldo Biznet GIO / InsightFace API: <b>US$ 14.20</b> · Pemakaian ±US$ 1.50/hari · Estimasi aman ±9 hari ke depan.</span>
+            </div>
+          </div>
+          <button onclick="switchView('services')" class="px-3.5 py-1.5 rounded-xl bg-amber-600 hover:bg-amber-700 text-white font-bold text-xs shrink-0 self-start sm:self-center transition shadow-sm">
+            Isi Saldo & Kuota →
+          </button>
+        </div>
+
+        <!-- 4 Main KPI Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-5">
+          
+          <!-- Card 1: Pendapatan Kotor (GMV) -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
+            <div class="flex items-center justify-between text-slate-400">
+              <span class="text-xs font-bold">Pendapatan Kotor (GMV)</span>
+              <div class="w-8 h-8 rounded-xl bg-coral-50 text-coral-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-currency-circle-dollar"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900 tracking-tight">Rp 48.750.000</div>
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
+              <i class="ph-bold ph-trend-up"></i>
+              <span>+18.4%</span>
+              <span class="text-slate-400 font-normal">vs 30 hari lalu</span>
+            </div>
+          </div>
+
+          <!-- Card 2: Pembeli Foto Aktif -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
+            <div class="flex items-center justify-between text-slate-400">
+              <span class="text-xs font-bold">Pembeli Foto Aktif</span>
+              <div class="w-8 h-8 rounded-xl bg-blue-50 text-blue-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-shopping-bag"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900 tracking-tight">1.240 Pembeli</div>
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
+              <i class="ph-bold ph-user-plus"></i>
+              <span>+342 user baru</span>
+              <span class="text-slate-400 font-normal">minggu ini</span>
+            </div>
+          </div>
+
+          <!-- Card 3: Pengguna & Fotografer Baru -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
+            <div class="flex items-center justify-between text-slate-400">
+              <span class="text-xs font-bold">Total Pengguna Terdaftar</span>
+              <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-users-three"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900 tracking-tight">3.820 Akun</div>
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
+              <i class="ph-bold ph-trend-up"></i>
+              <span>+24.5%</span>
+              <span class="text-slate-400 font-normal">(142 Fotografer)</span>
+            </div>
+          </div>
+
+          <!-- Card 4: Total Foto Terindeks AI -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
+            <div class="flex items-center justify-between text-slate-400">
+              <span class="text-xs font-bold">Foto Terindeks AI</span>
+              <div class="w-8 h-8 rounded-xl bg-emerald-50 text-emerald-600 flex items-center justify-center text-base">
+                <i class="ph-bold ph-scan"></i>
+              </div>
+            </div>
+            <div class="text-2xl font-black text-slate-900 tracking-tight">24.680 Foto</div>
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
+              <i class="ph-bold ph-check-circle"></i>
+              <span>SCRFD + ArcFace</span>
+              <span class="text-slate-400 font-normal">vektor 512-d</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Main Split View (Left 65% Chart + Right 35% Action Needed) -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6 items-start">
+          
+          <!-- Left 65%: Pendapatan Harian 30 Hari (Interactive Coral Bar Chart) -->
+          <div class="lg:col-span-8 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-card space-y-5">
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 border-b border-slate-100 pb-4">
+              <div>
+                <h3 class="text-base font-extrabold text-slate-900">Pendapatan Harian (30 Hari Terakhir)</h3>
+                <p class="text-xs text-slate-400">Tren penjualan foto Ultra HD 24-50MP & Web Compressed</p>
+              </div>
+              <div class="flex items-center gap-3">
+                <span class="text-xs font-bold text-coral-600 bg-coral-50 px-2.5 py-1 rounded-full border border-coral-200">
+                  Total: Rp 48.750.000
+                </span>
+                <span class="text-[11px] text-slate-400">Rata-rata: Rp 1.625rb/hari</span>
+              </div>
+            </div>
+
+            <!-- Vertical Bar Chart Visualizer -->
+            <div class="h-64 flex items-end gap-1.5 sm:gap-2 pt-6 px-1 border-b border-slate-100" id="chartDailyRevenue">
+              <!-- Dynamically populated via JS -->
+            </div>
+
+            <!-- Chart Legend & Footnote -->
+            <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
+              <div class="flex items-center gap-4">
+                <span class="flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-md bg-coral-500"></span>
+                  <span>Penjualan Harian (Lunas)</span>
+                </span>
+                <span class="flex items-center gap-1.5">
+                  <span class="w-3 h-3 rounded-md bg-coral-200"></span>
+                  <span>Weekend Peak</span>
+                </span>
+              </div>
+              <span class="text-[11px] font-mono">1 Okt — 30 Okt 2026</span>
+            </div>
+          </div>
+
+          <!-- Right 35%: Perlu Tindakan (Action Needed) -->
+          <div class="lg:col-span-4 bg-white p-5 sm:p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <div class="flex items-center gap-2">
+                <span class="w-2.5 h-2.5 rounded-full bg-rose-500 animate-ping"></span>
+                <h3 class="text-sm font-extrabold text-slate-900">Perlu Tindakan Owner</h3>
+              </div>
+              <span class="text-[10px] font-bold text-slate-400 bg-slate-100 px-2 py-0.5 rounded-full">Prioritas Tinggi</span>
+            </div>
+
+            <div class="space-y-3">
+              
+              <!-- Action Item 1: Gagal Ekstrak -->
+              <div onclick="switchView('photos-monitor')" class="p-3 rounded-xl border border-rose-200/80 bg-rose-50/50 hover:bg-rose-50 transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-rose-100 text-rose-600 flex items-center justify-center text-sm font-bold shrink-0">
+                    <i class="ph-bold ph-warning-circle"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-rose-700">5 Foto Gagal Ekstrak Wajah</span>
+                    <span class="text-[10px] text-slate-500">Foto blur atau format rusak (7 hari terakhir)</span>
+                  </div>
+                </div>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-rose-600"></i>
+              </div>
+
+              <!-- Action Item 2: Antrean AI -->
+              <div onclick="switchView('photos-monitor')" class="p-3 rounded-xl border border-slate-200 hover:border-coral-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm font-bold shrink-0">
+                    <i class="ph-bold ph-hourglass-high"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-coral-600">18 Foto Antrean Indexing AI</span>
+                    <span class="text-[10px] text-slate-500">Sedang diproses SCRFD InsightFace</span>
+                  </div>
+                </div>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-coral-600"></i>
+              </div>
+
+              <!-- Action Item 3: Tarik Saldo Menunggu -->
+              <div onclick="switchView('payout')" class="p-3 rounded-xl border border-amber-200/80 bg-amber-50/50 hover:bg-amber-50 transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-amber-100 text-amber-700 flex items-center justify-center text-sm font-bold shrink-0">
+                    <i class="ph-bold ph-bank"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-amber-800">4 Payout Menunggu Persetujuan</span>
+                    <span class="text-[10px] text-amber-800 font-bold">Total: Rp 4.850.000 via BCA & Mandiri</span>
+                  </div>
+                </div>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-amber-600"></i>
+              </div>
+
+              <!-- Action Item 4: KYC Fotografer Baru -->
+              <div onclick="switchView('kyc')" class="p-3 rounded-xl border border-slate-200 hover:border-coral-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold shrink-0">
+                    <i class="ph-bold ph-identification-card"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-coral-600">3 Pengajuan KYC Fotografer Baru</span>
+                    <span class="text-[10px] text-slate-500">KTP & portofolio kamera menunggu review</span>
+                  </div>
+                </div>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-coral-600"></i>
+              </div>
+
+              <!-- Action Item 5: Masukan Pengguna -->
+              <div onclick="switchView('feedback')" class="p-3 rounded-xl border border-slate-200 hover:border-coral-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
+                <div class="flex items-center gap-2.5">
+                  <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold shrink-0">
+                    <i class="ph-bold ph-chat-text"></i>
+                  </div>
+                  <div>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-coral-600">2 Masukan / Komplain Baru</span>
+                    <span class="text-[10px] text-slate-500">Terkait pencarian wajah di event lari</span>
+                  </div>
+                </div>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-coral-600"></i>
+              </div>
+
+            </div>
+
+            <!-- Action Card Live Counter Footer -->
+            <div class="pt-2 border-t border-slate-100 flex items-center justify-between text-[11px] text-slate-400 font-semibold">
+              <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> <b>42 online</b> sekarang</span>
+              <span><b>328 foto</b> terjual (7 hari)</span>
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Bottom 3-Column Grid -->
+        <div class="grid grid-cols-1 md:grid-cols-3 gap-6 items-start">
+          
+          <!-- Col 1: Transaksi Foto Terbaru -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="ph-bold ph-receipt text-coral-600 text-sm"></i>
+                <span>Transaksi Foto Terbaru</span>
+              </h4>
+              <button onclick="switchView('purchases')" class="text-[11px] text-coral-600 font-bold hover:underline">Lihat Semua →</button>
+            </div>
+            <div class="space-y-3" id="recentPurchasesList">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+
+          <!-- Col 2: Pengguna & Fotografer Terbaru -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="ph-bold ph-user-plus text-blue-600 text-sm"></i>
+                <span>Kreator & Pengguna Baru</span>
+              </h4>
+              <button onclick="switchView('users')" class="text-[11px] text-coral-600 font-bold hover:underline">Kelola →</button>
+            </div>
+            <div class="space-y-3" id="recentUsersList">
+              <!-- Dynamically populated via JS -->
+            </div>
+          </div>
+
+          <!-- Col 3: Komposisi Penjualan Resolusi Foto -->
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-4">
+            <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+              <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
+                <i class="ph-bold ph-chart-donut text-emerald-600 text-sm"></i>
+                <span>Komposisi Resolusi Foto</span>
+              </h4>
+              <span class="text-[10px] text-slate-400">Oktober 2026</span>
+            </div>
+            <div class="space-y-4">
+              <!-- Master 24-50MP -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-coral-500"></span>
+                    <span>Master Ultra HD (24–50 MP)</span>
+                  </span>
+                  <span class="font-bold text-slate-900">68% <span class="text-slate-400 font-normal">(Rp 33.150.000)</span></span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div class="bg-coral-500 h-full rounded-full" style="width: 68%"></div>
+                </div>
+              </div>
+
+              <!-- Web Compressed -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-amber-500"></span>
+                    <span>Web & Medsos Compressed</span>
+                  </span>
+                  <span class="font-bold text-slate-900">24% <span class="text-slate-400 font-normal">(Rp 11.700.000)</span></span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div class="bg-amber-500 h-full rounded-full" style="width: 24%"></div>
+                </div>
+              </div>
+
+              <!-- Bundling Event -->
+              <div class="space-y-1.5">
+                <div class="flex items-center justify-between text-xs">
+                  <span class="font-bold text-slate-800 flex items-center gap-1.5">
+                    <span class="w-2.5 h-2.5 rounded-full bg-blue-500"></span>
+                    <span>Paket Bundling Event</span>
+                  </span>
+                  <span class="font-bold text-slate-900">8% <span class="text-slate-400 font-normal">(Rp 3.900.000)</span></span>
+                </div>
+                <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
+                  <div class="bg-blue-500 h-full rounded-full" style="width: 8%"></div>
+                </div>
+              </div>
+
+              <div class="p-3 rounded-xl bg-slate-50 border border-slate-100 text-[11px] text-slate-500 leading-snug">
+                💡 <b>Storage Saving:</b> Pilihan *Web Compressed* telah berhasil menghemat <b>142 GB</b> ruang penyimpanan cloud di server Biznet GIO.
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 2: ANALITIK PERTUMBUHAN ==================== -->
+      <section id="view-growth" class="space-y-6 hidden">
+        
+        <!-- 4 Financial Summary Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
+            <span class="text-xs font-bold text-slate-400">Omset Kotor (Gross GMV)</span>
+            <div class="text-2xl font-black text-slate-900">Rp 48.750.000</div>
+            <p class="text-[11px] text-emerald-600 font-bold">+18.4% pertumbuhan bulanan</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
+            <span class="text-xs font-bold text-slate-400">Bagian Hak Fotografer (50%)</span>
+            <div class="text-2xl font-black text-slate-900">Rp 24.375.000</div>
+            <p class="text-[11px] text-slate-500">Kredit otomatis ke dompet kreator</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
+            <span class="text-xs font-bold text-slate-400">Laba Bersih Platform PicMe (40%)</span>
+            <div class="text-2xl font-black text-coral-600">Rp 19.500.000</div>
+            <p class="text-[11px] text-coral-700 font-bold">Margin profit bersih platform</p>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
+            <span class="text-xs font-bold text-slate-400">Saldo Fotografer Mengendap</span>
+            <div class="text-2xl font-black text-slate-900">Rp 8.420.000</div>
+            <p class="text-[11px] text-amber-700 font-bold">Belum ditarik oleh fotografer</p>
+          </div>
+        </div>
+
+        <!-- Mid Split View: Breakdown & Conversion Funnel -->
+        <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+          
+          <!-- Funnel Konversi Pengguna (3 Tahap) -->
+          <div class="lg:col-span-7 bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-5">
+            <div class="border-b border-slate-100 pb-3">
+              <h3 class="text-base font-extrabold text-slate-900">Funnel Konversi Pengguna & Pencarian Wajah</h3>
+              <p class="text-xs text-slate-400">Perjalanan user dari scan selfie hingga transaksi beli foto</p>
+            </div>
+
+            <div class="space-y-4">
+              <!-- Step 1 -->
+              <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+                <div class="flex items-center justify-between text-xs font-extrabold text-slate-900">
+                  <span class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-slate-900 text-white flex items-center justify-center text-[10px]">1</span>
+                    <span>Tamu Scan Selfie Wajah</span>
+                  </span>
+                  <span class="text-sm font-black">14.820 Tamu</span>
+                </div>
+                <div class="w-full bg-slate-200 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-slate-900 h-full rounded-full" style="width: 100%"></div>
+                </div>
+                <span class="text-[10px] text-slate-500 block">Total pengunjung yang mencoba pencarian wajah biometrik</span>
+              </div>
+
+              <!-- Step 2 -->
+              <div class="p-4 rounded-xl bg-blue-50/70 border border-blue-200 space-y-2">
+                <div class="flex items-center justify-between text-xs font-extrabold text-blue-950">
+                  <span class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-blue-600 text-white flex items-center justify-center text-[10px]">2</span>
+                    <span>Wajah Ditemukan (Cocok > 85%)</span>
+                  </span>
+                  <span class="text-sm font-black">8.920 Akun (60.2%)</span>
+                </div>
+                <div class="w-full bg-blue-200 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-blue-600 h-full rounded-full" style="width: 60.2%"></div>
+                </div>
+                <span class="text-[10px] text-blue-800 block">Pengguna yang memiliki foto kecocokan di event</span>
+              </div>
+
+              <!-- Step 3 -->
+              <div class="p-4 rounded-xl bg-coral-50/70 border border-coral-200 space-y-2">
+                <div class="flex items-center justify-between text-xs font-extrabold text-coral-950">
+                  <span class="flex items-center gap-2">
+                    <span class="w-6 h-6 rounded-full bg-coral-600 text-white flex items-center justify-center text-[10px]">3</span>
+                    <span>Membeli Foto (Paid Customer)</span>
+                  </span>
+                  <span class="text-sm font-black text-coral-600">1.840 Pembeli (20.6%)</span>
+                </div>
+                <div class="w-full bg-coral-200 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-coral-600 h-full rounded-full" style="width: 20.6%"></div>
+                </div>
+                <span class="text-[10px] text-coral-800 block">Konversi tinggi didukung kemudahan bayar QRIS & opsi resolusi terjangkau</span>
+              </div>
+            </div>
+          </div>
+
+          <!-- Breakdown Sumber Pendapatan -->
+          <div class="lg:col-span-5 bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-5">
+            <div class="border-b border-slate-100 pb-3">
+              <h3 class="text-base font-extrabold text-slate-900">Breakdown Sumber Pendapatan</h3>
+              <p class="text-xs text-slate-400">Kontribusi tipe transaksi terhadap omset</p>
+            </div>
+
+            <div class="space-y-4">
+              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+                <div>
+                  <h5 class="text-xs font-bold text-slate-900">Foto Satuan Ultra HD (Rp 35rb)</h5>
+                  <p class="text-[11px] text-slate-500">947 transaksi lunas</p>
+                </div>
+                <span class="text-sm font-extrabold text-slate-900">Rp 33.145.000</span>
+              </div>
+
+              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+                <div>
+                  <h5 class="text-xs font-bold text-slate-900">Foto Web Compressed (Rp 20rb)</h5>
+                  <p class="text-[11px] text-slate-500">585 transaksi lunas</p>
+                </div>
+                <span class="text-sm font-extrabold text-slate-900">Rp 11.700.000</span>
+              </div>
+
+              <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+                <div>
+                  <h5 class="text-xs font-bold text-slate-900">Paket Event & Tip Kreator</h5>
+                  <p class="text-[11px] text-slate-500">Event pass & bonus fotografer</p>
+                </div>
+                <span class="text-sm font-extrabold text-slate-900">Rp 3.905.000</span>
+              </div>
+            </div>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 3: SEMUA PENGGUNA & KREATOR ==================== -->
+      <section id="view-users" class="space-y-6 hidden">
+        
+        <!-- Row 1: KPI Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">Total Pengguna</span>
+            <div class="text-2xl font-black text-slate-900">3.820</div>
+            <span class="text-[11px] text-slate-500">Pelari, penonton & member</span>
+          </div>
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">Fotografer Terverifikasi</span>
+            <div class="text-2xl font-black text-coral-600">142 Kreator</div>
+            <span class="text-[11px] text-emerald-600 font-bold">100% KYC Approved</span>
+          </div>
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">Online Saat Ini</span>
+            <div class="text-2xl font-black text-emerald-600">42 User</div>
+            <span class="text-[11px] text-slate-500">Aktif browsing galeri</span>
+          </div>
+          <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">Total Transaksi Foto</span>
+            <div class="text-2xl font-black text-slate-900">2.410 Foto</div>
+            <span class="text-[11px] text-emerald-600 font-bold">Lunas terdownload</span>
+          </div>
+        </div>
+
+        <!-- Row 2: Infrastructure Cards -->
+        <div class="grid grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-slate-400 font-bold block">Database PostgreSQL</span>
+            <span class="text-base font-black text-slate-900 block mt-1">342 MB</span>
+            <span class="text-[10px] text-slate-500">pgvector ekstensi aktif</span>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-slate-400 font-bold block">Object Storage S3/R2</span>
+            <span class="text-base font-black text-slate-900 block mt-1">184 GB</span>
+            <span class="text-[10px] text-slate-500">24.680 file foto high-res</span>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-slate-400 font-bold block">Wajah Terindeks Vector</span>
+            <span class="text-base font-black text-slate-900 block mt-1">24.680 Vektor</span>
+            <span class="text-[10px] text-slate-500">512-dimensi ArcFace</span>
+          </div>
+          <div class="bg-slate-50 p-4 rounded-xl border border-slate-200">
+            <span class="text-slate-400 font-bold block">Antrean Worker AI</span>
+            <span class="text-base font-black text-amber-600 block mt-1">18 Foto</span>
+            <span class="text-[10px] text-slate-500">SCRFD face extraction</span>
+          </div>
+        </div>
+
+        <!-- Controls & Filter Tabs -->
+        <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+            
+            <!-- Filter Tabs -->
+            <div class="flex items-center gap-1.5 overflow-x-auto pb-1 sm:pb-0" id="userFilterTabs">
+              <button onclick="filterUsers('all')" class="user-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white">Semua (3.820)</button>
+              <button onclick="filterUsers('buyer')" class="user-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100">Pembeli (3.678)</button>
+              <button onclick="filterUsers('photographer')" class="user-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100">Fotografer (142)</button>
+              <button onclick="filterUsers('kyc')" class="user-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100">Menunggu KYC (3)</button>
+              <button onclick="filterUsers('admin')" class="user-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100">Admin (2)</button>
+            </div>
+
+            <!-- Actions -->
+            <div class="flex items-center gap-2">
+              <label class="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
+                <input type="checkbox" id="maskEmailToggle" checked onchange="toggleMaskEmail()" class="rounded border-slate-300 text-coral-600 focus:ring-coral-500">
+                <span>Samarkan Email</span>
+              </label>
+              <button onclick="openModalCreateUser()" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+                <i class="ph-bold ph-plus"></i>
+                <span>+ Buat Akun</span>
+              </button>
+            </div>
+
+          </div>
+
+          <!-- Data Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-y border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-3">Pengguna</th>
+                  <th class="py-3 px-3">Role & Status</th>
+                  <th class="py-3 px-3">Aktivitas Foto & Saldo</th>
+                  <th class="py-3 px-3">Terdaftar</th>
+                  <th class="py-3 px-3 text-right">Aksi Owner</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="usersTableBody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 4: VERIFIKASI FOTOGRAFER (KYC) ==================== -->
+      <section id="view-kyc" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Antrean Verifikasi Fotografer (KYC)</h3>
+              <p class="text-xs text-slate-400">Verifikasi identitas KTP dan portofolio kamera sebelum kreator diizinkan menjual foto</p>
+            </div>
+            <span class="text-xs font-bold px-3 py-1 rounded-full bg-amber-100 text-amber-800 border border-amber-200">
+              3 Pengajuan Menunggu
+            </span>
+          </div>
+
+          <div class="space-y-4" id="kycQueueList">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 5: MASUKAN PENGGUNA ==================== -->
+      <section id="view-feedback" class="space-y-6 hidden">
+        
+        <div class="grid grid-cols-2 sm:grid-cols-4 gap-4">
+          <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <span class="text-xs text-slate-400 font-bold">Total Masukan</span>
+            <div class="text-2xl font-black text-slate-900">48</div>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <span class="text-xs text-rose-500 font-bold">Masukan Baru</span>
+            <div class="text-2xl font-black text-rose-600">2</div>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <span class="text-xs text-amber-500 font-bold">Sedang Diproses</span>
+            <div class="text-2xl font-black text-amber-600">4</div>
+          </div>
+          <div class="bg-white p-4 rounded-xl border border-slate-200 text-center">
+            <span class="text-xs text-emerald-500 font-bold">Selesai / Arsip</span>
+            <div class="text-2xl font-black text-emerald-600">42</div>
+          </div>
+        </div>
+
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <h3 class="text-base font-extrabold text-slate-900 border-b border-slate-100 pb-3">Daftar Masukan & Ulasan Pengguna</h3>
+          <div class="space-y-4" id="feedbackFeedList">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 6: MONITOR UPLOAD & AI ==================== -->
+      <section id="view-photos-monitor" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Monitor Upload & Ekstraksi AI (SCRFD + ArcFace)</h3>
+              <p class="text-xs text-slate-400">Pantau proses pengunggahan foto, pembuatan watermark, dan indeks wajah kerumunan</p>
+            </div>
+            <button onclick="alert('Memulai sinkronisasi ulang antrean proses worker AI...')" class="px-3.5 py-1.5 rounded-xl bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-arrow-counter-clockwise"></i>
+              <span>Proses Ulang Semua Antrean</span>
+            </button>
+          </div>
+
+          <!-- Status Tabs -->
+          <div class="flex items-center gap-2 overflow-x-auto pb-1" id="photoMonitorTabs">
+            <button onclick="filterPhotosMonitor('all')" class="photo-tab px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white">Semua</button>
+            <button onclick="filterPhotosMonitor('failed')" class="photo-tab px-3 py-1.5 rounded-lg text-xs font-bold text-rose-600 bg-rose-50 border border-rose-200">Gagal Proses (5)</button>
+            <button onclick="filterPhotosMonitor('queue')" class="photo-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100">Antrean AI (18)</button>
+            <button onclick="filterPhotosMonitor('published')" class="photo-tab px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100">Terbit di Katalog (24.680)</button>
+          </div>
+
+          <!-- List Items -->
+          <div class="space-y-3" id="photoMonitorList">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 7: EVENT & SPOT FOTO ==================== -->
+      <section id="view-events" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Katalog Event & Spot Foto PicMe</h3>
+              <p class="text-xs text-slate-400">Event musik, marathon, car free day, dan spot street photography</p>
+            </div>
+            <button onclick="alert('Buka modal tambah event baru')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+              + Tambah Event / Spot Baru
+            </button>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4" id="adminEventsGrid">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 8: PEMBELIAN FOTO ==================== -->
+      <section id="view-purchases" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Riwayat Pembelian Foto Pengguna</h3>
+              <p class="text-xs text-slate-400">Semua transaksi masuk via QRIS ShopeePay / Virtual Account Tripay</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                Lunas: 2.410 Transaksi
+              </span>
+            </div>
+          </div>
+
+          <!-- Purchase Filter Pills -->
+          <div class="flex items-center gap-1.5 overflow-x-auto pb-1">
+            <button class="px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white">Semua</button>
+            <button class="px-3 py-1.5 rounded-lg text-xs font-bold text-emerald-700 bg-emerald-50">Lunas</button>
+            <button class="px-3 py-1.5 rounded-lg text-xs font-bold text-amber-700 hover:bg-amber-50">Menunggu Bayar</button>
+            <button class="px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100">Kedaluwarsa</button>
+          </div>
+
+          <!-- Transaction Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-y border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-3">Tanggal & Waktu</th>
+                  <th class="py-3 px-3">Pembeli</th>
+                  <th class="py-3 px-3">Foto & Fotografer</th>
+                  <th class="py-3 px-3">Metode Bayar</th>
+                  <th class="py-3 px-3">Nominal & Bagi Hasil</th>
+                  <th class="py-3 px-3 text-right">Status & Ref Tripay</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="purchasesTableBody">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 9: KOMISI FOTOGRAFER ==================== -->
+      <section id="view-commissions" class="space-y-6 hidden">
+        
+        <!-- Header Controls -->
+        <div class="flex items-center justify-between">
+          <div class="flex items-center gap-2 text-xs font-bold text-slate-600">
+            <span class="w-2.5 h-2.5 rounded-full bg-emerald-500 animate-ping"></span>
+            <span>Live Auto-Sync (10s)</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="alert('Data komisi dan saldo fotografer berhasil disegarkan!')" class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition">
+              Segarkan Data
+            </button>
+            <button onclick="switchView('pricing')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+              + Atur Tier Komisi
+            </button>
+          </div>
+        </div>
+
+        <!-- 6 Financial Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">1. Total Omset Foto (GMV)</span>
+            <div class="text-xl font-black text-slate-900 mt-1">Rp 48.750.000</div>
+            <span class="text-[11px] text-slate-500">Seluruh transaksi penjualan</span>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">2. Laba Bersih Platform (40%)</span>
+            <div class="text-xl font-black text-coral-600 mt-1">Rp 19.500.000</div>
+            <span class="text-[11px] text-coral-700 font-bold">Pendapatan bersih PicMe</span>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">3. Fotografer Produktif</span>
+            <div class="text-xl font-black text-slate-900 mt-1">98 Kreator</div>
+            <span class="text-[11px] text-emerald-600 font-bold">Minimal 1 foto terjual</span>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">4. Hak Bagi Hasil Fotografer (50%)</span>
+            <div class="text-xl font-black text-slate-900 mt-1">Rp 24.375.000</div>
+            <span class="text-[11px] text-slate-500">Total komisi fotografer</span>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">5. Permintaan Tarik Saldo</span>
+            <div class="text-xl font-black text-amber-600 mt-1">Rp 4.850.000</div>
+            <span class="text-[11px] text-amber-800 font-bold">4 permintaan pending transfer</span>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
+            <span class="text-xs font-bold text-slate-400">6. Saldo Ditransfer (Payout)</span>
+            <div class="text-xl font-black text-emerald-600 mt-1">Rp 19.525.000</div>
+            <span class="text-[11px] text-emerald-700 font-bold">84 pencairan sukses</span>
+          </div>
+        </div>
+
+        <!-- Photographer Commission List -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <h3 class="text-base font-extrabold text-slate-900 border-b border-slate-100 pb-3">Daftar Dompet & Komisi Fotografer Aktif</h3>
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-y border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-3">Fotografer</th>
+                  <th class="py-3 px-3">Foto Terunggah</th>
+                  <th class="py-3 px-3">Foto Terjual</th>
+                  <th class="py-3 px-3">Total Penghasilan</th>
+                  <th class="py-3 px-3">Saldo Tersedia</th>
+                  <th class="py-3 px-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="photographerCommissionsTable">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 10: PAYOUT & PENARIKAN ==================== -->
+      <section id="view-payout" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Permintaan Penarikan Saldo Fotografer</h3>
+              <p class="text-xs text-slate-400">Verifikasi nomor rekening dan setujui pencairan saldo kreator</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <label class="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
+                <input type="checkbox" id="maskRekeningToggle" checked onchange="toggleMaskRekening()" class="rounded border-slate-300 text-coral-600 focus:ring-coral-500">
+                <span>Sensor Rekening: ON</span>
+              </label>
+            </div>
+          </div>
+
+          <!-- Withdrawal Requests Table -->
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-y border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-3">Fotografer</th>
+                  <th class="py-3 px-3">Tujuan Bank / E-Wallet</th>
+                  <th class="py-3 px-3">Nominal Tarik</th>
+                  <th class="py-3 px-3">Waktu Pengajuan</th>
+                  <th class="py-3 px-3 text-right">Tindakan Owner</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100" id="withdrawalRequestsTable">
+                <!-- Dynamically populated via JS -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 11: KODE PROMO ==================== -->
+      <section id="view-promo" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Manajemen Kode Promo & Diskon Event</h3>
+              <p class="text-xs text-slate-400">Diskon foto satuan atau bundling event marathon & konser</p>
+            </div>
+            <button onclick="alert('Buka modal buat kode promo baru')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+              + Buat Kode Promo Baru
+            </button>
+          </div>
+
+          <div class="overflow-x-auto">
+            <table class="w-full text-left text-xs">
+              <thead class="bg-slate-50 border-y border-slate-200 text-slate-500 font-bold">
+                <tr>
+                  <th class="py-3 px-3">Kode Promo</th>
+                  <th class="py-3 px-3">Tipe & Keuntungan</th>
+                  <th class="py-3 px-3">Syarat Pembelian</th>
+                  <th class="py-3 px-3">Pemakaian</th>
+                  <th class="py-3 px-3">Masa Berlaku</th>
+                  <th class="py-3 px-3">Status</th>
+                  <th class="py-3 px-3 text-right">Aksi</th>
+                </tr>
+              </thead>
+              <tbody class="divide-y divide-slate-100">
+                <tr>
+                  <td class="py-3 px-3 font-mono font-bold text-coral-600">LARIPAGI10</td>
+                  <td class="py-3 px-3 font-bold">Diskon 10% Potongan Langsung</td>
+                  <td class="py-3 px-3 text-slate-500">Min. Pembelian 3 Foto</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">142 / 500 klaim</td>
+                  <td class="py-3 px-3 text-slate-500">Hingga 31 Des 2026</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">AKTIF</span></td>
+                  <td class="py-3 px-3 text-right"><button class="text-slate-400 hover:text-rose-600 font-bold">Nonaktifkan</button></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 font-mono font-bold text-coral-600">KONSERASIK</td>
+                  <td class="py-3 px-3 font-bold">Potongan Rp 10.000</td>
+                  <td class="py-3 px-3 text-slate-500">Khusus Foto Master 50MP</td>
+                  <td class="py-3 px-3 font-bold text-slate-900">89 / Tanpa Batas</td>
+                  <td class="py-3 px-3 text-slate-500">Hingga 15 Nov 2026</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-emerald-100 text-emerald-800">AKTIF</span></td>
+                  <td class="py-3 px-3 text-right"><button class="text-slate-400 hover:text-rose-600 font-bold">Nonaktifkan</button></td>
+                </tr>
+                <tr>
+                  <td class="py-3 px-3 font-mono font-bold text-slate-400">WISUDA20</td>
+                  <td class="py-3 px-3 font-bold text-slate-400">Diskon 20% Paket Keluarga</td>
+                  <td class="py-3 px-3 text-slate-400">Min. 5 Foto Wisuda</td>
+                  <td class="py-3 px-3 text-slate-400">200 / 200 Kuota Habis</td>
+                  <td class="py-3 px-3 text-slate-400">Kedaluwarsa</td>
+                  <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">NONAKTIF</span></td>
+                  <td class="py-3 px-3 text-right"><button class="text-coral-600 font-bold hover:underline">Aktifkan</button></td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 12: HARGA & KOMISI ==================== -->
+      <section id="view-pricing" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-5">
+          <div class="border-b border-slate-100 pb-3">
+            <h3 class="text-base font-extrabold text-slate-900">Pengaturan Harga Foto & Rasio Bagi Hasil</h3>
+            <p class="text-xs text-slate-400">Tentukan harga standar penjualan foto dan persentase komisi fotografer serta EO</p>
+          </div>
+
+          <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+            
+            <!-- Tier Pricing Settings -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+              <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Harga Default Foto PicMe</h4>
+              
+              <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-700">1. Original Master Ultra HD (24–50 MP)</label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                  <input type="number" id="inputPriceHighRes" value="35000" class="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs font-bold text-slate-900">
+                </div>
+                <span class="text-[10px] text-slate-400">File sensor fotografer asli tanpa kompresi (tersimpan permanen di cloud).</span>
+              </div>
+
+              <div class="space-y-1">
+                <label class="block text-xs font-bold text-slate-700">2. Web & Medsos Compressed (1080p - 2K)</label>
+                <div class="relative">
+                  <span class="absolute left-3.5 top-2.5 text-xs font-bold text-slate-400">Rp</span>
+                  <input type="number" id="inputPriceCompressed" value="20000" class="w-full bg-white border border-slate-300 rounded-xl pl-10 pr-4 py-2 text-xs font-bold text-slate-900">
+                </div>
+                <span class="text-[10px] text-slate-400">Ukuran ringan untuk medsos (file High-Res otomatis dihapus untuk hemat server).</span>
+              </div>
+            </div>
+
+            <!-- Revenue Split Ratio -->
+            <div class="p-5 rounded-2xl bg-slate-50 border border-slate-200 space-y-4">
+              <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider">Rasio Pembagian Pendapatan</h4>
+              
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span>Bagian Fotografer (Kreator)</span>
+                  <span class="text-emerald-600 font-extrabold">50%</span>
+                </div>
+                <input type="range" min="30" max="85" value="50" class="w-full accent-emerald-600">
+                <span class="text-[10px] text-slate-400">Rp 17.500 per foto Master / Rp 10.000 per foto Compressed.</span>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span>Bagian Venue / EO Partner</span>
+                  <span class="text-blue-600 font-extrabold">10%</span>
+                </div>
+                <input type="range" min="0" max="25" value="10" class="w-full accent-blue-600">
+                <span class="text-[10px] text-slate-400">Rp 3.500 per foto Master / Rp 2.000 per foto Compressed.</span>
+              </div>
+
+              <div class="space-y-1">
+                <div class="flex items-center justify-between text-xs font-bold">
+                  <span>Bagian Platform PicMe</span>
+                  <span class="text-coral-600 font-extrabold">40%</span>
+                </div>
+                <span class="text-[10px] text-slate-400">Menutup biaya server Biznet GIO, Tripay gateway, dan laba operasional.</span>
+              </div>
+            </div>
+
+          </div>
+
+          <button onclick="savePricingRules()" class="px-5 py-2.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+            Simpan Konfigurasi Harga & Komisi
+          </button>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 13: FITUR & MAINTENANCE ==================== -->
+      <section id="view-platform" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-5">
+          <div class="border-b border-slate-100 pb-3 flex items-center justify-between">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Kontrol Fitur & Saklar Darurat (Feature Toggles)</h3>
+              <p class="text-xs text-slate-400">Kendali operasional modul platform PicMe secara real-time</p>
+            </div>
+            <button onclick="alert('Semua perubahan saklar fitur berhasil disimpan!')" class="px-3.5 py-1.5 rounded-xl bg-slate-900 text-white text-xs font-bold hover:bg-slate-800 transition">
+              Simpan Kontrol Fitur
+            </button>
+          </div>
+
+          <div class="space-y-3">
+            
+            <!-- Toggle 1 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">1. Pencarian Wajah AI (Selfie Face Match)</span>
+                <span class="text-[11px] text-slate-500">Mengaktifkan pemindaian selfie dan pencocokan vektor 512-d di galeri.</span>
+              </div>
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shrink-0">
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-white shadow-2xs">Aktif</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Jeda</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Mati</button>
+              </div>
+            </div>
+
+            <!-- Toggle 2 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">2. Upload Foto Fotografer & Auto-Watermark</span>
+                <span class="text-[11px] text-slate-500">Menerima batch upload foto konser/lari dan pembuatan thumbnail otomatis.</span>
+              </div>
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shrink-0">
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-white shadow-2xs">Aktif</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Jeda</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Mati</button>
+              </div>
+            </div>
+
+            <!-- Toggle 3 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">3. Checkout & Pembayaran Instan (Tripay QRIS)</span>
+                <span class="text-[11px] text-slate-500">Membuka gerbang transaksi pembelian foto Ultra HD & Compressed.</span>
+              </div>
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shrink-0">
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-white shadow-2xs">Aktif</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Jeda</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Mati</button>
+              </div>
+            </div>
+
+            <!-- Toggle 4 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">4. Penarikan Saldo Otomatis Fotografer</span>
+                <span class="text-[11px] text-slate-500">Menerima request pencairan saldo dompet ke rekening bank kreator.</span>
+              </div>
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shrink-0">
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-white shadow-2xs">Aktif</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Jeda</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Mati</button>
+              </div>
+            </div>
+
+            <!-- Toggle 5 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">5. Pendaftaran Akun & KYC Fotografer Baru</span>
+                <span class="text-[11px] text-slate-500">Membuka registrasi fotografer baru untuk bergabung menjual dokumentasi.</span>
+              </div>
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shrink-0">
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-white shadow-2xs">Aktif</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Jeda</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Mati</button>
+              </div>
+            </div>
+
+            <!-- Toggle 6 -->
+            <div class="p-3.5 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">6. Wajib OTP WhatsApp saat Daftar</span>
+                <span class="text-[11px] text-slate-500">Mengirimkan kode verifikasi 6 digit ke nomor WhatsApp pendaftar.</span>
+              </div>
+              <div class="flex items-center gap-1 bg-white p-1 rounded-xl border border-slate-200 shrink-0">
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold bg-emerald-500 text-white shadow-2xs">Aktif</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Jeda</button>
+                <button class="px-2.5 py-1 rounded-lg text-xs font-bold text-slate-500 hover:text-slate-800">Mati</button>
+              </div>
+            </div>
+
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 14: LAYANAN & KESEHATAN SISTEM ==================== -->
+      <section id="view-services" class="space-y-6 hidden">
+        
+        <!-- System Health Grid -->
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Layanan & Kesehatan Infrastruktur (Uptime Monitor)</h3>
+              <p class="text-xs text-slate-400">Status konektivitas database, vector search, cloud storage, dan payment gateway</p>
+            </div>
+            <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+              Uptime 99.98% (30 Hari)
+            </span>
+          </div>
+
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 text-xs">
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">Database PostgreSQL</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Normal</div>
+              <span class="text-[10px] text-slate-400">Latency: 14 ms • Connected</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">Vector Search (pgvector)</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Normal</div>
+              <span class="text-[10px] text-slate-400">Cosine query: 32 ms</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">AI Engine (SCRFD+ArcFace)</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Siap & Aktif</div>
+              <span class="text-[10px] text-slate-400">ONNX Runtime C++ Server</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">Cloud Storage S3 / Biznet</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Terhubung</div>
+              <span class="text-[10px] text-slate-400">Read/Write latency: 48 ms</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">Tripay Payment Gateway</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Online</div>
+              <span class="text-[10px] text-slate-400">QRIS Callback: 100% Berhasil</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">WhatsApp Gateway (Fonnte)</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Terkoneksi</div>
+              <span class="text-[10px] text-slate-400">OTP delivered: < 3 detik</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">Watermark Worker</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Normal</div>
+              <span class="text-[10px] text-slate-400">Pillow process: 120ms/foto</span>
+            </div>
+
+            <div class="p-4 rounded-xl bg-slate-50 border border-slate-200 space-y-2">
+              <div class="flex items-center justify-between">
+                <span class="font-bold text-slate-800">Auth & Enkripsi PDP</span>
+                <span class="w-2.5 h-2.5 rounded-full bg-emerald-500"></span>
+              </div>
+              <div class="text-lg font-black text-slate-900">Secure (AES-256)</div>
+              <span class="text-[10px] text-slate-400">UU PDP No. 27/2022</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- External Quota & Balance Cards -->
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
+            <span class="text-xs font-bold text-slate-400">Saldo Layanan Face AI Eksternal</span>
+            <div class="text-2xl font-black text-slate-900">US$ 14.20</div>
+            <p class="text-xs text-slate-500">Estimasi sisa kuota: ±9.400 pemindaian foto sebelum perlu top up.</p>
+            <button class="mt-2 text-xs font-bold text-coral-600 hover:underline">+ Top Up Saldo AI</button>
+          </div>
+          <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
+            <span class="text-xs font-bold text-slate-400">Kapasitas Cloud Storage S3 / R2</span>
+            <div class="text-2xl font-black text-slate-900">184 GB / 500 GB</div>
+            <p class="text-xs text-slate-500">Terpakai 36.8% • Estimasi muat ±45.000 foto 24–50MP lagi.</p>
+            <button class="mt-2 text-xs font-bold text-coral-600 hover:underline">+ Tambah Kuota Storage</button>
+          </div>
+        </div>
+
+      </section>
+
+      <!-- ==================== VIEW 15: INFO & PEMBARUAN ==================== -->
+      <section id="view-announcements" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Status Layanan Publik & Pengumuman Pop-up</h3>
+              <p class="text-xs text-slate-400">Kontrol banner pemberitahuan yang tampil di aplikasi publik PicMe</p>
+            </div>
+            <button onclick="alert('Buka modal tambah info / pengumuman baru')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+              + Buat Info / Pembaruan
+            </button>
+          </div>
+
+          <div class="space-y-3">
+            <div class="p-4 rounded-xl border border-slate-200 bg-slate-50 flex items-center justify-between">
+              <div>
+                <span class="text-xs font-extrabold text-slate-900 block">Status Pencarian Wajah AI di Halaman Depan</span>
+                <span class="text-[11px] text-slate-500">Indikator yang dilihat pengguna jika server sedang sibuk</span>
+              </div>
+              <span class="px-3 py-1 rounded-full text-xs font-bold bg-emerald-100 text-emerald-800">Normal 100%</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 16: BROADCAST WHATSAPP ==================== -->
+      <section id="view-broadcast" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="border-b border-slate-100 pb-3">
+            <h3 class="text-base font-extrabold text-slate-900">Broadcast WhatsApp Otomatis ke Peserta Event</h3>
+            <p class="text-xs text-slate-400">Kirim notifikasi instan saat foto konser / lari sudah diunggah fotografer</p>
+          </div>
+
+          <div class="max-w-xl space-y-3 text-xs">
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Target Penerima</label>
+              <select class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold">
+                <option>Semua Peserta We The Fest 2026 (1.420 Kontak)</option>
+                <option>Semua Pelari Jogja Marathon 2026 (890 Kontak)</option>
+                <option>Semua Fotografer Terverifikasi (142 Kontak)</option>
+              </select>
+            </div>
+            <div>
+              <label class="block font-bold text-slate-700 mb-1">Pesan WhatsApp Blast</label>
+              <textarea rows="4" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-3 text-xs font-mono" placeholder="Halo {{nama}}, foto aksi kamu di We The Fest 2026 sudah selesai diindeks oleh AI PicMe! Buka link ini untuk melihat foto kamu: https://pixme-18g.pages.dev"></textarea>
+            </div>
+            <button onclick="alert('Pesan broadcast WhatsApp siap diantrekan!')" class="px-5 py-2.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+              <i class="ph-bold ph-paper-plane-tilt"></i>
+              <span>Kirim Broadcast Sekarang</span>
+            </button>
+          </div>
+        </div>
+      </section>
+
+      <!-- ==================== VIEW 17: AUDIT LOG ==================== -->
+      <section id="view-audit" class="space-y-6 hidden">
+        <div class="bg-white p-6 rounded-2xl border border-slate-200 shadow-card space-y-4">
+          <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-3 border-b border-slate-100 pb-4">
+            <div>
+              <h3 class="text-base font-extrabold text-slate-900">Audit Log & Catatan Aktivitas Sistem</h3>
+              <p class="text-xs text-slate-400">Jejak audit transaksi finansial, persetujuan KYC, dan perubahan fitur</p>
+            </div>
+            <button onclick="renderAuditLogs()" class="px-3.5 py-1.5 rounded-xl bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs flex items-center gap-1.5 transition">
+              <i class="ph-bold ph-arrow-counter-clockwise"></i>
+              <span>Refresh Log</span>
+            </button>
+          </div>
+
+          <div class="space-y-3" id="auditLogList">
+            <!-- Dynamically populated via JS -->
+          </div>
+        </div>
+      </section>
+
+    </main>
+
+  </div>
+
+  <!-- ==================== MODAL: BUAT AKUN BARU ==================== -->
+  <div id="modalCreateUser" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModalCreateUser()"></div>
+    <div class="bg-white rounded-3xl p-6 max-w-md w-full relative z-10 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h4 class="text-sm font-extrabold text-slate-900">Buat Akun Pengguna / Fotografer</h4>
+        <button onclick="closeModalCreateUser()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+          <i class="ph-bold ph-x text-sm"></i>
+        </button>
+      </div>
+      <form onsubmit="handleCreateUser(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nama Lengkap</label>
+          <input type="text" id="newUserName" required placeholder="Budi Santoso" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Email</label>
+          <input type="email" id="newUserEmail" required placeholder="budi@gmail.com" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Role Akun</label>
+          <select id="newUserRole" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-bold">
+            <option value="photographer">Fotografer (Creator)</option>
+            <option value="buyer">Pembeli (User)</option>
+            <option value="admin">Administrator</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Password Sementara</label>
+          <input type="password" id="newUserPassword" required value="Picme123!" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+        </div>
+        <button type="submit" class="w-full bg-coral-600 hover:bg-coral-700 text-white font-bold py-3 rounded-xl shadow-sm transition">
+          Simpan Akun
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: SUNTIK SALDO / KREDIT ==================== -->
+  <div id="modalInjectBalance" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModalInjectBalance()"></div>
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full relative z-10 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h4 class="text-sm font-extrabold text-slate-900">Suntik Saldo / Kredit Kreator</h4>
+        <button onclick="closeModalInjectBalance()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+          <i class="ph-bold ph-x text-sm"></i>
+        </button>
+      </div>
+      <div class="text-xs space-y-3">
+        <p class="text-slate-500">Kreator: <b id="injectTargetName" class="text-slate-900">Fotografer</b></p>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Jumlah Nominal (Rp)</label>
+          <input type="number" id="injectAmount" placeholder="100000" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-bold text-slate-900">
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Alasan Penyesuaian</label>
+          <input type="text" id="injectReason" placeholder="Bonus event / koreksi komisi" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+        </div>
+        <button onclick="submitInjectBalance()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-sm transition">
+          Kreditkan Saldo Sekarang
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== MODAL: APPROVE PAYOUT ==================== -->
+  <div id="modalApprovePayout" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModalApprovePayout()"></div>
+    <div class="bg-white rounded-3xl p-6 max-w-sm w-full relative z-10 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h4 class="text-sm font-extrabold text-slate-900">Setujui & Tandai Ditransfer</h4>
+        <button onclick="closeModalApprovePayout()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+          <i class="ph-bold ph-x text-sm"></i>
+        </button>
+      </div>
+      <div class="text-xs space-y-3">
+        <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
+          <span class="text-slate-400 font-bold block">Penerima Payout:</span>
+          <span id="payoutTargetCreator" class="font-bold text-slate-900 block">Rian Santoso</span>
+          <span id="payoutTargetBank" class="text-slate-600 block">BCA • 8492019482</span>
+          <span id="payoutTargetNominal" class="text-sm font-black text-emerald-600 block pt-1">Rp 1.450.000</span>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Unggah Bukti Transfer (Opsional)</label>
+          <input type="file" class="w-full text-xs text-slate-500 file:mr-2 file:py-1.5 file:px-3 file:rounded-xl file:border-0 file:bg-slate-100 file:font-bold">
+        </div>
+        <button onclick="confirmApprovePayout()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white font-bold py-3 rounded-xl shadow-sm transition">
+          Konfirmasi Telah Ditransfer
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== SCRIPT CONTROLLER & REALISTIC DATA ==================== -->
+  <script>
+    let activeView = 'dashboard';
+    let isEmailMasked = true;
+    let isRekeningMasked = true;
+    let selectedInjectCreator = null;
+    let selectedPayoutItem = null;
+
+    // View Titles & Subtitles
+    const viewMetadata = {
+      'dashboard': { title: 'Dashboard Utama', sub: 'Ringkasan performa penjualan, AI processing, dan omset PicMe' },
+      'growth': { title: 'Analitik Pertumbuhan', sub: 'Omset kotor, bagi hasil fotografer, dan konversi funnel pembeli' },
+      'users': { title: 'Semua Pengguna & Kreator', sub: 'Daftar pembeli, fotografer terverifikasi, dan metrik infrastruktur cloud' },
+      'kyc': { title: 'Verifikasi Fotografer (KYC)', sub: 'Pemeriksaan kartu identitas KTP dan portofolio kamera profesional' },
+      'feedback': { title: 'Masukan & Komplain Pengguna', sub: 'Tindak lanjut laporan bug, komplain foto, dan saran fitur' },
+      'photos-monitor': { title: 'Monitor Upload & AI Processing', sub: 'Status antrean ekstraksi wajah SCRFD + ArcFace dan watermark' },
+      'events': { title: 'Event & Spot Foto', sub: 'Daftar konser musik, spot marathon, dan car free day aktif' },
+      'purchases': { title: 'Pembelian Foto', sub: 'Riwayat transaksi lunas via Payment Gateway Tripay & QRIS' },
+      'commissions': { title: 'Komisi Fotografer', sub: 'Hak pendapatan kreator 50% dan dompet saldo penjualan' },
+      'payout': { title: 'Payout & Penarikan Saldo', sub: 'Daftar permintaan pencairan dana fotografer ke rekening bank' },
+      'promo': { title: 'Kode Promo', sub: 'Manajemen kupon diskon festival dan promo event lari' },
+      'pricing': { title: 'Harga & Komisi', sub: 'Penetapan harga foto Master Rp 35rb vs Compressed Rp 20rb & bagi hasil' },
+      'platform': { title: 'Fitur & Maintenance', sub: 'Saklar darurat operasional modul pencarian wajah dan pembayaran' },
+      'services': { title: 'Layanan & Kesehatan', sub: 'Pantauan latency PostgreSQL, S3, Redis, dan sisa kuota API' },
+      'announcements': { title: 'Info & Pembaruan', sub: 'Pengumuman pop-up dan banner status layanan publik' },
+      'broadcast': { title: 'Broadcast WhatsApp', sub: 'Kirim notifikasi otomatis saat foto event peserta selesai diindeks' },
+      'audit': { title: 'Audit Log Sistem', sub: 'Jejak rekaman aktivitas owner, transaksi, dan perubahan konfigurasi' }
+    };
+
+    // Realistic Indonesian Mock Data
+    const mockUsers = [
+      { id: 'usr-01', name: 'Rian Santoso', email: 'rian.photo@gmail.com', wa: '081234567890', role: 'FOTOGRAFER VERIFIED', photos: '1.240 foto', storage: '14.2 GB', joined: '12 Jan 2026', balance: 3450000 },
+      { id: 'usr-02', name: 'Dimas Wicaksono', email: 'dimas.wicak@gmail.com', wa: '081398765432', role: 'FOTOGRAFER VERIFIED', photos: '890 foto', storage: '9.8 GB', joined: '03 Feb 2026', balance: 1850000 },
+      { id: 'usr-03', name: 'Anisa Maharani', email: 'anisa.runner@yahoo.com', wa: '085712345678', role: 'PEMBELI', photos: '14 foto dibeli', storage: '320 MB', joined: '15 Agu 2026', balance: 0 },
+      { id: 'usr-04', name: 'Bambang Pamungkas', email: 'bambang.p@gmail.com', wa: '081809876543', role: 'PEMBELI', photos: '8 foto dibeli', storage: '190 MB', joined: '18 Agu 2026', balance: 0 },
+      { id: 'usr-05', name: 'Bayu Saputra', email: 'bayu.lens@outlook.com', wa: '082155566778', role: 'MENUNGGU KYC', photos: '0 foto', storage: '0 MB', joined: '28 Okt 2026', balance: 0 },
+      { id: 'usr-06', name: 'Siti Nurhaliza', email: 'siti.fest@gmail.com', wa: '087812983476', role: 'PEMBELI', photos: '6 foto dibeli', storage: '140 MB', joined: '20 Okt 2026', balance: 0 },
+      { id: 'usr-07', name: 'Administrator PicMe', email: 'superadmin@picme.id', wa: '081199988776', role: 'SUPERADMIN', photos: 'System Owner', storage: 'Unlimited', joined: '01 Jan 2026', balance: 19500000 }
+    ];
+
+    const mockPurchases = [
+      { id: 'TRX-894101', date: 'Hari ini, 11:24', buyer: 'Anisa Maharani (anisa.runner@yahoo.com)', item: 'WTF26_MAIN_STAGE_0842.JPG', tier: 'Master 24-50MP', photographer: 'Rian Santoso', method: 'QRIS by ShopeePay', amount: 35000, creatorShare: 17500, eoShare: 3500, platformShare: 14000, status: 'Lunas', ref: 'TPY-982341' },
+      { id: 'TRX-894102', date: 'Hari ini, 10:48', buyer: 'Bambang Pamungkas (bambang.p@gmail.com)', item: 'WTF26_CROWD_CHEER_1029.JPG', tier: 'Web Compressed', photographer: 'Dimas Wicaksono', method: 'BCA Virtual Account', amount: 20000, creatorShare: 10000, eoShare: 2000, platformShare: 8000, status: 'Lunas', ref: 'TPY-982342' },
+      { id: 'TRX-894103', date: 'Hari ini, 09:15', buyer: 'Siti Nurhaliza (siti.fest@gmail.com)', item: 'JOGJA_MARATHON_KM21_0441.JPG', tier: 'Master 24-50MP', photographer: 'Rian Santoso', method: 'QRIS by GoPay', amount: 35000, creatorShare: 17500, eoShare: 3500, platformShare: 14000, status: 'Lunas', ref: 'TPY-982343' },
+      { id: 'TRX-894104', date: 'Kemarin, 21:05', buyer: 'Reza Fahlevi (reza.runner@gmail.com)', item: 'CFD_SUDIRMAN_CYCLING_0112.JPG', tier: 'Web Compressed', photographer: 'Dimas Wicaksono', method: 'Mandiri VA', amount: 20000, creatorShare: 10000, eoShare: 2000, platformShare: 8000, status: 'Lunas', ref: 'TPY-982344' },
+      { id: 'TRX-894105', date: 'Kemarin, 19:40', buyer: 'Kevin Sanjaya (kevin.s@gmail.com)', item: 'WTF26_BARRIER_FRONT_1184.JPG', tier: 'Master 24-50MP', photographer: 'Rian Santoso', method: 'QRIS by Dana', amount: 35000, creatorShare: 17500, eoShare: 3500, platformShare: 14000, status: 'Lunas', ref: 'TPY-982345' }
+    ];
+
+    const mockWithdrawals = [
+      { id: 'WD-01', creator: 'Rian Santoso', bank: 'BCA', acc: '8492019482', name: 'Rian Santoso', amount: 1450000, time: '2 jam lalu' },
+      { id: 'WD-02', creator: 'Dimas Wicaksono', bank: 'Mandiri', acc: '1370019284716', name: 'Dimas Wicaksono', amount: 1850000, time: '4 jam lalu' },
+      { id: 'WD-03', creator: 'Aris Munandar', bank: 'BNI', acc: '0839218491', name: 'Aris Munandar', amount: 800000, time: '6 jam lalu' },
+      { id: 'WD-04', creator: 'Fajar Nugraha', bank: 'BCA', acc: '5271829401', name: 'Fajar Nugraha', amount: 750000, time: '1 hari lalu' }
+    ];
+
+    const mockKyc = [
+      { id: 'kyc-01', name: 'Bayu Saputra', email: 'bayu.lens@outlook.com', wa: '082155566778', gear: 'Sony A7 IV + 70-200mm f/2.8 GM II', port: 'instagram.com/bayupics', idImg: 'KTP Terlampir' },
+      { id: 'kyc-02', name: 'Irfan Hakim', email: 'irfan.snap@gmail.com', wa: '081923481726', gear: 'Canon EOS R6 Mark II + 24-70mm f/2.8', port: 'drive.google.com/portofolio-irfan', idImg: 'KTP Terlampir' },
+      { id: 'kyc-03', name: 'Nadia Pratiwi', email: 'nadia.shot@gmail.com', wa: '085819283746', gear: 'Nikon Z8 + 85mm f/1.4', port: 'instagram.com/nadiashoot', idImg: 'KTP Terlampir' }
+    ];
+
+    const mockPhotosMonitor = [
+      { id: 'PM-01', file: 'DSC_0942_CORRUPT.JPG', creator: 'Rian Santoso', event: 'We The Fest 2026', time: '10 menit lalu', status: 'Gagal', log: 'Wajah tidak terdeteksi / file unreadable by OpenCV', thumb: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=50' },
+      { id: 'PM-02', file: 'DSC_0943_BLUR.JPG', creator: 'Dimas Wicaksono', event: 'Jogja Marathon 2026', time: '25 menit lalu', status: 'Gagal', log: 'Resolution below minimum / severe motion blur', thumb: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&q=50' },
+      { id: 'PM-03', file: 'WTF26_MAIN_0842.JPG', creator: 'Rian Santoso', event: 'We The Fest 2026', time: '1 jam lalu', status: 'Terbit', log: 'Berhasil diindeks (8 wajah, 512-d ArcFace)', thumb: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=300&q=80' },
+      { id: 'PM-04', file: 'WTF26_CROWD_1029.JPG', creator: 'Rian Santoso', event: 'We The Fest 2026', time: '1 jam lalu', status: 'Terbit', log: 'Berhasil diindeks (14 wajah, 512-d ArcFace)', thumb: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&q=80' }
+    ];
+
+    const mockAudit = [
+      { action: 'PAYMENT_TRIPAY_PAID', color: 'emerald', text: 'Pembelian Foto Lunas Rp 35.000 via QRIS (Ref: TPY-982341)', actor: 'webhook@tripay.co.id', target: 'anisa.runner@yahoo.com', time: '11:24 WIB' },
+      { action: 'PHOTOGRAPHER_PAYOUT_APPROVED', color: 'blue', text: 'Persetujuan Payout Saldo Rp 1.450.000 via BCA', actor: 'superadmin@picme.id', target: 'rian.photo@gmail.com', time: '10:15 WIB' },
+      { action: 'FACE_SCAN_SEARCH', color: 'purple', text: 'Pencarian wajah selfie tamu cocok 3 foto di We The Fest 2026', actor: 'guest-session-8419', target: 'We The Fest 2026', time: '09:40 WIB' },
+      { action: 'SUNTIK_SALDO', color: 'amber', text: 'Penambahan saldo kredit kreator Rp 100.000 (Bonus Event)', actor: 'superadmin@picme.id', target: 'dimas.wicak@gmail.com', time: '08:30 WIB' },
+      { action: 'DELETE_HIGHRES_RAW', color: 'rose', text: 'Auto-delete file high-res master setelah pembelian tier Web Compressed', actor: 'system-worker@picme.id', target: 'photo-id-849102', time: 'Kemarin, 21:05 WIB' }
+    ];
+
+    // Navigation Switcher
+    function switchView(viewName) {
+      if (!viewMetadata[viewName]) return;
+      activeView = viewName;
+
+      // Hide all views
+      document.querySelectorAll('main > section').forEach(sec => sec.classList.add('hidden'));
+      const targetSec = document.getElementById(`view-${viewName}`);
+      if (targetSec) targetSec.classList.remove('hidden');
+
+      // Update sidebar active state
+      document.querySelectorAll('.nav-item').forEach(btn => {
+        btn.className = 'nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-semibold text-slate-600 hover:text-slate-900 hover:bg-slate-50 transition';
+      });
+      const activeNav = document.getElementById(`nav-${viewName}`);
+      if (activeNav) {
+        activeNav.className = 'nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition text-coral-600 bg-coral-50/90 shadow-2xs';
+      }
+
+      // Update header
+      document.getElementById('headerViewTitle').innerText = viewMetadata[viewName].title;
+      document.getElementById('headerViewSubtitle').innerText = viewMetadata[viewName].sub;
+
+      // Close mobile sidebar if open
+      toggleSidebar(false);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function toggleSidebar(open) {
+      const sb = document.getElementById('adminSidebar');
+      const bd = document.getElementById('sidebarBackdrop');
+      if (open) {
+        sb.classList.remove('-translate-x-full');
+        bd.classList.remove('hidden');
+      } else {
+        sb.classList.add('-translate-x-full');
+        bd.classList.add('hidden');
+      }
+    }
+
+    // Chart Renderer: Interactive Coral Bars (30 Days)
+    function renderDailyRevenueChart() {
+      const container = document.getElementById('chartDailyRevenue');
+      if (!container) return;
+
+      // 30 days dummy revenue data (Rp 800rb - 2.8jt)
+      const data = [
+        950, 1100, 1350, 1200, 1800, 2400, 2650,
+        1150, 1280, 1400, 1650, 1900, 2750, 2800,
+        1250, 1300, 1420, 1550, 1850, 2500, 2600,
+        1200, 1350, 1480, 1600, 1950, 2700, 2850,
+        1400, 1650
+      ];
+      const maxVal = Math.max(...data);
+
+      container.innerHTML = data.map((val, idx) => {
+        const heightPct = Math.round((val / maxVal) * 100);
+        const isWeekend = (idx % 7 === 5 || idx % 7 === 6);
+        const bgClass = isWeekend ? 'bg-coral-600 hover:bg-coral-700' : 'bg-coral-400/80 hover:bg-coral-500';
+        const formatted = new Intl.NumberFormat('id-ID').format(val * 1000);
+
+        return `
+          <div class="flex-1 flex flex-col items-center gap-1 group relative h-full justify-end cursor-pointer">
+            <div class="opacity-0 group-hover:opacity-100 absolute -top-8 bg-slate-900 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow whitespace-nowrap pointer-events-none transition z-20">
+              Tgl ${idx + 1}: Rp ${formatted}
+            </div>
+            <div class="w-full ${bgClass} rounded-t-sm coral-bar-anim" style="height: ${heightPct}%"></div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Tables Population
+    function renderUsersTable(filter = 'all') {
+      const tbody = document.getElementById('usersTableBody');
+      if (!tbody) return;
+
+      let filtered = mockUsers;
+      if (filter === 'buyer') filtered = mockUsers.filter(u => u.role === 'PEMBELI');
+      if (filter === 'photographer') filtered = mockUsers.filter(u => u.role === 'FOTOGRAFER VERIFIED');
+      if (filter === 'kyc') filtered = mockUsers.filter(u => u.role === 'MENUNGGU KYC');
+      if (filter === 'admin') filtered = mockUsers.filter(u => u.role === 'SUPERADMIN');
+
+      tbody.innerHTML = filtered.map(u => {
+        const emailDisplay = isEmailMasked && u.role !== 'SUPERADMIN' 
+          ? u.email.replace(/(.{3})(.*)(@.*)/, '$1***$3') 
+          : u.email;
+
+        let roleBadge = 'bg-slate-100 text-slate-700';
+        if (u.role === 'FOTOGRAFER VERIFIED') roleBadge = 'bg-purple-100 text-purple-800 border border-purple-200';
+        if (u.role === 'MENUNGGU KYC') roleBadge = 'bg-amber-100 text-amber-800 border border-amber-200';
+        if (u.role === 'SUPERADMIN') roleBadge = 'bg-coral-100 text-coral-800 border border-coral-200';
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3 px-3">
+              <div class="flex items-center gap-2.5">
+                <div class="w-8 h-8 rounded-xl bg-slate-100 text-slate-700 font-extrabold flex items-center justify-center text-xs shrink-0">
+                  ${u.name.substring(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <span class="font-bold text-slate-900 block">${u.name}</span>
+                  <span class="text-[11px] text-slate-400 block">${emailDisplay} • <a href="https://wa.me/${u.wa}" target="_blank" class="text-emerald-600 hover:underline"><i class="ph-bold ph-whatsapp-logo"></i> ${u.wa}</a></span>
+                </div>
+              </div>
+            </td>
+            <td class="py-3 px-3">
+              <span class="px-2 py-0.5 rounded-full text-[10px] font-extrabold tracking-wider ${roleBadge}">
+                ${u.role}
+              </span>
+            </td>
+            <td class="py-3 px-3">
+              <span class="font-bold text-slate-800 block">${u.photos}</span>
+              <span class="text-[10px] text-slate-400 block">${u.storage} • Saldo: Rp ${new Intl.NumberFormat('id-ID').format(u.balance)}</span>
+            </td>
+            <td class="py-3 px-3 text-slate-500">${u.joined}</td>
+            <td class="py-3 px-3 text-right">
+              <div class="flex items-center justify-end gap-1.5">
+                <button onclick="openModalInjectBalance('${u.name}')" class="px-2 py-1 rounded-lg bg-emerald-50 hover:bg-emerald-100 text-emerald-700 font-bold text-[10px] transition" title="Suntik Saldo">
+                  + Saldo
+                </button>
+                ${u.role === 'MENUNGGU KYC' ? `
+                  <button onclick="approveKycQuick('${u.name}')" class="px-2 py-1 rounded-lg bg-blue-50 hover:bg-blue-100 text-blue-700 font-bold text-[10px] transition">
+                    Approve KYC
+                  </button>
+                ` : ''}
+                <button onclick="alert('Reset password dikirimkan ke email user')" class="p-1 text-slate-400 hover:text-slate-700 rounded" title="Reset Password">
+                  <i class="ph-bold ph-key"></i>
+                </button>
+              </div>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function toggleMaskEmail() {
+      isEmailMasked = document.getElementById('maskEmailToggle').checked;
+      renderUsersTable();
+    }
+
+    function toggleMaskRekening() {
+      isRekeningMasked = document.getElementById('maskRekeningToggle').checked;
+      renderWithdrawalsTable();
+    }
+
+    function filterUsers(type) {
+      document.querySelectorAll('.user-tab-btn').forEach(btn => {
+        btn.className = 'user-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold text-slate-600 hover:bg-slate-100';
+      });
+      event.target.className = 'user-tab-btn px-3 py-1.5 rounded-lg text-xs font-bold bg-slate-900 text-white';
+      renderUsersTable(type);
+    }
+
+    function renderPurchasesTable() {
+      const tbody = document.getElementById('purchasesTableBody');
+      if (!tbody) return;
+
+      tbody.innerHTML = mockPurchases.map(p => {
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3 px-3 font-mono text-slate-500">${p.date}</td>
+            <td class="py-3 px-3">
+              <span class="font-bold text-slate-900 block">${p.buyer.split('(')[0]}</span>
+              <span class="text-[10px] text-slate-400">${p.buyer.split('(')[1].replace(')', '')}</span>
+            </td>
+            <td class="py-3 px-3">
+              <span class="font-bold text-slate-900 block truncate max-w-[200px]">${p.item}</span>
+              <span class="text-[10px] text-coral-600 font-bold">${p.tier}</span>
+              <span class="text-[10px] text-slate-400">• ${p.photographer}</span>
+            </td>
+            <td class="py-3 px-3 font-semibold text-slate-700">${p.method}</td>
+            <td class="py-3 px-3">
+              <span class="font-black text-slate-900 block">Rp ${new Intl.NumberFormat('id-ID').format(p.amount)}</span>
+              <span class="text-[10px] text-slate-400">Fotografer: Rp ${new Intl.NumberFormat('id-ID').format(p.creatorShare)} • PicMe: Rp ${new Intl.NumberFormat('id-ID').format(p.platformShare)}</span>
+            </td>
+            <td class="py-3 px-3 text-right">
+              <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">
+                ${p.status}
+              </span>
+              <span class="block text-[9px] font-mono text-slate-400 mt-0.5">${p.ref}</span>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderWithdrawalsTable() {
+      const tbody = document.getElementById('withdrawalRequestsTable');
+      if (!tbody) return;
+
+      tbody.innerHTML = mockWithdrawals.map(w => {
+        const maskedAcc = isRekeningMasked ? w.acc.slice(0, 3) + '••••' + w.acc.slice(-3) : w.acc;
+
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3 px-3">
+              <span class="font-bold text-slate-900 block">${w.creator}</span>
+              <span class="text-[10px] text-slate-400">a.n ${w.name}</span>
+            </td>
+            <td class="py-3 px-3">
+              <span class="font-bold text-slate-800 block">${w.bank}</span>
+              <span class="text-[11px] font-mono text-slate-500">${maskedAcc}</span>
+            </td>
+            <td class="py-3 px-3">
+              <span class="text-sm font-black text-slate-900">Rp ${new Intl.NumberFormat('id-ID').format(w.amount)}</span>
+            </td>
+            <td class="py-3 px-3 text-slate-500">${w.time}</td>
+            <td class="py-3 px-3 text-right">
+              <button onclick="openModalApprovePayout('${w.creator}', '${w.bank} • ${w.acc}', '${w.amount}')" class="px-3 py-1.5 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">
+                Setujui & Tandai Ditransfer
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderCommissionsTable() {
+      const tbody = document.getElementById('photographerCommissionsTable');
+      if (!tbody) return;
+
+      const creators = mockUsers.filter(u => u.role.includes('FOTOGRAFER'));
+      tbody.innerHTML = creators.map(c => {
+        return `
+          <tr class="hover:bg-slate-50/80 transition">
+            <td class="py-3 px-3">
+              <span class="font-bold text-slate-900 block">${c.name}</span>
+              <span class="text-[10px] text-slate-400">${c.email}</span>
+            </td>
+            <td class="py-3 px-3 font-semibold text-slate-700">${c.photos}</td>
+            <td class="py-3 px-3 font-bold text-emerald-600">324 Foto Terjual</td>
+            <td class="py-3 px-3 font-black text-slate-900">Rp 11.340.000</td>
+            <td class="py-3 px-3 font-black text-coral-600">Rp ${new Intl.NumberFormat('id-ID').format(c.balance)}</td>
+            <td class="py-3 px-3 text-right">
+              <button onclick="openModalInjectBalance('${c.name}')" class="text-xs font-bold text-slate-600 hover:text-coral-600 underline">
+                Atur Saldo
+              </button>
+            </td>
+          </tr>
+        `;
+      }).join('');
+    }
+
+    function renderKycQueue() {
+      const container = document.getElementById('kycQueueList');
+      if (!container) return;
+
+      container.innerHTML = mockKyc.map(k => {
+        return `
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
+            <div class="space-y-1">
+              <div class="flex items-center gap-2">
+                <span class="font-extrabold text-sm text-slate-900">${k.name}</span>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800">Menunggu Review</span>
+              </div>
+              <p class="text-xs text-slate-500">${k.email} • WA: <a href="https://wa.me/${k.wa}" target="_blank" class="text-emerald-600 hover:underline">${k.wa}</a></p>
+              <div class="text-[11px] text-slate-600 pt-1 space-y-0.5">
+                <p><b>Kamera & Lensa:</b> ${k.gear}</p>
+                <p><b>Portofolio:</b> <a href="https://${k.port}" target="_blank" class="text-coral-600 hover:underline">${k.port}</a></p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              <button onclick="approveKyc('${k.id}', '${k.name}')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">
+                Setujui KYC (Verified)
+              </button>
+              <button onclick="rejectKyc('${k.id}', '${k.name}')" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-bold text-xs transition">
+                Tolak
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderFeedbackFeed() {
+      const container = document.getElementById('feedbackFeedList');
+      if (!container) return;
+
+      const feedbacks = [
+        { user: 'Bambang Pamungkas', email: 'bambang.p@gmail.com', time: '1 jam lalu', page: '/index.html (Pencarian Wajah)', cat: 'Saran Fitur', body: 'Fitur selfie-nya cepat banget! Kalau bisa tambahkan filter nomor dada (BIB) untuk lari marathon agar makin akurat.', status: 'Baru' },
+        { user: 'Siti Nurhaliza', email: 'siti.fest@gmail.com', time: '3 jam lalu', page: '/login.html (Face ID)', cat: 'Pujian', body: 'Keren banget login pakai deteksi mata terbuka, terasa sangat aman!', status: 'Selesai' }
+      ];
+
+      container.innerHTML = feedbacks.map((fb, idx) => {
+        return `
+          <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/40 space-y-3">
+            <div class="flex items-center justify-between">
+              <div>
+                <span class="font-extrabold text-xs text-slate-900">${fb.user}</span>
+                <span class="text-[11px] text-slate-400">(${fb.email}) • Halaman: <code>${fb.page}</code></span>
+              </div>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-100 text-blue-800">${fb.cat}</span>
+            </div>
+            <p class="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-slate-100">${fb.body}</p>
+            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
+              <input type="text" placeholder="Tulis catatan admin atau tindak lanjut..." class="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs">
+              <div class="flex items-center gap-2 shrink-0">
+                <button onclick="alert('Catatan admin berhasil disimpan!')" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition">Simpan</button>
+                <button onclick="alert('Balasan diteruskan ke WhatsApp pengguna')" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition">Balas WA</button>
+              </div>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderPhotoMonitorList(filter = 'all') {
+      const container = document.getElementById('photoMonitorList');
+      if (!container) return;
+
+      let filtered = mockPhotosMonitor;
+      if (filter === 'failed') filtered = mockPhotosMonitor.filter(p => p.status === 'Gagal');
+      if (filter === 'published') filtered = mockPhotosMonitor.filter(p => p.status === 'Terbit');
+
+      container.innerHTML = filtered.map(p => {
+        const isFailed = p.status === 'Gagal';
+        return `
+          <div class="p-3.5 rounded-2xl border ${isFailed ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-slate-50/40'} flex items-center justify-between gap-3">
+            <div class="flex items-center gap-3 min-w-0">
+              <img src="${p.thumb}" class="w-12 h-14 object-cover rounded-xl border border-slate-200 shrink-0">
+              <div class="space-y-0.5 min-w-0">
+                <div class="flex items-center gap-2">
+                  <span class="font-extrabold text-xs text-slate-900 truncate">${p.file}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isFailed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${p.status}</span>
+                </div>
+                <p class="text-[11px] text-slate-500">${p.creator} • Event: <b>${p.event}</b> (${p.time})</p>
+                <p class="text-[10px] font-mono ${isFailed ? 'text-rose-600 font-bold' : 'text-slate-400'}">${p.log}</p>
+              </div>
+            </div>
+            <div class="flex items-center gap-2 shrink-0">
+              ${isFailed ? `
+                <button onclick="alert('Memulai proses ulang ekstraksi wajah SCRFD untuk foto ini...')" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm transition">
+                  Proses Ulang AI
+                </button>
+              ` : ''}
+              <button onclick="alert('Foto berhasil dihapus')" class="p-1.5 text-slate-400 hover:text-rose-600 rounded">
+                <i class="ph-bold ph-trash"></i>
+              </button>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderEventsGrid() {
+      const container = document.getElementById('adminEventsGrid');
+      if (!container) return;
+
+      const events = [
+        { title: 'We The Fest 2026', date: '14 Agustus 2026', loc: 'GBK Senayan, Jakarta', photos: '14.280 Foto', creators: '42 Fotografer', status: 'AKTIF' },
+        { title: 'Jogja International Marathon', date: '28 September 2026', loc: 'Candi Prambanan, DIY', photos: '8.450 Foto', creators: '28 Fotografer', status: 'AKTIF' },
+        { title: 'CFD Sudirman Street Hunting', date: 'Minggu, 25 Okt 2026', loc: 'Jl. Sudirman, Jakarta', photos: '1.950 Foto', creators: '14 Fotografer', status: 'SELESAI' }
+      ];
+
+      container.innerHTML = events.map(e => {
+        return `
+          <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-3">
+            <div class="flex items-center justify-between">
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800">${e.status}</span>
+              <span class="text-[11px] text-slate-400 font-medium">${e.date}</span>
+            </div>
+            <div>
+              <h4 class="font-extrabold text-sm text-slate-900">${e.title}</h4>
+              <p class="text-xs text-slate-500"><i class="ph-bold ph-map-pin"></i> ${e.loc}</p>
+            </div>
+            <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600 font-bold">
+              <span>${e.photos}</span>
+              <span class="text-coral-600">${e.creators}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderAuditLogs() {
+      const container = document.getElementById('auditLogList');
+      if (!container) return;
+
+      container.innerHTML = mockAudit.map(a => {
+        return `
+          <div class="p-3 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
+            <div class="flex items-center gap-2.5">
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-${a.color}-100 text-${a.color}-800 border border-${a.color}-200">${a.action}</span>
+              <span class="font-bold text-slate-900">${a.text}</span>
+            </div>
+            <div class="flex items-center gap-2 text-[11px] text-slate-400">
+              <span>Oleh: <b>${a.actor}</b></span>
+              <span>•</span>
+              <span>${a.time}</span>
+            </div>
+          </div>
+        `;
+      }).join('');
+    }
+
+    function renderDashboardWidgets() {
+      const recentP = document.getElementById('recentPurchasesList');
+      if (recentP) {
+        recentP.innerHTML = mockPurchases.slice(0, 4).map(p => `
+          <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
+            <div>
+              <span class="font-bold text-slate-900 block truncate max-w-[160px]">${p.item}</span>
+              <span class="text-[10px] text-slate-400">${p.buyer.split('(')[0]} • ${p.date.split(',')[1]}</span>
+            </div>
+            <div class="text-right">
+              <span class="font-black text-slate-900 block">Rp ${new Intl.NumberFormat('id-ID').format(p.amount)}</span>
+              <span class="text-[9px] font-bold text-emerald-600">Lunas</span>
+            </div>
+          </div>
+        `).join('');
+      }
+
+      const recentU = document.getElementById('recentUsersList');
+      if (recentU) {
+        recentU.innerHTML = mockUsers.slice(0, 4).map(u => `
+          <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
+            <div class="flex items-center gap-2">
+              <div class="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 font-extrabold flex items-center justify-center text-[10px]">
+                ${u.name.substring(0, 2).toUpperCase()}
+              </div>
+              <div>
+                <span class="font-bold text-slate-900 block">${u.name}</span>
+                <span class="text-[10px] text-slate-400">${u.role}</span>
+              </div>
+            </div>
+            <span class="text-[10px] text-slate-400">${u.joined}</span>
+          </div>
+        `).join('');
+      }
+    }
+
+    // Modal Action Handlers
+    function openModalCreateUser() {
+      document.getElementById('modalCreateUser').classList.remove('hidden');
+    }
+    function closeModalCreateUser() {
+      document.getElementById('modalCreateUser').classList.add('hidden');
+    }
+    function handleCreateUser(e) {
+      e.preventDefault();
+      const name = document.getElementById('newUserName').value.trim();
+      const email = document.getElementById('newUserEmail').value.trim();
+      const role = document.getElementById('newUserRole').value === 'photographer' ? 'FOTOGRAFER VERIFIED' : 'PEMBELI';
+
+      mockUsers.unshift({
+        id: 'usr-' + Date.now().toString(36),
+        name: name,
+        email: email,
+        wa: '0812' + Math.floor(10000000 + Math.random() * 90000000),
+        role: role,
+        photos: '0 foto',
+        storage: '0 MB',
+        joined: 'Hari ini',
+        balance: 0
+      });
+
+      renderUsersTable();
+      closeModalCreateUser();
+      alert(`Akun ${name} (${role}) berhasil dibuat!`);
+    }
+
+    function openModalInjectBalance(creatorName) {
+      selectedInjectCreator = creatorName;
+      document.getElementById('injectTargetName').innerText = creatorName;
+      document.getElementById('modalInjectBalance').classList.remove('hidden');
+    }
+    function closeModalInjectBalance() {
+      document.getElementById('modalInjectBalance').classList.add('hidden');
+    }
+    function submitInjectBalance() {
+      const amt = document.getElementById('injectAmount').value;
+      if (!amt) return;
+      const user = mockUsers.find(u => u.name === selectedInjectCreator);
+      if (user) {
+        user.balance += parseInt(amt);
+      }
+      renderUsersTable();
+      renderCommissionsTable();
+      closeModalInjectBalance();
+      alert(`Berhasil menambahkan saldo Rp ${new Intl.NumberFormat('id-ID').format(amt)} untuk ${selectedInjectCreator}!`);
+    }
+
+    function openModalApprovePayout(creator, bank, nominal) {
+      document.getElementById('payoutTargetCreator').innerText = creator;
+      document.getElementById('payoutTargetBank').innerText = bank;
+      document.getElementById('payoutTargetNominal').innerText = 'Rp ' + new Intl.NumberFormat('id-ID').format(nominal);
+      document.getElementById('modalApprovePayout').classList.remove('hidden');
+    }
+    function closeModalApprovePayout() {
+      document.getElementById('modalApprovePayout').classList.add('hidden');
+    }
+    function confirmApprovePayout() {
+      closeModalApprovePayout();
+      alert('Payout berhasil disetujui! Status transfer ditandai selesai dan saldo dompet kreator terpotong.');
+    }
+
+    function approveKycQuick(name) {
+      const user = mockUsers.find(u => u.name === name);
+      if (user) {
+        user.role = 'FOTOGRAFER VERIFIED';
+      }
+      renderUsersTable();
+      alert(`KYC Fotografer untuk ${name} berhasil disetujui!`);
+    }
+
+    function approveKyc(id, name) {
+      alert(`KYC Fotografer ${name} telah disetujui!`);
+    }
+
+    function rejectKyc(id, name) {
+      const reason = prompt('Masukkan alasan penolakan KYC:');
+      if (reason) {
+        alert(`Pengajuan KYC ${name} ditolak dengan alasan: ${reason}`);
+      }
+    }
+
+    function savePricingRules() {
+      alert('Konfigurasi harga dan rasio bagi hasil fotografer berhasil disimpan!');
+    }
+
+    function handleGlobalSearch(e) {
+      const q = e.target.value.toLowerCase();
+      if (q.length > 2) {
+        // Simple search behavior
+        console.log('Searching:', q);
+      }
+    }
+
+    function openNotificationDrawer() {
+      alert('Semua sistem normal. 4 payout fotografer dan 5 foto gagal ekstrak menunggu perhatian Anda.');
+    }
+
+    function logoutAdmin() {
+      if (confirm('Keluar dari Master Console PicMe?')) {
+        localStorage.removeItem('picme_current_user');
+        window.location.href = '/login.html';
+      }
+    }
+
+    // Keyboard shortcut ⌘K
+    window.addEventListener('keydown', (e) => {
+      if ((e.metaKey || e.ctrlKey) && e.key === 'k') {
+        e.preventDefault();
+        const searchInput = document.getElementById('globalAdminSearch');
+        if (searchInput) searchInput.focus();
+      }
+    });
+
+    // Initialize all views on load
+    window.addEventListener('DOMContentLoaded', () => {
+      renderDailyRevenueChart();
+      renderDashboardWidgets();
+      renderUsersTable();
+      renderPurchasesTable();
+      renderWithdrawalsTable();
+      renderCommissionsTable();
+      renderKycQueue();
+      renderFeedbackFeed();
+      renderPhotoMonitorList();
+      renderEventsGrid();
+      renderAuditLogs();
+
+      // Check hash route if any
+      const hash = window.location.hash.replace('#', '');
+      if (hash && viewMetadata[hash]) {
+        switchView(hash);
+      }
+    });
+  </script>
+</body>
+</html>

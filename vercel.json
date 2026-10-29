@@ -4,6 +4,14 @@
   "trailingSlash": false,
   "routes": [
     {
+      "src": "/admin",
+      "dest": "/frontend/admin.html"
+    },
+    {
+      "src": "/admin/(.*)",
+      "dest": "/frontend/admin.html"
+    },
+    {
       "src": "/login",
       "dest": "/frontend/login.html"
     },
