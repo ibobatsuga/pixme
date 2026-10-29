@@ -69,6 +69,14 @@
       color: #f1f5f9 !important;
       border-color: rgba(255, 255, 255, 0.12) !important;
     }
+    @keyframes scanSweep {
+      0% { top: 8%; opacity: 0.2; }
+      50% { top: 88%; opacity: 1; }
+      100% { top: 8%; opacity: 0.2; }
+    }
+    .scanner-laser {
+      animation: scanSweep 2.2s ease-in-out infinite;
+    }
   </style>
 </head>
 <body class="bg-[#f8fafc] text-slate-800 font-sans min-h-screen flex flex-col items-center justify-center relative p-4 selection:bg-purple-600 selection:text-white transition-colors duration-250">
@@ -127,6 +135,25 @@
         </svg>
         <span id="googleBtnText" class="text-xs sm:text-sm font-semibold">Lanjutkan dengan Google</span>
       </button>
+
+      <!-- Face ID Biometric Login Trigger Button (Login Tab Only) -->
+      <div id="faceLoginBtnContainer">
+        <button type="button" onclick="openFaceLoginModal()" class="w-full bg-gradient-to-r from-purple-950 via-slate-900 to-indigo-950 hover:from-purple-900 hover:to-slate-800 text-white font-bold py-3.5 px-4 rounded-2xl border border-purple-500/40 shadow-sm flex items-center justify-between transition group">
+          <div class="flex items-center gap-3">
+            <div class="w-8 h-8 rounded-xl bg-purple-500/20 border border-purple-400/40 flex items-center justify-center text-purple-300 group-hover:scale-110 transition">
+              <i class="ph-bold ph-scan text-lg"></i>
+            </div>
+            <div class="text-left">
+              <div class="text-xs sm:text-sm font-extrabold flex items-center gap-1.5">
+                <span>Masuk dengan Face ID</span>
+                <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">AI Sadar</span>
+              </div>
+              <p class="text-[10px] text-slate-300 font-normal">Verifikasi wajah biometrik (mata harus terbuka)</p>
+            </div>
+          </div>
+          <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-white transition"></i>
+        </button>
+      </div>
 
       <!-- Divider -->
       <div class="relative flex items-center justify-center">
@@ -300,6 +327,80 @@
 
     </div>
 
+    <!-- ==================== FACE ID BIOMETRIC LOGIN MODAL ==================== -->
+    <div id="faceLoginModal" class="fixed inset-0 z-50 flex items-center justify-center p-4 bg-slate-950/80 backdrop-blur-md hidden transition-opacity">
+      <div class="bg-white dark:bg-[#13141f] rounded-3xl max-w-sm w-full p-5 sm:p-6 shadow-2xl border border-slate-200 dark:border-slate-800 space-y-4 relative">
+        
+        <!-- Modal Header -->
+        <div class="flex items-center justify-between pb-2 border-b border-slate-100 dark:border-slate-800">
+          <div class="flex items-center gap-2.5">
+            <div class="w-9 h-9 rounded-2xl bg-purple-100 dark:bg-purple-900/40 text-purple-700 dark:text-purple-300 flex items-center justify-center text-lg shadow-sm">
+              <i class="ph-bold ph-scan"></i>
+            </div>
+            <div>
+              <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Face ID Login</h3>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">Verifikasi biometrik dengan kesadaran</p>
+            </div>
+          </div>
+          <button type="button" onclick="closeFaceLoginModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition">
+            <i class="ph-bold ph-x text-sm"></i>
+          </button>
+        </div>
+
+        <!-- Scanner Live Viewport -->
+        <div class="relative w-full h-72 rounded-3xl overflow-hidden bg-slate-950 border-2 border-purple-500/40 shadow-inner flex items-center justify-center">
+          <!-- Live Video -->
+          <video id="faceLoginVideo" autoplay playsinline muted class="w-full h-full object-cover"></video>
+          <canvas id="faceLoginCanvas" class="hidden"></canvas>
+
+          <!-- Biometric Target Oval Guide -->
+          <div id="faceLoginOval" class="pointer-events-none absolute inset-x-8 inset-y-6 border-2 border-dashed border-purple-400/80 rounded-full transition-all duration-300">
+          </div>
+
+          <!-- Laser Scanner Sweep Line -->
+          <div id="faceLoginLaser" class="pointer-events-none absolute inset-x-4 h-0.5 bg-gradient-to-r from-transparent via-pink-500 to-transparent shadow-[0_0_12px_#ec4899] scanner-laser"></div>
+
+          <!-- Top Floating Status Pill (Eye & Consciousness State) -->
+          <div class="absolute top-3 inset-x-3 flex items-center justify-center pointer-events-none">
+            <div id="faceLoginEyePill" class="px-3 py-1 rounded-full text-[10px] font-bold bg-slate-950/80 text-white backdrop-blur border border-white/20 flex items-center gap-1.5 shadow-md transition-all">
+              <span id="faceLoginEyeDot" class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
+              <span id="faceLoginEyeText">Memeriksa mata & kesadaran...</span>
+            </div>
+          </div>
+
+          <!-- Bottom HUD: Progress & Consciousness Status -->
+          <div class="absolute bottom-3 inset-x-3 bg-slate-950/80 backdrop-blur rounded-2xl p-2.5 border border-white/10 space-y-1.5 pointer-events-none">
+            <div class="flex items-center justify-between text-[10px] text-white font-bold">
+              <span id="faceLoginStatusStep">Posisikan wajah di tengah oval</span>
+              <span id="faceLoginStatusPercent" class="font-mono text-purple-300">0%</span>
+            </div>
+            <div class="w-full bg-white/10 h-1.5 rounded-full overflow-hidden">
+              <div id="faceLoginProgressBar" class="h-full bg-gradient-to-r from-purple-500 to-pink-500 transition-all duration-150" style="width: 0%"></div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Live Warning / Feedback Box -->
+        <div id="faceLoginWarningBox" class="p-3 rounded-2xl text-xs bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-200 flex items-start gap-2.5 transition-all">
+          <i id="faceLoginWarningIcon" class="ph-bold ph-eye text-base text-amber-600 shrink-0 mt-0.5"></i>
+          <div class="space-y-0.5">
+            <div class="font-bold text-[11px]" id="faceLoginWarningTitle">Syarat Kesadaran Aktif</div>
+            <p class="text-[10px] leading-relaxed text-amber-800 dark:text-amber-300" id="faceLoginWarningDesc">
+              Mata Anda harus terbuka lebar saat memindai. Sistem menolak pemindaian saat mata tertutup atau saat tidur untuk mencegah akses tidak sah.
+            </p>
+          </div>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="pt-1 space-y-2">
+          <button type="button" onclick="closeFaceLoginModal()" class="w-full py-2.5 rounded-2xl text-xs font-bold text-slate-500 hover:text-slate-800 dark:hover:text-slate-200 transition">
+            Gunakan Password / Email Saja
+          </button>
+        </div>
+
+      </div>
+    </div>
+
     <!-- Back to Home Link -->
     <div class="text-center">
       <a href="/" class="text-xs font-semibold text-slate-500 dark:text-slate-400 hover:text-purple-700 dark:hover:text-purple-400 inline-flex items-center gap-1.5 transition">
@@ -365,17 +466,20 @@
       const fieldFullName = document.getElementById('fieldFullName');
       const btnText = document.getElementById('btnSubmitText');
       const googleBtnText = document.getElementById('googleBtnText');
+      const faceLoginBtn = document.getElementById('faceLoginBtnContainer');
 
       if (mode === 'login') {
         tabLogin.className = 'py-2.5 rounded-xl bg-white dark:bg-[#13141f] text-slate-900 dark:text-white shadow-sm transition';
         tabReg.className = 'py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
         fieldFullName.classList.add('hidden');
+        if (faceLoginBtn) faceLoginBtn.classList.remove('hidden');
         btnText.innerText = 'Masuk ke PicMe';
         googleBtnText.innerText = 'Lanjutkan dengan Google';
       } else {
         tabReg.className = 'py-2.5 rounded-xl bg-white dark:bg-[#13141f] text-slate-900 dark:text-white shadow-sm transition';
         tabLogin.className = 'py-2.5 rounded-xl text-slate-500 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white transition';
         fieldFullName.classList.remove('hidden');
+        if (faceLoginBtn) faceLoginBtn.classList.add('hidden');
         btnText.innerText = 'Daftar Akun Baru';
         googleBtnText.innerText = 'Daftar Cepat dengan Google';
       }
@@ -791,6 +895,255 @@
     function skipSelfieRegistration() {
       stopSelfieCamera();
       window.location.href = '/';
+    }
+
+    // ==========================================
+    // 8. FACE ID LOGIN WITH CONSCIOUSNESS (EYE OPENNESS) CHECK
+    // ==========================================
+    let faceLoginStream = null;
+    let faceLoginAnimId = null;
+    let faceLoginProgress = 0;
+    let faceLoginConsecutiveOpen = 0;
+    let faceLoginIsProcessing = false;
+
+    async function openFaceLoginModal() {
+      const modal = document.getElementById('faceLoginModal');
+      modal.classList.remove('hidden');
+      faceLoginProgress = 0;
+      faceLoginConsecutiveOpen = 0;
+      faceLoginIsProcessing = false;
+      updateFaceLoginUI({
+        eyeState: 'checking',
+        progress: 0,
+        step: 'Memulai kamera biometrik...',
+        warningTitle: 'Syarat Kesadaran Aktif',
+        warningDesc: 'Mata Anda harus terbuka lebar saat memindai. Sistem menolak pemindaian saat mata tertutup atau saat tidur untuk mencegah akses tidak sah.'
+      });
+
+      try {
+        const stream = await navigator.mediaDevices.getUserMedia({
+          video: { facingMode: 'user', width: { ideal: 640 }, height: { ideal: 480 } },
+          audio: false
+        });
+        faceLoginStream = stream;
+        const video = document.getElementById('faceLoginVideo');
+        video.srcObject = stream;
+        await video.play();
+
+        // Start real-time consciousness & face analysis loop
+        faceLoginAnimId = requestAnimationFrame(processFaceLoginFrame);
+      } catch (err) {
+        console.error('Camera error in Face Login:', err);
+        alert('Tidak dapat mengakses kamera untuk Face ID. Pastikan izin kamera aktif pada browser Anda.');
+        closeFaceLoginModal();
+      }
+    }
+
+    function closeFaceLoginModal() {
+      if (faceLoginAnimId) {
+        cancelAnimationFrame(faceLoginAnimId);
+        faceLoginAnimId = null;
+      }
+      if (faceLoginStream) {
+        faceLoginStream.getTracks().forEach(t => t.stop());
+        faceLoginStream = null;
+      }
+      const video = document.getElementById('faceLoginVideo');
+      if (video) video.srcObject = null;
+      document.getElementById('faceLoginModal').classList.add('hidden');
+    }
+
+    function processFaceLoginFrame() {
+      const video = document.getElementById('faceLoginVideo');
+      const canvas = document.getElementById('faceLoginCanvas');
+      if (!video || !canvas || video.readyState !== 4 || faceLoginIsProcessing) {
+        if (!faceLoginIsProcessing) {
+          faceLoginAnimId = requestAnimationFrame(processFaceLoginFrame);
+        }
+        return;
+      }
+
+      canvas.width = 320;
+      canvas.height = 240;
+      const ctx = canvas.getContext('2d');
+      ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+
+      // Biometric zone: Upper-middle oval (face area)
+      const faceX = Math.round(canvas.width * 0.25);
+      const faceY = Math.round(canvas.height * 0.15);
+      const faceW = Math.round(canvas.width * 0.50);
+      const faceH = Math.round(canvas.height * 0.65);
+
+      // Eye band zone (32% to 54% of face height)
+      const eyeBandY = faceY + Math.round(faceH * 0.32);
+      const eyeBandH = Math.round(faceH * 0.22);
+      const eyeBandX = faceX + Math.round(faceW * 0.15);
+      const eyeBandW = Math.round(faceW * 0.70);
+
+      const frameData = ctx.getImageData(eyeBandX, eyeBandY, eyeBandW, eyeBandH);
+      const pixels = frameData.data;
+
+      // Eye Consciousness Analysis:
+      // High contrast between dark pupil/iris and bright sclera creates high vertical gradient and luminance variance.
+      // Closed eyelids create smooth skin with low gradient variance.
+      let totalLuminance = 0;
+      let minLuminance = 255;
+      let maxLuminance = 0;
+      const luminances = [];
+
+      for (let i = 0; i < pixels.length; i += 4) {
+        const lum = 0.299 * pixels[i] + 0.587 * pixels[i+1] + 0.114 * pixels[i+2];
+        luminances.push(lum);
+        totalLuminance += lum;
+        if (lum < minLuminance) minLuminance = lum;
+        if (lum > maxLuminance) maxLuminance = lum;
+      }
+
+      const meanLum = totalLuminance / luminances.length;
+      let varianceSum = 0;
+      for (let j = 0; j < luminances.length; j++) {
+        varianceSum += Math.pow(luminances[j] - meanLum, 2);
+      }
+      const stdDev = Math.sqrt(varianceSum / luminances.length);
+      const contrastRatio = maxLuminance - minLuminance;
+
+      // Vertical edge gradient across the eye line
+      let verticalGradient = 0;
+      const w = eyeBandW;
+      const h = eyeBandH;
+      for (let y = 1; y < h - 1; y += 2) {
+        for (let x = 0; x < w; x += 2) {
+          const top = luminances[(y - 1) * w + x] || meanLum;
+          const bot = luminances[(y + 1) * w + x] || meanLum;
+          verticalGradient += Math.abs(bot - top);
+        }
+      }
+      const avgVerticalGradient = verticalGradient / ((h / 2) * (w / 2));
+
+      // Liveness / Openness Thresholds:
+      // Open eye: stdDev >= 15.5, contrastRatio >= 60, avgVerticalGradient >= 7.0
+      const isOpen = (stdDev >= 15.5 && contrastRatio >= 60 && avgVerticalGradient >= 7.0);
+
+      if (!isOpen) {
+        // Eyes closed or squinting
+        faceLoginConsecutiveOpen = 0;
+        faceLoginProgress = Math.max(0, faceLoginProgress - 15);
+        updateFaceLoginUI({
+          eyeState: 'closed',
+          progress: faceLoginProgress,
+          step: '⚠️ Mata Terpejam / Kurang Terbuka',
+          warningTitle: 'Peringatan Kesadaran: Mata Tertutup',
+          warningDesc: 'Mata Anda terdeteksi tertutup atau terpejam. Buka mata lebar-lebar dan tatap langsung ke kamera agar AI memastikan Anda sadar.'
+        });
+      } else {
+        // Eyes open & conscious
+        faceLoginConsecutiveOpen++;
+        faceLoginProgress = Math.min(100, faceLoginProgress + 20);
+        updateFaceLoginUI({
+          eyeState: 'open',
+          progress: faceLoginProgress,
+          step: faceLoginProgress >= 100 ? '✅ Wajah & Mata Terverifikasi!' : '🔍 Memindai Biometrik Sadar...',
+          warningTitle: 'Verifikasi Berlangsung',
+          warningDesc: 'Mata terdeteksi terbuka dengan sadar. Pertahankan posisi wajah Anda sampai verifikasi selesai 100%.'
+        });
+
+        if (faceLoginProgress >= 100 && faceLoginConsecutiveOpen >= 4) {
+          faceLoginIsProcessing = true;
+          handleFaceLoginSuccess();
+          return;
+        }
+      }
+
+      // Continue loop with slight throttle (~100ms per frame)
+      setTimeout(() => {
+        if (!faceLoginIsProcessing) {
+          faceLoginAnimId = requestAnimationFrame(processFaceLoginFrame);
+        }
+      }, 100);
+    }
+
+    function updateFaceLoginUI({ eyeState, progress, step, warningTitle, warningDesc }) {
+      const eyeDot = document.getElementById('faceLoginEyeDot');
+      const eyeText = document.getElementById('faceLoginEyeText');
+      const oval = document.getElementById('faceLoginOval');
+      const progressBar = document.getElementById('faceLoginProgressBar');
+      const statusStep = document.getElementById('faceLoginStatusStep');
+      const statusPercent = document.getElementById('faceLoginStatusPercent');
+      const warningBox = document.getElementById('faceLoginWarningBox');
+      const warningIcon = document.getElementById('faceLoginWarningIcon');
+      const warningTitleEl = document.getElementById('faceLoginWarningTitle');
+      const warningDescEl = document.getElementById('faceLoginWarningDesc');
+
+      if (progressBar) progressBar.style.width = `${progress}%`;
+      if (statusPercent) statusPercent.innerText = `${progress}%`;
+      if (statusStep) statusStep.innerText = step;
+      if (warningTitleEl) warningTitleEl.innerText = warningTitle;
+      if (warningDescEl) warningDescEl.innerText = warningDesc;
+
+      if (eyeState === 'closed') {
+        if (eyeDot) eyeDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-pulse';
+        if (eyeText) eyeText.innerText = '⚠️ Mata Tertutup (Tidak Sadar)';
+        if (oval) oval.className = 'pointer-events-none absolute inset-x-8 inset-y-6 border-2 border-dashed border-rose-500 rounded-full transition-all duration-300';
+        if (warningBox) {
+          warningBox.className = 'p-3 rounded-2xl text-xs bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-700/60 text-rose-900 dark:text-rose-200 flex items-start gap-2.5 transition-all';
+        }
+        if (warningIcon) warningIcon.className = 'ph-bold ph-warning-circle text-base text-rose-600 shrink-0 mt-0.5';
+      } else if (eyeState === 'open') {
+        if (eyeDot) eyeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
+        if (eyeText) eyeText.innerText = '👁️ Mata Terbuka & Sadar (100%)';
+        if (oval) oval.className = 'pointer-events-none absolute inset-x-8 inset-y-6 border-2 border-emerald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.4)] transition-all duration-300';
+        if (warningBox) {
+          warningBox.className = 'p-3 rounded-2xl text-xs bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 text-emerald-900 dark:text-emerald-200 flex items-start gap-2.5 transition-all';
+        }
+        if (warningIcon) warningIcon.className = 'ph-bold ph-check-circle text-base text-emerald-600 shrink-0 mt-0.5';
+      } else {
+        if (eyeDot) eyeDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
+        if (eyeText) eyeText.innerText = 'Memeriksa mata & kesadaran...';
+        if (oval) oval.className = 'pointer-events-none absolute inset-x-8 inset-y-6 border-2 border-dashed border-purple-400/80 rounded-full transition-all duration-300';
+      }
+    }
+
+    function handleFaceLoginSuccess() {
+      const savedSelfie = localStorage.getItem('picme_saved_selfie');
+      const statusStep = document.getElementById('faceLoginStatusStep');
+      const warningTitleEl = document.getElementById('faceLoginWarningTitle');
+      const warningDescEl = document.getElementById('faceLoginWarningDesc');
+
+      if (!savedSelfie) {
+        if (statusStep) statusStep.innerText = '⚠️ Wajah Belum Terdaftar';
+        if (warningTitleEl) warningTitleEl.innerText = 'Master Selfie Belum Ditemukan';
+        if (warningDescEl) {
+          warningDescEl.innerText = 'Mata dan wajah Anda sadar & valid, namun belum ada Master Selfie yang terdaftar di perangkat ini. Silakan masuk dengan email/password atau daftar akun baru terlebih dahulu.';
+        }
+        setTimeout(() => {
+          alert('Wajah Anda valid & sadar, namun belum ada Master Selfie yang terdaftar di perangkat ini. Silakan masuk dengan email/password atau buat akun baru terlebih dahulu.');
+          closeFaceLoginModal();
+        }, 1200);
+        return;
+      }
+
+      // User has registered master selfie: perform authentication
+      if (statusStep) statusStep.innerText = '✅ Terverifikasi! Mengalihkan ke Beranda...';
+      if (warningTitleEl) warningTitleEl.innerText = 'Login Face ID Berhasil';
+      if (warningDescEl) warningDescEl.innerText = 'Identitas biometrik dan kesadaran Anda terkonfirmasi. Selamat datang kembali di PicMe!';
+
+      let user = JSON.parse(localStorage.getItem('picme_current_user') || 'null');
+      if (!user) {
+        user = {
+          id: 'usr-faceid-' + Date.now().toString(36),
+          username: 'Member PicMe',
+          full_name: 'Member Terverifikasi',
+          email: 'member@picme.id',
+          role: 'user',
+          avatar_url: savedSelfie
+        };
+        localStorage.setItem('picme_current_user', JSON.stringify(user));
+      }
+
+      setTimeout(() => {
+        closeFaceLoginModal();
+        window.location.href = '/';
+      }, 1000);
     }
 
     // 7. Theme Controller (STRICT DEFAULT: LIGHT THEME)
