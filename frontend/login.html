@@ -144,11 +144,10 @@
               <i class="ph-bold ph-scan text-lg"></i>
             </div>
             <div class="text-left">
-              <div class="text-xs sm:text-sm font-extrabold flex items-center gap-1.5">
-                <span>Masuk dengan Face ID</span>
-                <span class="px-2 py-0.5 rounded-full text-[9px] font-black uppercase tracking-wider bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">AI Sadar</span>
+              <div class="text-xs sm:text-sm font-extrabold text-white">
+                Masuk dengan Face ID
               </div>
-              <p class="text-[10px] text-slate-300 font-normal">Verifikasi wajah biometrik (mata harus terbuka)</p>
+              <p class="text-[10px] text-slate-300 font-normal">Verifikasi biometrik wajah (mata harus terbuka)</p>
             </div>
           </div>
           <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-white transition"></i>
@@ -339,7 +338,7 @@
             </div>
             <div>
               <h3 class="text-sm font-extrabold text-slate-900 dark:text-white">Face ID Login</h3>
-              <p class="text-[10px] text-slate-500 dark:text-slate-400">Verifikasi biometrik dengan kesadaran</p>
+              <p class="text-[10px] text-slate-500 dark:text-slate-400">Verifikasi biometrik kamera langsung</p>
             </div>
           </div>
           <button type="button" onclick="closeFaceLoginModal()" class="w-8 h-8 rounded-full bg-slate-100 dark:bg-slate-800 text-slate-500 hover:text-slate-900 dark:hover:text-white flex items-center justify-center transition">
@@ -360,15 +359,15 @@
           <!-- Laser Scanner Sweep Line -->
           <div id="faceLoginLaser" class="pointer-events-none absolute inset-x-4 h-0.5 bg-gradient-to-r from-transparent via-pink-500 to-transparent shadow-[0_0_12px_#ec4899] scanner-laser"></div>
 
-          <!-- Top Floating Status Pill (Eye & Consciousness State) -->
+          <!-- Top Floating Status Pill (Eye & Liveness State) -->
           <div class="absolute top-3 inset-x-3 flex items-center justify-center pointer-events-none">
             <div id="faceLoginEyePill" class="px-3 py-1 rounded-full text-[10px] font-bold bg-slate-950/80 text-white backdrop-blur border border-white/20 flex items-center gap-1.5 shadow-md transition-all">
               <span id="faceLoginEyeDot" class="w-2 h-2 rounded-full bg-amber-400 animate-ping"></span>
-              <span id="faceLoginEyeText">Memeriksa mata & kesadaran...</span>
+              <span id="faceLoginEyeText">Memeriksa mata...</span>
             </div>
           </div>
 
-          <!-- Bottom HUD: Progress & Consciousness Status -->
+          <!-- Bottom HUD: Progress Status -->
           <div class="absolute bottom-3 inset-x-3 bg-slate-950/80 backdrop-blur rounded-2xl p-2.5 border border-white/10 space-y-1.5 pointer-events-none">
             <div class="flex items-center justify-between text-[10px] text-white font-bold">
               <span id="faceLoginStatusStep">Posisikan wajah di tengah oval</span>
@@ -384,9 +383,9 @@
         <div id="faceLoginWarningBox" class="p-3 rounded-2xl text-xs bg-amber-50 dark:bg-amber-950/40 border border-amber-300 dark:border-amber-700/60 text-amber-900 dark:text-amber-200 flex items-start gap-2.5 transition-all">
           <i id="faceLoginWarningIcon" class="ph-bold ph-eye text-base text-amber-600 shrink-0 mt-0.5"></i>
           <div class="space-y-0.5">
-            <div class="font-bold text-[11px]" id="faceLoginWarningTitle">Syarat Kesadaran Aktif</div>
+            <div class="font-bold text-[11px]" id="faceLoginWarningTitle">Pastikan Mata Terbuka</div>
             <p class="text-[10px] leading-relaxed text-amber-800 dark:text-amber-300" id="faceLoginWarningDesc">
-              Mata Anda harus terbuka lebar saat memindai. Sistem menolak pemindaian saat mata tertutup atau saat tidur untuk mencegah akses tidak sah.
+              Mata Anda harus terbuka saat pemindaian. Sistem menolak verifikasi saat mata tertutup untuk keamanan akun.
             </p>
           </div>
         </div>
@@ -916,8 +915,8 @@
         eyeState: 'checking',
         progress: 0,
         step: 'Memulai kamera biometrik...',
-        warningTitle: 'Syarat Kesadaran Aktif',
-        warningDesc: 'Mata Anda harus terbuka lebar saat memindai. Sistem menolak pemindaian saat mata tertutup atau saat tidur untuk mencegah akses tidak sah.'
+        warningTitle: 'Pastikan Mata Terbuka',
+        warningDesc: 'Mata Anda harus terbuka saat pemindaian. Sistem menolak pemindaian saat mata tertutup untuk keamanan akun.'
       });
 
       try {
@@ -1032,19 +1031,19 @@
           eyeState: 'closed',
           progress: faceLoginProgress,
           step: '⚠️ Mata Terpejam / Kurang Terbuka',
-          warningTitle: 'Peringatan Kesadaran: Mata Tertutup',
-          warningDesc: 'Mata Anda terdeteksi tertutup atau terpejam. Buka mata lebar-lebar dan tatap langsung ke kamera agar AI memastikan Anda sadar.'
+          warningTitle: 'Peringatan: Mata Tertutup',
+          warningDesc: 'Mata Anda terdeteksi tertutup atau terpejam. Harap buka mata dan tatap langsung ke kamera.'
         });
       } else {
-        // Eyes open & conscious
+        // Eyes open
         faceLoginConsecutiveOpen++;
         faceLoginProgress = Math.min(100, faceLoginProgress + 20);
         updateFaceLoginUI({
           eyeState: 'open',
           progress: faceLoginProgress,
-          step: faceLoginProgress >= 100 ? '✅ Wajah & Mata Terverifikasi!' : '🔍 Memindai Biometrik Sadar...',
+          step: faceLoginProgress >= 100 ? '✅ Wajah & Mata Terverifikasi!' : '🔍 Memindai Biometrik Wajah...',
           warningTitle: 'Verifikasi Berlangsung',
-          warningDesc: 'Mata terdeteksi terbuka dengan sadar. Pertahankan posisi wajah Anda sampai verifikasi selesai 100%.'
+          warningDesc: 'Mata terdeteksi terbuka. Pertahankan posisi wajah Anda sampai verifikasi selesai 100%.'
         });
 
         if (faceLoginProgress >= 100 && faceLoginConsecutiveOpen >= 4) {
@@ -1082,7 +1081,7 @@
 
       if (eyeState === 'closed') {
         if (eyeDot) eyeDot.className = 'w-2 h-2 rounded-full bg-rose-500 animate-pulse';
-        if (eyeText) eyeText.innerText = '⚠️ Mata Tertutup (Tidak Sadar)';
+        if (eyeText) eyeText.innerText = '⚠️ Mata Tertutup';
         if (oval) oval.className = 'pointer-events-none absolute inset-x-8 inset-y-6 border-2 border-dashed border-rose-500 rounded-full transition-all duration-300';
         if (warningBox) {
           warningBox.className = 'p-3 rounded-2xl text-xs bg-rose-50 dark:bg-rose-950/40 border border-rose-300 dark:border-rose-700/60 text-rose-900 dark:text-rose-200 flex items-start gap-2.5 transition-all';
@@ -1090,7 +1089,7 @@
         if (warningIcon) warningIcon.className = 'ph-bold ph-warning-circle text-base text-rose-600 shrink-0 mt-0.5';
       } else if (eyeState === 'open') {
         if (eyeDot) eyeDot.className = 'w-2 h-2 rounded-full bg-emerald-400';
-        if (eyeText) eyeText.innerText = '👁️ Mata Terbuka & Sadar (100%)';
+        if (eyeText) eyeText.innerText = '👁️ Mata Terbuka (Terverifikasi)';
         if (oval) oval.className = 'pointer-events-none absolute inset-x-8 inset-y-6 border-2 border-emerald-400 rounded-full shadow-[0_0_15px_rgba(52,211,153,0.4)] transition-all duration-300';
         if (warningBox) {
           warningBox.className = 'p-3 rounded-2xl text-xs bg-emerald-50 dark:bg-emerald-950/40 border border-emerald-300 dark:border-emerald-700/60 text-emerald-900 dark:text-emerald-200 flex items-start gap-2.5 transition-all';
@@ -1098,7 +1097,7 @@
         if (warningIcon) warningIcon.className = 'ph-bold ph-check-circle text-base text-emerald-600 shrink-0 mt-0.5';
       } else {
         if (eyeDot) eyeDot.className = 'w-2 h-2 rounded-full bg-amber-400 animate-ping';
-        if (eyeText) eyeText.innerText = 'Memeriksa mata & kesadaran...';
+        if (eyeText) eyeText.innerText = 'Memeriksa mata & wajah...';
         if (oval) oval.className = 'pointer-events-none absolute inset-x-8 inset-y-6 border-2 border-dashed border-purple-400/80 rounded-full transition-all duration-300';
       }
     }
