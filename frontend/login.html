@@ -246,7 +246,7 @@
     <div id="selfieCard" class="glass-card rounded-3xl p-6 sm:p-8 shadow-2xl relative border border-slate-200/80 dark:border-slate-800 space-y-5 hidden">
       <div class="text-center space-y-1.5">
         <span class="inline-block px-3 py-1 rounded-full text-[10px] font-extrabold uppercase tracking-wider bg-purple-100 text-purple-900 dark:bg-purple-900/50 dark:text-purple-200">
-          Langkah 2: Foto Selfie Profil Master
+          Langkah 2: Foto Selfie Akun
         </span>
         <h2 class="text-lg sm:text-xl font-extrabold text-slate-900 dark:text-white">Ambil Foto Selfie Pertama Anda</h2>
         <p class="text-xs text-slate-500 dark:text-slate-400">
@@ -1127,12 +1127,12 @@
 
       if (!savedSelfie) {
         if (statusStep) statusStep.innerText = '⚠️ Wajah Belum Terdaftar';
-        if (warningTitleEl) warningTitleEl.innerText = 'Master Selfie Belum Ditemukan';
+        if (warningTitleEl) warningTitleEl.innerText = 'Foto Selfie Belum Ditemukan';
         if (warningDescEl) {
-          warningDescEl.innerText = 'Mata dan wajah Anda sadar & valid, namun belum ada Master Selfie yang terdaftar di perangkat ini. Silakan masuk dengan email/password atau daftar akun baru terlebih dahulu.';
+          warningDescEl.innerText = 'Mata dan wajah Anda sadar & valid, namun belum ada Foto Selfie yang terdaftar di akun ini. Silakan masuk dengan email/password atau daftar akun baru terlebih dahulu.';
         }
         setTimeout(() => {
-          alert('Wajah Anda valid & sadar, namun belum ada Master Selfie yang terdaftar di perangkat ini. Silakan masuk dengan email/password atau buat akun baru terlebih dahulu.');
+          alert('Wajah Anda valid & sadar, namun belum ada Foto Selfie yang terdaftar di akun ini. Silakan masuk dengan email/password atau buat akun baru terlebih dahulu.');
           closeFaceLoginModal();
         }, 1200);
         return;
