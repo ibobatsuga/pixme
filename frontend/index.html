@@ -273,6 +273,24 @@
       <button onclick="filterByCategory('sports')" id="catBtn-sports" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
         <i class="ph-bold ph-sneaker-move text-pink-600"></i>Lari & Olahraga
       </button>
+      <button onclick="filterByCategory('automotive')" id="catBtn-automotive" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-motorcycle text-pink-600"></i>Sunmori & Otomotif
+      </button>
+      <button onclick="filterByCategory('graduation')" id="catBtn-graduation" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-graduation-cap text-pink-600"></i>Wisuda & Kampus
+      </button>
+      <button onclick="filterByCategory('street')" id="catBtn-street" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-compass text-pink-600"></i>Wisata & Street
+      </button>
+      <button onclick="filterByCategory('cosplay')" id="catBtn-cosplay" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-mask-happy text-pink-600"></i>Cosplay & Hobi
+      </button>
+      <button onclick="filterByCategory('tournament')" id="catBtn-tournament" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-trophy text-pink-600"></i>Turnamen & Kompetisi
+      </button>
+      <button onclick="filterByCategory('culture')" id="catBtn-culture" class="cat-pill px-4 py-2 rounded-full text-xs font-bold bg-white dark:bg-[#1a1c2b] hover:bg-pink-50 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300 hover:text-pink-600 border border-slate-200/80 dark:border-slate-800 shadow-sm flex items-center gap-1.5 shrink-0 transition">
+        <i class="ph-bold ph-confetti text-pink-600"></i>Karnaval & Budaya
+      </button>
     </div>
 
     <!-- Hero Editorial Banner -->
@@ -1447,29 +1465,128 @@
       await fetchEvents();
     });
 
+    // Catalog of Default Events Across All Categories
+    const DEFAULT_MOCK_EVENTS = [
+      { id: 'evt-wtf26', title: 'We The Fest 2026', location: 'GBK Senayan, Jakarta', event_date: '14 Agustus 2026', category: 'music', description: 'Main Stage, Barrier & Crowd Coverage' },
+      { id: 'evt-sync26', title: 'Synchronize Fest 2026', location: 'Gambir Expo Kemayoran, Jakarta', event_date: '4 Oktober 2026', category: 'music', description: 'Dynamic Live Stages & Festival Vibe' },
+      { id: 'evt-marathon26', title: 'Maybank Marathon Bali 2026', location: 'Gianyar, Bali', event_date: '23 Agustus 2026', category: 'sports', description: 'Full Marathon & Half Marathon Finishers' },
+      { id: 'evt-borobudur26', title: 'Borobudur Marathon 2026', location: 'Magelang, Jawa Tengah', event_date: '15 November 2026', category: 'sports', description: 'Heritage Track & Runners Crowd' },
+      { id: 'evt-sunmori26', title: 'Sunmori Kaliurang & Merapi Ride', location: 'Kaliurang KM 21, Yogyakarta', event_date: '12 Juli 2026', category: 'automotive', description: 'Biker Convoy, Cornering & Rolling Shots' },
+      { id: 'evt-pik2-meet', title: 'Morning Run & Meet PIK 2 Supercar', location: 'Pantai Indah Kapuk 2, Jakarta', event_date: '28 Juni 2026', category: 'automotive', description: 'Sports Cars, JDM & Automotive Photography' },
+      { id: 'evt-ugm-grad', title: 'Wisuda Periode IV UGM Yogyakarta', location: 'Grha Sabha Pramana UGM', event_date: '26 Agustus 2026', category: 'graduation', description: 'Momen Wisudawan, Toga & Kebersamaan Keluarga' },
+      { id: 'evt-itb-grad', title: 'Wisuda Akbar ITB Bandung', location: 'Sabuga ITB, Bandung', event_date: '18 Juli 2026', category: 'graduation', description: 'Dokumentasi Wisuda & Parade Himpunan Mahasiswa' },
+      { id: 'evt-malioboro-street', title: 'Street Photography Malioboro Night', location: 'Kawasan Malioboro, Yogyakarta', event_date: '5 September 2026', category: 'street', description: 'Candid Street, Wisatawan & Suasana Malam' },
+      { id: 'evt-kotatua-street', title: 'Kota Tua Heritage Walking Tour', location: 'Taman Fatahillah, Jakarta', event_date: '20 September 2026', category: 'street', description: 'Human Interest, Arsitektur Kolonial & Wisatawan' },
+      { id: 'evt-comifuro19', title: 'Comic Frontier (Comifuro) 19', location: 'ICE BSD City, Tangerang', event_date: '10 Oktober 2026', category: 'cosplay', description: 'Cosplayer Parade, Photoshoot Hall & Stage' },
+      { id: 'evt-inacon26', title: 'Indonesia Anime Con (INACON) 2026', location: 'JCC Senayan, Jakarta', event_date: '15 November 2026', category: 'cosplay', description: 'International Cosplay Showcase & Meetup' },
+      { id: 'evt-pialapresiden', title: 'Piala Presiden Esports Grand Final', location: 'Tennis Indoor Senayan, Jakarta', event_date: '8 November 2026', category: 'tournament', description: 'Player Stages, Trophy Ceremony & Fans Arena' },
+      { id: 'evt-kejurnas-badminton', title: 'Kejurnas Bulutangkis Djarum Super', location: 'Istora Senayan, Jakarta', event_date: '12 Desember 2026', category: 'tournament', description: 'Aksi Smash Atlet & Riuh Penonton Istora' },
+      { id: 'evt-jfc26', title: 'Jember Fashion Carnaval (JFC) 2026', location: 'Alun-Alun Jember, Jawa Timur', event_date: '7 Agustus 2026', category: 'culture', description: 'Costume Art Parade Sepanjang 3,6 KM' },
+      { id: 'evt-pkb48', title: 'Pesta Kesenian Bali (PKB) XLVIII', location: 'Art Center Denpasar, Bali', event_date: '22 Juni 2026', category: 'culture', description: 'Pawai Budaya, Penari Tradisional & Tabuh Gamelan' }
+    ];
+
+    const CATEGORY_META = {
+      music: {
+        label: 'Konser & Festival Musik',
+        icon: 'ph-bold ph-speaker-hifi text-pink-300',
+        emoji: '🎵',
+        iconBg: 'bg-pink-50 text-pink-600',
+        iconPh: 'ph-bold ph-speaker-hifi',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      },
+      sports: {
+        label: 'Lari & Olahraga',
+        icon: 'ph-bold ph-sneaker-move text-emerald-300',
+        emoji: '🏃',
+        iconBg: 'bg-emerald-50 text-emerald-600',
+        iconPh: 'ph-bold ph-sneaker-move',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-brand-900 via-brand-800 to-blue-600 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      },
+      automotive: {
+        label: 'Sunmori & Otomotif',
+        icon: 'ph-bold ph-motorcycle text-amber-300',
+        emoji: '🏍️',
+        iconBg: 'bg-amber-50 text-amber-600',
+        iconPh: 'ph-bold ph-motorcycle',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-orange-950 to-amber-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      },
+      graduation: {
+        label: 'Wisuda & Kampus',
+        icon: 'ph-bold ph-graduation-cap text-sky-300',
+        emoji: '🎓',
+        iconBg: 'bg-blue-50 text-blue-600',
+        iconPh: 'ph-bold ph-graduation-cap',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-indigo-950 to-sky-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      },
+      street: {
+        label: 'Wisata & Street',
+        icon: 'ph-bold ph-compass text-teal-300',
+        emoji: '📸',
+        iconBg: 'bg-teal-50 text-teal-600',
+        iconPh: 'ph-bold ph-compass',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-teal-950 to-emerald-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      },
+      cosplay: {
+        label: 'Cosplay & Hobi',
+        icon: 'ph-bold ph-mask-happy text-fuchsia-300',
+        emoji: '🎭',
+        iconBg: 'bg-fuchsia-50 text-fuchsia-600',
+        iconPh: 'ph-bold ph-mask-happy',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-fuchsia-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      },
+      tournament: {
+        label: 'Turnamen & Kompetisi',
+        icon: 'ph-bold ph-trophy text-yellow-300',
+        emoji: '🏆',
+        iconBg: 'bg-amber-50 text-amber-600',
+        iconPh: 'ph-bold ph-trophy',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-amber-950 to-orange-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      },
+      culture: {
+        label: 'Karnaval & Budaya',
+        icon: 'ph-bold ph-confetti text-pink-300',
+        emoji: '🎉',
+        iconBg: 'bg-rose-50 text-rose-600',
+        iconPh: 'ph-bold ph-confetti',
+        banner: 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-rose-950 to-pink-700 text-white p-6 sm:p-9 shadow-glass flex flex-col justify-between min-h-[220px]'
+      }
+    };
+
+    function filterDefaultEvents(category) {
+      if (!category || category === 'all') return DEFAULT_MOCK_EVENTS;
+      return DEFAULT_MOCK_EVENTS.filter(e => e.category === category);
+    }
+
     // 1. Fetch Events List
     async function fetchEvents(category = null) {
       try {
         const url = category && category !== 'all' ? `/api/events?category=${category}` : '/api/events';
         const res = await fetch(url);
-        const data = await res.json();
-        eventsList = data.events || [];
-
-        renderEventSelectors();
-        renderCreatorEventList();
-
-        if (eventsList.length > 0) {
-          // If current selected event is not in filtered list, select first available
-          if (!currentEventId || !eventsList.some(e => e.id === currentEventId)) {
-            syncEventSelection(eventsList[0].id);
+        if (res.ok) {
+          const data = await res.json();
+          if (data && data.events && data.events.length > 0) {
+            eventsList = data.events;
+          } else {
+            eventsList = filterDefaultEvents(category);
           }
+        } else {
+          eventsList = filterDefaultEvents(category);
         }
       } catch (err) {
-        console.error('Failed to load events:', err);
+        eventsList = filterDefaultEvents(category);
+      }
+
+      renderEventSelectors();
+      renderCreatorEventList();
+
+      if (eventsList.length > 0) {
+        if (!currentEventId || !eventsList.some(e => e.id === currentEventId)) {
+          syncEventSelection(eventsList[0].id);
+        }
       }
     }
 
-    // 2. Filter Category Pills (All 3 Buttons Unified with Same Colors & Gradient Active State)
+    // 2. Filter Category Pills (Unified PicMe Gradient Active State)
     async function filterByCategory(cat) {
       currentCategoryFilter = cat;
       document.querySelectorAll('.cat-pill').forEach(btn => {
@@ -1509,8 +1626,9 @@
       }
 
       const options = eventsList.map(ev => {
-        const icon = ev.category === 'sports' ? '🏃' : '🎵';
-        return `<option value="${ev.id}">${icon} ${ev.title} (${ev.location})</option>`;
+        const meta = CATEGORY_META[ev.category] || CATEGORY_META.music;
+        const emoji = meta.emoji || '📸';
+        return `<option value="${ev.id}">${emoji} ${ev.title} (${ev.location})</option>`;
       }).join('');
 
       globalSel.innerHTML = options;
@@ -1527,14 +1645,12 @@
       }
 
       container.innerHTML = eventsList.map(ev => {
-        const isMusic = ev.category !== 'sports';
-        const iconBg = isMusic ? 'bg-pink-50 text-pink-600' : 'bg-blue-50 text-blue-600';
-        const iconPh = isMusic ? 'ph-bold ph-music-notes' : 'ph-bold ph-sneaker-move';
+        const meta = CATEGORY_META[ev.category] || CATEGORY_META.music;
         return `
           <div class="p-4 rounded-2xl bg-slate-50/70 border border-slate-100 hover:border-pink-300 transition flex items-center justify-between">
             <div class="flex items-center gap-3">
-              <div class="w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center text-lg shrink-0">
-                <i class="${iconPh}"></i>
+              <div class="w-10 h-10 rounded-xl ${meta.iconBg} flex items-center justify-center text-lg shrink-0">
+                <i class="${meta.iconPh}"></i>
               </div>
               <div>
                 <h5 class="font-bold text-sm text-slate-800">${ev.title}</h5>
@@ -1564,103 +1680,111 @@
 
       const ev = eventsList.find(e => e.id === eventId);
       if (ev) {
-        const isMusic = ev.category !== 'sports';
+        const meta = CATEGORY_META[ev.category] || CATEGORY_META.music;
         document.getElementById('heroTitle').innerText = ev.title;
         document.getElementById('heroLocation').innerText = ev.location;
-        document.getElementById('heroCategory').innerText = isMusic ? 'Music Festival & Concert' : 'Marathon & Sports';
-        document.getElementById('heroCategoryIcon').className = isMusic ? 'ph-bold ph-music-note text-pink-300' : 'ph-bold ph-flag-checkered text-amber-300';
+        document.getElementById('heroCategory').innerText = meta.label;
+        document.getElementById('heroCategoryIcon').className = meta.icon;
         
         const banner = document.getElementById('eventHeroBanner');
-        if (isMusic) {
-          banner.className = 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-slate-950 via-purple-950 to-pink-700 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[230px]';
-        } else {
-          banner.className = 'relative rounded-3xl overflow-hidden bg-gradient-to-tr from-brand-900 via-brand-800 to-blue-600 text-white p-7 sm:p-9 shadow-glass flex flex-col justify-between min-h-[230px]';
-        }
+        banner.className = meta.banner;
 
-        document.getElementById('heroDate').innerHTML = `<i class="ph-bold ph-calendar"></i> <span>${ev.event_date}</span> <span class="text-white/40">•</span> <span>Dokumentasi Resmi Terverifikasi</span>`;
+        document.getElementById('heroDate').innerHTML = `<i class="ph-bold ph-calendar"></i> <span>${ev.event_date}</span> <span class="text-white/40">•</span> <span>${ev.description || 'Dokumentasi Resmi Terverifikasi'}</span>`;
       }
 
       await loadEventPhotos(eventId);
     }
 
+    // Curated Sample Photos Per Category for Instant Experience
+    function getSamplePhotosForCategory(category, eventId) {
+      const photosMap = {
+        music: [
+          { id: 'p-m1', filename: 'WTF26_MAIN_STAGE_0842.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=3840&auto=format&fit=crop&q=100', faces_detected: 8, similarity: 0.96 },
+          { id: 'p-m2', filename: 'WTF26_CROWD_CHEER_1029.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=3840&auto=format&fit=crop&q=100', faces_detected: 14, similarity: 0.92 },
+          { id: 'p-m3', filename: 'WTF26_BARRIER_FRONT_1184.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.89 },
+          { id: 'p-m4', filename: 'WTF26_STAGE_LASER_0991.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=3840&auto=format&fit=crop&q=100', faces_detected: 11, similarity: 0.94 }
+        ],
+        sports: [
+          { id: 'p-s1', filename: 'MARATHON_FINISH_LINE_4401.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.95 },
+          { id: 'p-s2', filename: 'MARATHON_KM21_SPRINT_4412.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.91 },
+          { id: 'p-s3', filename: 'MARATHON_RUNNERS_PACK_4425.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=3840&auto=format&fit=crop&q=100', faces_detected: 9, similarity: 0.88 },
+          { id: 'p-s4', filename: 'MARATHON_CHEERING_POINT_4438.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=3840&auto=format&fit=crop&q=100', faces_detected: 7, similarity: 0.93 }
+        ],
+        automotive: [
+          { id: 'p-a1', filename: 'SUNMORI_KALIURANG_CORNER_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.95 },
+          { id: 'p-a2', filename: 'SUNMORI_BIKER_CONVOY_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.92 },
+          { id: 'p-a3', filename: 'PIK2_SUPERCAR_MEET_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.90 },
+          { id: 'p-a4', filename: 'AUTOMOTIVE_ROLLING_SHOT_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.94 }
+        ],
+        graduation: [
+          { id: 'p-g1', filename: 'WISUDA_UGM_CELEBRATION_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=3840&auto=format&fit=crop&q=100', faces_detected: 8, similarity: 0.96 },
+          { id: 'p-g2', filename: 'WISUDA_TOGA_THROW_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=3840&auto=format&fit=crop&q=100', faces_detected: 12, similarity: 0.93 },
+          { id: 'p-g3', filename: 'WISUDA_PORTRAIT_DIPLOMA_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1627556704302-624286467c65?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1627556704302-624286467c65?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.97 },
+          { id: 'p-g4', filename: 'WISUDA_CAMPUS_SMILE_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1535982330050-f1c2fb79ff78?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1535982330050-f1c2fb79ff78?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.91 }
+        ],
+        street: [
+          { id: 'p-st1', filename: 'MALIOBORO_NIGHT_STREET_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.94 },
+          { id: 'p-st2', filename: 'KOTATUA_CANDID_HUMAN_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.90 },
+          { id: 'p-st3', filename: 'STREET_TRAVEL_MOMENT_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.89 },
+          { id: 'p-st4', filename: 'URBAN_PEDESTRIAN_WALK_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.92 }
+        ],
+        cosplay: [
+          { id: 'p-c1', filename: 'COMIFURO19_CHARACTER_POSE_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.96 },
+          { id: 'p-c2', filename: 'INACON_WARRIOR_ARMOR_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.93 },
+          { id: 'p-c3', filename: 'COSPLAY_ANIME_COSTUME_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.95 },
+          { id: 'p-c4', filename: 'HALL_PHOTOSHOOT_CON_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.91 }
+        ],
+        tournament: [
+          { id: 'p-t1', filename: 'ESPORTS_ARENA_FINALS_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.95 },
+          { id: 'p-t2', filename: 'GAMING_CHAMPIONSHIP_STAGE_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.92 },
+          { id: 'p-t3', filename: 'TOURNAMENT_COMPETITORS_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=3840&auto=format&fit=crop&q=100', faces_detected: 8, similarity: 0.90 },
+          { id: 'p-t4', filename: 'ISTORA_BADMINTON_CROWD_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?w=3840&auto=format&fit=crop&q=100', faces_detected: 10, similarity: 0.94 }
+        ],
+        culture: [
+          { id: 'p-cl1', filename: 'JFC_CARNAVAL_COSTUME_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.96 },
+          { id: 'p-cl2', filename: 'BALI_TRADITIONAL_DANCE_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.93 },
+          { id: 'p-cl3', filename: 'CULTURE_PARADE_ART_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.91 },
+          { id: 'p-cl4', filename: 'CARNAVAL_FESTIVAL_CHEER_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=3840&auto=format&fit=crop&q=100', faces_detected: 9, similarity: 0.94 }
+        ]
+      };
+
+      const list = photosMap[category] || photosMap.music;
+      return list.map(item => ({
+        ...item,
+        photo_id: item.id,
+        event_id: eventId,
+        width: 6000,
+        height: 4000,
+        distance: (1 - item.similarity).toFixed(2)
+      }));
+    }
+
     // 6. Load All Photos for Current Event
     async function loadEventPhotos(eventId) {
+      const currentEv = eventsList.find(e => e.id === eventId);
+      const cat = currentEv ? currentEv.category : 'music';
+
       try {
         const res = await fetch(`/api/events/${eventId}/photos`);
-        const data = await res.json();
-        allCurrentEventPhotos = data.photos || [];
-
-        // Seed fallback sample festival photography if empty for instant preview
-        if (allCurrentEventPhotos.length === 0) {
-          allCurrentEventPhotos = [
-            {
-              id: 'sample-p1',
-              photo_id: 'sample-p1',
-              event_id: eventId,
-              filename: 'WTF26_MAIN_STAGE_0842.JPG',
-              thumbnail_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=900&auto=format&fit=crop&q=80',
-              file_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=3840&auto=format&fit=crop&q=100',
-              faces_detected: 8,
-              width: 6000,
-              height: 4000,
-              similarity: 0.96,
-              distance: 0.04
-            },
-            {
-              id: 'sample-p2',
-              photo_id: 'sample-p2',
-              event_id: eventId,
-              filename: 'WTF26_CROWD_CHEER_1029.JPG',
-              thumbnail_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=900&auto=format&fit=crop&q=80',
-              file_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=3840&auto=format&fit=crop&q=100',
-              faces_detected: 14,
-              width: 6000,
-              height: 4000,
-              similarity: 0.92,
-              distance: 0.08
-            },
-            {
-              id: 'sample-p3',
-              photo_id: 'sample-p3',
-              event_id: eventId,
-              filename: 'WTF26_BARRIER_FRONT_1184.JPG',
-              thumbnail_url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&auto=format&fit=crop&q=80',
-              file_url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=3840&auto=format&fit=crop&q=100',
-              faces_detected: 5,
-              width: 6000,
-              height: 4000,
-              similarity: 0.89,
-              distance: 0.11
-            },
-            {
-              id: 'sample-p4',
-              photo_id: 'sample-p4',
-              event_id: eventId,
-              filename: 'WTF26_STAGE_LASER_0991.JPG',
-              thumbnail_url: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=900&auto=format&fit=crop&q=80',
-              file_url: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=3840&auto=format&fit=crop&q=100',
-              faces_detected: 11,
-              width: 6000,
-              height: 4000,
-              similarity: 0.94,
-              distance: 0.06
-            }
-          ];
-        }
-
-        document.getElementById('statTotalPhotos').innerText = allCurrentEventPhotos.length;
-        const totalFaces = allCurrentEventPhotos.reduce((sum, p) => sum + (p.faces_detected || 0), 0);
-        document.getElementById('statTotalFaces').innerText = totalFaces;
-
-        // Auto-match user photos when master selfie exists!
-        const savedSelfie = localStorage.getItem('picme_saved_selfie');
-        if (savedSelfie && allCurrentEventPhotos.length > 0) {
-          autoMatchUserPhotos(eventId, savedSelfie);
+        if (res.ok) {
+          const data = await res.json();
+          allCurrentEventPhotos = (data && data.photos && data.photos.length > 0) ? data.photos : getSamplePhotosForCategory(cat, eventId);
         } else {
-          renderGallery(allCurrentEventPhotos, false);
+          allCurrentEventPhotos = getSamplePhotosForCategory(cat, eventId);
         }
       } catch (err) {
-        console.error('Error fetching event photos:', err);
+        allCurrentEventPhotos = getSamplePhotosForCategory(cat, eventId);
+      }
+
+      document.getElementById('statTotalPhotos').innerText = allCurrentEventPhotos.length;
+      const totalFaces = allCurrentEventPhotos.reduce((sum, p) => sum + (p.faces_detected || 0), 0);
+      document.getElementById('statTotalFaces').innerText = totalFaces;
+
+      // Auto-match user photos when master selfie exists!
+      const savedSelfie = localStorage.getItem('picme_saved_selfie');
+      if (savedSelfie && allCurrentEventPhotos.length > 0) {
+        autoMatchUserPhotos(eventId, savedSelfie);
+      } else {
         renderGallery(allCurrentEventPhotos, false);
       }
     }
