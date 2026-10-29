@@ -4,6 +4,8 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>PicMe — Temukan Foto Kamu di Konser Musik & Event</title>
+  <link rel="icon" type="image/png" href="/assets/picme-logo.png">
+  <link rel="apple-touch-icon" href="/assets/picme-logo.png">
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
   <!-- Phosphor Icons -->
@@ -176,17 +178,20 @@
       <!-- LEFT SECTION: FotoYu Style "Temuan RoboYu kamu di Semua Kota" + PicMe Brand on Desktop -->
       <div class="flex items-center gap-3 sm:gap-4 shrink-0">
         
-        <!-- Desktop Brand Logo -->
-        <div class="hidden md:flex items-center gap-3 shrink-0">
-          <div class="w-10 h-10 rounded-2xl bg-gradient-to-tr from-brand-900 via-purple-700 to-pink-500 flex items-center justify-center text-white text-xl shadow-glass transform hover:scale-105 transition-transform duration-200">
-            <i class="ph-bold ph-music-notes"></i>
-          </div>
+        <!-- Mobile Brand Icon -->
+        <a href="/" class="md:hidden flex items-center shrink-0">
+          <img src="/assets/picme-logo.png" alt="PicMe" class="w-8 h-8 rounded-xl object-contain shadow-sm">
+        </a>
+
+        <!-- Desktop Brand Logo with Official PicMe Logo -->
+        <a href="/" class="hidden md:flex items-center gap-3 shrink-0 group">
+          <img src="/assets/picme-logo.png" alt="PicMe Logo" class="w-10 h-10 rounded-2xl shadow-glass object-contain transform group-hover:scale-105 transition-transform duration-200">
           <div>
             <div class="flex items-center gap-1.5">
-              <span class="font-extrabold text-2xl tracking-tight text-slate-900">Pic<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
+              <span class="font-extrabold text-2xl tracking-tight text-slate-900 dark:text-white">Pic<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
             </div>
           </div>
-        </div>
+        </a>
 
         <!-- FotoYu 1:1 Reference Header: "Temuan PicMe kamu 🤖 di Semua Kota" (Interactive City Dropdown) -->
         <div onclick="toggleModal('modalCityPicker', true)" class="flex flex-col cursor-pointer select-none group pr-1">
