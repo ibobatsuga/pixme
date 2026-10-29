@@ -1,0 +1,1014 @@
+<!DOCTYPE html>
+<html lang="id" class="h-full bg-[#0a0b10] text-slate-100 antialiased selection:bg-pink-500 selection:text-white">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>PicMe — Investor Pitch Deck (Interactive)</title>
+  <link rel="icon" type="image/png" href="/assets/picme-logo.png">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <!-- Phosphor Icons -->
+  <script src="https://unpkg.com/@phosphor-icons/web"></script>
+  <!-- Google Fonts: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+      theme: {
+        extend: {
+          fontFamily: {
+            sans: ['"Plus Jakarta Sans"', 'sans-serif'],
+          },
+          colors: {
+            brand: {
+              50: '#fdf2f8',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+              900: '#831843',
+            }
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Presentation Styling */
+    .slide-active {
+      display: flex !important;
+      opacity: 1 !important;
+      transform: scale(1) translateY(0) !important;
+    }
+    .slide-hidden-prev {
+      display: none !important;
+      opacity: 0 !important;
+      transform: scale(0.96) translateY(-20px) !important;
+    }
+    .slide-hidden-next {
+      display: none !important;
+      opacity: 0 !important;
+      transform: scale(0.96) translateY(20px) !important;
+    }
+    .glass-deck {
+      background: rgba(18, 20, 31, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    .glass-card-deck {
+      background: rgba(25, 28, 44, 0.6);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .gradient-text-pink-purple {
+      background: linear-gradient(135deg, #f43f5e 0%, #ec4899 50%, #a855f7 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .glow-glow {
+      box-shadow: 0 0 50px -10px rgba(236, 72, 153, 0.3);
+    }
+    /* Hide scrollbar */
+    .no-scrollbar::-webkit-scrollbar { display: none; }
+    .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="h-full flex flex-col justify-between overflow-hidden relative select-none">
+
+  <!-- Ambient Glowing Background Accents -->
+  <div class="absolute -top-32 -left-32 w-96 h-96 rounded-full bg-purple-600/15 blur-[120px] pointer-events-none"></div>
+  <div class="absolute -bottom-32 -right-32 w-96 h-96 rounded-full bg-pink-600/15 blur-[120px] pointer-events-none"></div>
+  <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[500px] rounded-full bg-blue-600/5 blur-[150px] pointer-events-none"></div>
+
+  <!-- Top Progress Bar -->
+  <header class="w-full h-1 bg-white/5 relative z-50">
+    <div id="deckProgressBar" class="h-full bg-gradient-to-r from-pink-500 via-purple-500 to-indigo-500 transition-all duration-300 ease-out" style="width: 8.33%;"></div>
+  </header>
+
+  <!-- Top Navigation Bar -->
+  <nav class="w-full max-w-7xl mx-auto px-4 sm:px-8 py-3.5 sm:py-4 flex items-center justify-between z-40 relative">
+    <div class="flex items-center gap-3">
+      <a href="/" class="flex items-center gap-2.5 group">
+        <img src="/assets/picme-logo.png" alt="PicMe Logo" class="w-8 h-8 rounded-xl shadow-md object-contain group-hover:scale-105 transition-transform">
+        <span class="font-black text-xl tracking-tight text-white">Pic<span class="gradient-text-pink-purple">Me</span></span>
+      </a>
+      <span class="hidden sm:inline-block px-2.5 py-0.5 rounded-full text-[10px] font-black uppercase tracking-wider bg-pink-500/15 text-pink-400 border border-pink-500/30">
+        Investor Pitch Deck
+      </span>
+    </div>
+
+    <!-- Right Controls -->
+    <div class="flex items-center gap-2">
+      <a href="/" target="_blank" class="px-3.5 py-1.5 rounded-full bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition flex items-center gap-1.5 border border-white/15 shadow-sm">
+        <i class="ph-bold ph-arrow-square-out text-pink-400"></i>
+        <span>Live Web App</span>
+      </a>
+      <button onclick="toggleSpeakerNotes()" id="btnNotes" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold transition flex items-center gap-1 border border-white/10" title="Buka Catatan Presenter (Hotkey: N)">
+        <i class="ph-bold ph-notebook"></i>
+        <span class="hidden md:inline">Notes</span>
+      </button>
+      <button onclick="toggleOverviewModal()" class="px-3 py-1.5 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-semibold transition flex items-center gap-1 border border-white/10" title="Lihat Semua Slide (Hotkey: O)">
+        <i class="ph-bold ph-squares-four"></i>
+        <span class="hidden md:inline">Index</span>
+      </button>
+      <button onclick="toggleFullscreen()" class="w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white flex items-center justify-center text-sm transition border border-white/10" title="Layar Penuh (Hotkey: F)">
+        <i id="fullscreenIcon" class="ph-bold ph-corners-out"></i>
+      </button>
+    </div>
+  </nav>
+
+
+  <!-- ==================== MAIN SLIDE STAGE ==================== -->
+  <main id="slideStage" class="flex-1 w-full max-w-7xl mx-auto px-4 sm:px-8 py-2 sm:py-4 flex items-center justify-center relative z-30 overflow-y-auto no-scrollbar">
+
+    <!-- SLIDE 1: COVER -->
+    <div class="slide slide-active flex-col items-center justify-center text-center max-w-4xl mx-auto space-y-6 w-full py-6 transition-all duration-300" data-slide="1" data-notes="Buka dengan energi tinggi. Jelaskan one-liner PicMe dan tunjukkan badge bahwa web app sudah live di Edge Network.">
+      <div class="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/10 backdrop-blur-md border border-white/20 text-xs font-bold text-pink-300 shadow-sm animate-pulse">
+        <span class="w-2 h-2 rounded-full bg-emerald-400"></span>
+        <span>SEED STAGE INVESTMENT MEMORANDUM</span>
+      </div>
+
+      <div class="space-y-4">
+        <div class="w-20 h-20 sm:w-24 sm:h-24 mx-auto rounded-3xl p-1 bg-gradient-to-tr from-pink-500 to-purple-600 shadow-2xl glow-glow">
+          <img src="/assets/picme-logo.png" alt="PicMe Official" class="w-full h-full object-contain rounded-2xl bg-slate-950 p-2">
+        </div>
+        <h1 class="text-4xl sm:text-6xl lg:text-7xl font-black tracking-tight text-white leading-tight">
+          Pic<span class="gradient-text-pink-purple">Me</span>
+        </h1>
+        <p class="text-lg sm:text-2xl font-bold text-slate-300 max-w-2xl mx-auto leading-snug">
+          The AI-Powered Event Photography Marketplace
+        </p>
+        <p class="text-sm sm:text-base text-slate-400 max-w-xl mx-auto">
+          Upload 1 Selfie. Temukan dan beli seluruh momen foto Anda di kerumunan 10.000+ peserta konser, marathon, hingga wisuda dalam <span class="text-pink-400 font-bold">2 detik</span>.
+        </p>
+      </div>
+
+      <!-- Quick KPI Chips -->
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 max-w-2xl w-full pt-4">
+        <div class="glass-card-deck p-3 rounded-2xl text-center border border-white/10">
+          <div class="text-xl sm:text-2xl font-black text-white">&lt; 2s</div>
+          <div class="text-[11px] text-slate-400 font-semibold">AI Face Search</div>
+        </div>
+        <div class="glass-card-deck p-3 rounded-2xl text-center border border-white/10">
+          <div class="text-xl sm:text-2xl font-black text-pink-400">8 Niche</div>
+          <div class="text-[11px] text-slate-400 font-semibold">Kategori Event</div>
+        </div>
+        <div class="glass-card-deck p-3 rounded-2xl text-center border border-white/10">
+          <div class="text-xl sm:text-2xl font-black text-purple-400">43%</div>
+          <div class="text-[11px] text-slate-400 font-semibold">Net Take-Rate Margin</div>
+        </div>
+        <div class="glass-card-deck p-3 rounded-2xl text-center border border-white/10">
+          <div class="text-xl sm:text-2xl font-black text-emerald-400">Live</div>
+          <div class="text-[11px] text-slate-400 font-semibold">Production Web App</div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 2: THE PROBLEM -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="2" data-notes="Fokuskan pada paradoks: demand foto tinggi, fotografer hunting ribuan foto, tapi 92% foto tidak laku karena terhalang pipa distribusi Google Drive yang lambat.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">The Problem</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Pasar yang Masif, Namun Monetisasinya Bocor 90%+</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Industri dokumentasi event bernilai miliaran rupiah lumpuh oleh gesekan distribusi manual.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-4 sm:gap-5 pt-2">
+        <!-- Card 1 -->
+        <div class="glass-card-deck p-5 sm:p-6 rounded-3xl border border-rose-500/20 bg-rose-950/10 space-y-3 relative overflow-hidden">
+          <div class="w-12 h-12 rounded-2xl bg-rose-500/20 text-rose-400 flex items-center justify-center text-2xl font-bold">
+            <i class="ph-bold ph-user-focus"></i>
+          </div>
+          <h3 class="text-base sm:text-lg font-bold text-white">1. Peserta Event Frustrasi</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Harus menguras 30–60 menit menyisir link Google Drive berisi 5.000–20.000 file tak beraturan. Kebanyakan menyerah dan kehilangan momen terbaiknya.
+          </p>
+          <div class="pt-2 text-[11px] font-bold text-rose-400 flex items-center gap-1">
+            <i class="ph-bold ph-x-circle"></i> Endless Manual Scrolling
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="glass-card-deck p-5 sm:p-6 rounded-3xl border border-amber-500/20 bg-amber-950/10 space-y-3 relative overflow-hidden">
+          <div class="w-12 h-12 rounded-2xl bg-amber-500/20 text-amber-400 flex items-center justify-center text-2xl font-bold">
+            <i class="ph-bold ph-camera-slash"></i>
+          </div>
+          <h3 class="text-base sm:text-lg font-bold text-white">2. Fotografer Boncos</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Mengambil ribuan foto sensor 50MP, namun 92% tidak pernah terjual. Foto di-screenshot dan di-crop watermark tanpa kompensasi finansial.
+          </p>
+          <div class="pt-2 text-[11px] font-bold text-amber-400 flex items-center gap-1">
+            <i class="ph-bold ph-x-circle"></i> 92% Foto Mengendap di Harddisk
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="glass-card-deck p-5 sm:p-6 rounded-3xl border border-purple-500/20 bg-purple-950/10 space-y-3 relative overflow-hidden">
+          <div class="w-12 h-12 rounded-2xl bg-purple-500/20 text-purple-400 flex items-center justify-center text-2xl font-bold">
+            <i class="ph-bold ph-trend-down"></i>
+          </div>
+          <h3 class="text-base sm:text-lg font-bold text-white">3. EO & Promotor Pasif</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Event Organizer kehilangan peluang pendapatan *digital merchandise pasca-event* dan ketiadaan data interaksi partisipan setelah acara usai.
+          </p>
+          <div class="pt-2 text-[11px] font-bold text-purple-400 flex items-center gap-1">
+            <i class="ph-bold ph-x-circle"></i> Zero Digital Post-Event Revenue
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 3: THE SOLUTION -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="3" data-notes="Jelaskan keunggulan zero-friction PicMe: tidak perlu install aplikasi, langsung buka via browser mobile.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">The Solution</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Solusi Kami: PicMe Biometric Marketplace</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Mengeliminasi gesekan pencarian dan transaksi menggunakan kecerdasan buatan.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+        <div class="glass-card-deck p-6 rounded-3xl border border-pink-500/30 space-y-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-pink-600 to-purple-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">
+            <i class="ph-bold ph-scan"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Instant Selfie Search</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            AI ArcFace 512-d vector matching mengekstrak biometrik wajah selfie dan langsung mencocokkan di antara puluhan ribu foto dalam tempo &lt; 2 detik.
+          </p>
+          <span class="inline-block text-[10px] font-bold px-2.5 py-1 rounded-full bg-pink-500/20 text-pink-300 border border-pink-500/30">
+            Akurasi Cosine Similarity 96%+
+          </span>
+        </div>
+
+        <div class="glass-card-deck p-6 rounded-3xl border border-purple-500/30 space-y-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-purple-600 to-indigo-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">
+            <i class="ph-bold ph-device-mobile"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Zero App Friction</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Tidak perlu unduh aplikasi dari Play Store / App Store. Cukup scan QR di lokasi acara atau buka link via browser mobile smartphone apa pun.
+          </p>
+          <span class="inline-block text-[10px] font-bold px-2.5 py-1 rounded-full bg-purple-500/20 text-purple-300 border border-purple-500/30">
+            100% PWA Browser Native
+          </span>
+        </div>
+
+        <div class="glass-card-deck p-6 rounded-3xl border border-emerald-500/30 space-y-3">
+          <div class="w-12 h-12 rounded-2xl bg-gradient-to-tr from-emerald-600 to-teal-600 text-white flex items-center justify-center text-2xl font-bold shadow-lg">
+            <i class="ph-bold ph-credit-card"></i>
+          </div>
+          <h3 class="text-lg font-bold text-white">Dual-Tier Instant Checkout</h3>
+          <p class="text-xs text-slate-300 leading-relaxed">
+            Pilihan checkout fleksibel: <b>Web Compressed (Rp 25.000)</b> untuk medsos cepat, atau <b>Master Ultra HD (Rp 35.000)</b> untuk cetak resolusi tinggi.
+          </p>
+          <span class="inline-block text-[10px] font-bold px-2.5 py-1 rounded-full bg-emerald-500/20 text-emerald-300 border border-emerald-500/30">
+            QRIS & Instant Settlement
+          </span>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 4: PRODUCT ARCHITECTURE -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="4" data-notes="Tekankan efisiensi arsitektur: kami menggunakan edge-network Cloudflare dan vector indexing yang membuat cost komputasi per foto kurang dari Rp 300.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">Technology & Architecture</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Alur Sistem yang Cepat & Skalabel</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Dari hunting foto hingga transaksi dana cair ke dompet kreator.</p>
+      </div>
+
+      <div class="glass-card-deck p-6 sm:p-8 rounded-3xl border border-white/10 space-y-6">
+        <div class="grid grid-cols-1 sm:grid-cols-4 gap-3 relative">
+          <!-- Step 1 -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+            <div class="text-pink-400 font-black text-xs">STEP 01</div>
+            <h4 class="font-bold text-white text-sm">Bulk Ingest</h4>
+            <p class="text-[11px] text-slate-400">Fotografer upload 500+ file RAW/JPG di Creator Studio (`/photographer`).</p>
+          </div>
+          <!-- Step 2 -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+            <div class="text-purple-400 font-black text-xs">STEP 02</div>
+            <h4 class="font-bold text-white text-sm">Vector Embedding</h4>
+            <p class="text-[11px] text-slate-400">AI ArcFace memetakan 512 fitur biometrik wajah & nomor BIB di tiap foto.</p>
+          </div>
+          <!-- Step 3 -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+            <div class="text-indigo-400 font-black text-xs">STEP 03</div>
+            <h4 class="font-bold text-white text-sm">Instant Match</h4>
+            <p class="text-[11px] text-slate-400">Peserta unggah selfie; algoritma menyajikan galeri personal dalam &lt; 2 detik.</p>
+          </div>
+          <!-- Step 4 -->
+          <div class="p-4 rounded-2xl bg-white/5 border border-white/10 space-y-2">
+            <div class="text-emerald-400 font-black text-xs">STEP 04</div>
+            <h4 class="font-bold text-white text-sm">One-Click Buy</h4>
+            <p class="text-[11px] text-slate-400">Bayar via QRIS; watermark terangkat seketika dan komisi 50% split otomatis.</p>
+          </div>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 pt-2 border-t border-white/10 text-xs">
+          <div class="flex items-center gap-2 text-slate-300">
+            <i class="ph-bold ph-shield-check text-emerald-400 text-lg"></i>
+            <span>Anti-Scraping Watermark Protection</span>
+          </div>
+          <div class="flex items-center gap-2 text-slate-300">
+            <i class="ph-bold ph-lightning text-amber-400 text-lg"></i>
+            <span>Latency Edge Global Delivery</span>
+          </div>
+          <div class="flex items-center gap-2 text-slate-300">
+            <i class="ph-bold ph-identification-card text-pink-400 text-lg"></i>
+            <span>Fotografer KYC Terverifikasi</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 5: MARKET SIZE (TAM, SAM, SOM) -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="5" data-notes="Jelaskan bahwa Indonesia mengalami running boom dan festival boom luar biasa. Tiket konser dan maraton selalu sold out dalam hitungan menit.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">Market Size</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Peluang Pasar: Booming Ekonomi Pengalaman</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Masyarakat rela membayar demi validasi visual di linimasa media sosial.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+        <div class="glass-card-deck p-6 sm:p-7 rounded-3xl border border-white/10 space-y-2">
+          <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Total Addressable Market</span>
+          <div class="text-3xl sm:text-5xl font-black gradient-text-pink-purple">$1.8B+</div>
+          <h4 class="font-bold text-white text-sm sm:text-base">Pasar Dokumentasi & Event SEA</h4>
+          <p class="text-xs text-slate-300">Total belanja foto kenangan, tiket event, seremoni, dan maraton di Asia Tenggara.</p>
+        </div>
+
+        <div class="glass-card-deck p-6 sm:p-7 rounded-3xl border border-purple-500/30 space-y-2">
+          <span class="text-xs font-bold text-purple-400 uppercase tracking-wider">Serviceable Addressable Market</span>
+          <div class="text-3xl sm:text-5xl font-black text-white">$140M</div>
+          <h4 class="font-bold text-white text-sm sm:text-base">Pasar Indonesia Tier 1 & 2</h4>
+          <p class="text-xs text-slate-300">45 Juta+ peserta event komersial per tahun (marathon, festival musik, wisuda, sunmori, turnamen).</p>
+        </div>
+
+        <div class="glass-card-deck p-6 sm:p-7 rounded-3xl border border-pink-500/40 bg-pink-950/20 space-y-2">
+          <span class="text-xs font-bold text-pink-400 uppercase tracking-wider">Serviceable Obtainable Market</span>
+          <div class="text-3xl sm:text-5xl font-black text-pink-400">$8.4M</div>
+          <h4 class="font-bold text-white text-sm sm:text-base">Target Penetrasi 24 Bulan</h4>
+          <p class="text-xs text-slate-300">Target Rp 130 Miliar GMV di 5 hub kota besar (Jabodetabek, Joglosemar, Bandung, Surabaya, Bali).</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 6: 8 VERTICAL PILLARS -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-5 w-full py-4 transition-all duration-300" data-slide="6" data-notes="Ini competitive advantage terbesar PicMe dibanding kompetitor yang hanya fokus di lari/maraton. PicMe punya 8 pilar vertikal berfrekuensi tinggi.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">Market Coverage</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">8 Pilar Kategori Berfrekuensi Tinggi</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Tidak terbatas hanya pada maraton; PicMe menggarap seluruh ceruk dokumentasi aktif.</p>
+      </div>
+
+      <div class="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-1">
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-pink-500/20 hover:border-pink-500/50 transition">
+          <div class="text-pink-400 text-2xl mb-1"><i class="ph-bold ph-speaker-hifi"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Konser & Musik</h4>
+          <p class="text-[10px] text-slate-400 mt-1">We The Fest, Synchronize, DWP, konser stadium.</p>
+        </div>
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-emerald-500/20 hover:border-emerald-500/50 transition">
+          <div class="text-emerald-400 text-2xl mb-1"><i class="ph-bold ph-sneaker-move"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Lari & Olahraga</h4>
+          <p class="text-[10px] text-slate-400 mt-1">Maybank Marathon, Borobudur Marathon, Fun Run.</p>
+        </div>
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-amber-500/20 hover:border-amber-500/50 transition">
+          <div class="text-amber-400 text-2xl mb-1"><i class="ph-bold ph-motorcycle"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Sunmori & Otomotif</h4>
+          <p class="text-[10px] text-slate-400 mt-1">Riding Kaliurang, Meet Supercar PIK 2, Cornering.</p>
+        </div>
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-sky-500/20 hover:border-sky-500/50 transition">
+          <div class="text-sky-400 text-2xl mb-1"><i class="ph-bold ph-graduation-cap"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Wisuda & Kampus</h4>
+          <p class="text-[10px] text-slate-400 mt-1">UGM, ITB, UI (1,8 Juta wisudawan/tahun di Indo).</p>
+        </div>
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-teal-500/20 hover:border-teal-500/50 transition">
+          <div class="text-teal-400 text-2xl mb-1"><i class="ph-bold ph-compass"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Wisata & Street</h4>
+          <p class="text-[10px] text-slate-400 mt-1">Malioboro, Kota Tua Jakarta, spot turis ikonik.</p>
+        </div>
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-fuchsia-500/20 hover:border-fuchsia-500/50 transition">
+          <div class="text-fuchsia-400 text-2xl mb-1"><i class="ph-bold ph-mask-happy"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Cosplay & Hobi</h4>
+          <p class="text-[10px] text-slate-400 mt-1">Comifuro, INACON, Anime Festival konvensi.</p>
+        </div>
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-orange-500/20 hover:border-orange-500/50 transition">
+          <div class="text-orange-400 text-2xl mb-1"><i class="ph-bold ph-trophy"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Turnamen & Game</h4>
+          <p class="text-[10px] text-slate-400 mt-1">Piala Presiden Esports, Djarum Badminton.</p>
+        </div>
+        <div class="glass-card-deck p-3.5 rounded-2xl border border-rose-500/20 hover:border-rose-500/50 transition">
+          <div class="text-rose-400 text-2xl mb-1"><i class="ph-bold ph-confetti"></i></div>
+          <h4 class="font-bold text-white text-xs sm:text-sm">Karnaval Budaya</h4>
+          <p class="text-[10px] text-slate-400 mt-1">Jember Fashion Carnaval, PKB Bali.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 7: BUSINESS MODEL & UNIT ECONOMICS -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="7" data-notes="Jelaskan bahwa margin kotor PicMe di atas 40% dan model revenue sharing transparan membuat fotografer sangat loyal.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">Business Model & Economics</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Unit Economics Sehat & Cash-Flow Positif</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Model transaksi langsung tanpa beban inventaris fisik.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-2 gap-5 pt-2">
+        <!-- Waterfall Card -->
+        <div class="glass-card-deck p-6 rounded-3xl border border-white/10 space-y-4">
+          <h3 class="font-bold text-white text-base">Breakdown Transaksi (Foto Rp 25.000)</h3>
+          
+          <div class="space-y-2 text-xs">
+            <div class="flex justify-between p-2 rounded-xl bg-white/5 font-bold">
+              <span>Harga Jual Pembeli (Compressed)</span>
+              <span class="text-white">Rp 25.000</span>
+            </div>
+            <div class="flex justify-between p-2 rounded-xl bg-white/5 text-slate-400">
+              <span>Payment Gateway & SMS OTP</span>
+              <span class="text-rose-400">- Rp 1.500 (6%)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded-xl bg-white/5 text-slate-400">
+              <span>Cloud Storage & Vector Compute</span>
+              <span class="text-rose-400">- Rp 250 (1%)</span>
+            </div>
+            <div class="flex justify-between p-2 rounded-xl bg-white/5 text-slate-300">
+              <span>Bagi Hasil Fotografer Terverifikasi</span>
+              <span class="text-amber-400">- Rp 12.500 (50%)</span>
+            </div>
+            <div class="flex justify-between p-3 rounded-2xl bg-gradient-to-r from-pink-950/40 to-purple-950/40 border border-pink-500/30 text-sm font-extrabold text-white">
+              <span class="text-pink-300">Gross Margin Bersih PicMe</span>
+              <span class="text-emerald-400 font-black">Rp 10.750 (43%)</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- 3 Revenue Streams -->
+        <div class="space-y-3 flex flex-col justify-between">
+          <div class="glass-card-deck p-4 rounded-2xl border border-white/10">
+            <h4 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="ph-bold ph-ticket text-pink-400"></i>
+              <span>1. Pay-Per-Download Take Rate</span>
+            </h4>
+            <p class="text-xs text-slate-300 mt-1">Komisi 50% dari setiap foto compressed (Rp 25k) dan Master HD (Rp 35k).</p>
+          </div>
+
+          <div class="glass-card-deck p-4 rounded-2xl border border-white/10">
+            <h4 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="ph-bold ph-package text-purple-400"></i>
+              <span>2. Bundling Packages</span>
+            </h4>
+            <p class="text-xs text-slate-300 mt-1">Beli 3+ foto dapat diskon 15%, mendongkrak AOV (Average Order Value) ke Rp 60.000+.</p>
+          </div>
+
+          <div class="glass-card-deck p-4 rounded-2xl border border-white/10">
+            <h4 class="font-bold text-white text-sm flex items-center gap-2">
+              <i class="ph-bold ph-buildings text-emerald-400"></i>
+              <span>3. B2B Enterprise & Whitelabel</span>
+            </h4>
+            <p class="text-xs text-slate-300 mt-1">Biaya setup & lisensi platform untuk Marathon berskala 20.000+ peserta dan kampus universitas.</p>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 8: COMPETITIVE ADVANTAGE & MOATS -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="8" data-notes="Jelaskan keunggulan kompetitif PicMe: bukan cuma cepat, tapi juga web-native dan punya kurasi fotografer ketat sehingga tidak ada foto spam.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">Competitive Moats</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Mengapa PicMe Menang?</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Membandingkan PicMe dengan metode lama dan kompetitor regional.</p>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="w-full text-left text-xs border-collapse">
+          <thead>
+            <tr class="border-b border-white/15 text-slate-400">
+              <th class="p-3">Fitur & Parameter</th>
+              <th class="p-3">Google Drive / GDrive</th>
+              <th class="p-3">Fotografer Manual (DM)</th>
+              <th class="p-3">FotoYu / Kompetitor</th>
+              <th class="p-3 bg-pink-950/30 text-pink-300 font-black rounded-t-xl">PicMe 🚀</th>
+            </tr>
+          </thead>
+          <tbody class="divide-y divide-white/5 text-slate-300">
+            <tr>
+              <td class="p-3 font-semibold text-white">Kecepatan Cari Foto</td>
+              <td class="p-3 text-rose-400">30–60 Menit</td>
+              <td class="p-3 text-rose-400">Jam s/d Hari</td>
+              <td class="p-3 text-slate-400">5–15 Detik</td>
+              <td class="p-3 bg-pink-950/20 font-bold text-emerald-400">&lt; 2 Detik (Instant Vector)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Aksesibilitas User</td>
+              <td class="p-3 text-slate-400">Buka ribuan folder</td>
+              <td class="p-3 text-slate-400">Chat manual di IG</td>
+              <td class="p-3 text-amber-400">Perlu unduh aplikasi</td>
+              <td class="p-3 bg-pink-950/20 font-bold text-pink-300">100% Web Native (No App)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Cakupan Kategori</td>
+              <td class="p-3 text-slate-400">Acak & tidak terstruktur</td>
+              <td class="p-3 text-slate-400">Personal per fotografer</td>
+              <td class="p-3 text-slate-400">Dominan hanya event lari</td>
+              <td class="p-3 bg-pink-950/20 font-bold text-white">8 Niche Lengkap (Musik, Wisuda, dll)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Pilihan Resolusi</td>
+              <td class="p-3 text-slate-400">Rawan dicuri gratis</td>
+              <td class="p-3 text-slate-400">Tergantung kesepakatan</td>
+              <td class="p-3 text-slate-400">Satu harga kaku</td>
+              <td class="p-3 bg-pink-950/20 font-bold text-emerald-400">Dual-Tier (25k vs 35k)</td>
+            </tr>
+            <tr>
+              <td class="p-3 font-semibold text-white">Kurasi Fotografer</td>
+              <td class="p-3 text-slate-400">Tidak ada kontrol</td>
+              <td class="p-3 text-slate-400">Kualitas tidak stabil</td>
+              <td class="p-3 text-slate-400">Campur aduk publik</td>
+              <td class="p-3 bg-pink-950/20 font-bold text-purple-300">Terkurasi & Verifikasi KYC KTP</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 9: GO-TO-MARKET & VIRAL FLYWHEEL -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="9" data-notes="Jelaskan bahwa CAC (Customer Acquisition Cost) PicMe sangat rendah karena kami menunggangi momentum offline event dan promosi organik dari peserta yang bangga pamer foto di IG Story.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">Go-To-Market</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Viral Flywheel & Customer Acquisition</h2>
+        <p class="text-xs sm:text-sm text-slate-400">CAC mendekati nol berkat momentum emosional peserta pasca-acara.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-4 gap-4 pt-2">
+        <div class="glass-card-deck p-5 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-full bg-pink-600 text-white flex items-center justify-center font-bold text-xs">1</div>
+          <h4 class="font-bold text-white text-sm">Official Event Partner</h4>
+          <p class="text-xs text-slate-300">PicMe bermitra dengan promotor festival & EO lari. QR dipajang di panggung & BIB.</p>
+        </div>
+
+        <div class="glass-card-deck p-5 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-full bg-purple-600 text-white flex items-center justify-center font-bold text-xs">2</div>
+          <h4 class="font-bold text-white text-sm">Instant Selfie Trigger</h4>
+          <p class="text-xs text-slate-300">Peserta scan QR saat istirahat atau perjalanan pulang; langsung melihat fotonya siap beli.</p>
+        </div>
+
+        <div class="glass-card-deck p-5 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-full bg-indigo-600 text-white flex items-center justify-center font-bold text-xs">3</div>
+          <h4 class="font-bold text-white text-sm">IG Story Flex Loop</h4>
+          <p class="text-xs text-slate-300">Foto dibeli dan diunggah ke Story/TikTok dengan mention atau watermark sudut PicMe.</p>
+        </div>
+
+        <div class="glass-card-deck p-5 rounded-2xl border border-white/10 space-y-2">
+          <div class="w-8 h-8 rounded-full bg-emerald-600 text-white flex items-center justify-center font-bold text-xs">4</div>
+          <h4 class="font-bold text-white text-sm">Viral FOMO Wave</h4>
+          <p class="text-xs text-slate-300">Ratusan teman se-event melihat story tersebut, penasaran, dan langsung membuka PicMe.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 10: FINANCIAL PROJECTIONS -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="10" data-notes="Tunjukkan model proyeksi 3 tahun. Kami menargetkan mencapai EBITDA positif di akhir Tahun 1 dan scale pesat di Tahun 2 dan 3.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">Financial Projections</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Pertumbuhan Eksponensial 3 Tahun</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Berdasarkan ekspansi kemitraan event kota-kota besar di Indonesia.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+        <!-- Year 1 -->
+        <div class="glass-card-deck p-6 rounded-3xl border border-white/10 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-white/10 text-white font-black text-xs">TAHUN 1 (2027)</span>
+            <span class="text-xs text-emerald-400 font-bold">EBITDA 22%</span>
+          </div>
+          <div>
+            <div class="text-3xl font-black text-white">Rp 8,9 Miliar</div>
+            <div class="text-xs text-slate-400 font-semibold">Gross Merchandise Value (GMV)</div>
+          </div>
+          <div class="space-y-1 text-xs text-slate-300 pt-2 border-t border-white/10">
+            <div>• <b>120 Event</b> Terdaftar</div>
+            <div>• <b>250 Fotografer</b> Terverifikasi</div>
+            <div>• <b>320.000 Foto</b> Terjual Lunas</div>
+            <div class="text-pink-400 font-bold">• Net Revenue: Rp 4,4 Miliar</div>
+          </div>
+        </div>
+
+        <!-- Year 2 -->
+        <div class="glass-card-deck p-6 rounded-3xl border border-purple-500/40 bg-purple-950/20 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-purple-500/20 text-purple-300 font-black text-xs">TAHUN 2 (2028)</span>
+            <span class="text-xs text-emerald-400 font-bold">EBITDA 38%</span>
+          </div>
+          <div>
+            <div class="text-3xl font-black text-purple-300">Rp 42,5 Miliar</div>
+            <div class="text-xs text-slate-400 font-semibold">Gross Merchandise Value (GMV)</div>
+          </div>
+          <div class="space-y-1 text-xs text-slate-300 pt-2 border-t border-white/10">
+            <div>• <b>480 Event</b> Terdaftar</div>
+            <div>• <b>900 Fotografer</b> Terverifikasi</div>
+            <div>• <b>1.450.000 Foto</b> Terjual Lunas</div>
+            <div class="text-purple-300 font-bold">• Net Revenue: Rp 21,2 Miliar</div>
+          </div>
+        </div>
+
+        <!-- Year 3 -->
+        <div class="glass-card-deck p-6 rounded-3xl border border-pink-500/40 bg-pink-950/20 space-y-3">
+          <div class="flex items-center justify-between">
+            <span class="px-3 py-1 rounded-full bg-pink-500/20 text-pink-300 font-black text-xs">TAHUN 3 (2029)</span>
+            <span class="text-xs text-emerald-400 font-bold">EBITDA 46%</span>
+          </div>
+          <div>
+            <div class="text-3xl font-black gradient-text-pink-purple">Rp 148 Miliar</div>
+            <div class="text-xs text-slate-400 font-semibold">Gross Merchandise Value (GMV)</div>
+          </div>
+          <div class="space-y-1 text-xs text-slate-300 pt-2 border-t border-white/10">
+            <div>• <b>1.500 Event</b> Terdaftar</div>
+            <div>• <b>3.000 Fotografer</b> Terverifikasi</div>
+            <div>• <b>4.800.000 Foto</b> Terjual Lunas</div>
+            <div class="text-pink-400 font-bold">• Net Revenue: Rp 74 Miliar</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 11: THE TEAM -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="11" data-notes="Sorot perpaduan antara keahlian Computer Vision AI, pemahaman industri promotor event, dan jaringan komunitas fotografer komersial.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">The Team</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Didukung Tim dengan Eksekusi Kuat</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Kombinasi keahlian di bidang Computer Vision, Event Promotor, dan Platform Scaling.</p>
+      </div>
+
+      <div class="grid grid-cols-1 md:grid-cols-3 gap-5 pt-2">
+        <div class="glass-card-deck p-6 rounded-3xl border border-white/10 text-center space-y-3">
+          <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-pink-500 to-purple-600 flex items-center justify-center text-3xl font-black text-white shadow-xl">
+            <i class="ph-bold ph-user"></i>
+          </div>
+          <div>
+            <h4 class="font-extrabold text-white text-base">Chief Executive Officer</h4>
+            <span class="text-xs text-pink-400 font-semibold">Product Strategy & BD</span>
+          </div>
+          <p class="text-xs text-slate-300">Membawa relasi strategis dengan agensi promotor festival musik, asosiasi event, dan kemitraan brand.</p>
+        </div>
+
+        <div class="glass-card-deck p-6 rounded-3xl border border-white/10 text-center space-y-3">
+          <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-purple-500 to-indigo-600 flex items-center justify-center text-3xl font-black text-white shadow-xl">
+            <i class="ph-bold ph-code"></i>
+          </div>
+          <div>
+            <h4 class="font-extrabold text-white text-base">Chief Technology Officer</h4>
+            <span class="text-xs text-purple-400 font-semibold">AI & Edge Infrastructure</span>
+          </div>
+          <p class="text-xs text-slate-300">Spesialis Machine Learning & Biometrik Wajah; memimpin arsitektur pencarian vektor berskala masif.</p>
+        </div>
+
+        <div class="glass-card-deck p-6 rounded-3xl border border-white/10 text-center space-y-3">
+          <div class="w-20 h-20 mx-auto rounded-full bg-gradient-to-tr from-indigo-500 to-emerald-600 flex items-center justify-center text-3xl font-black text-white shadow-xl">
+            <i class="ph-bold ph-camera"></i>
+          </div>
+          <div>
+            <h4 class="font-extrabold text-white text-base">Head of Creator Network</h4>
+            <span class="text-xs text-emerald-400 font-semibold">Community & Operations</span>
+          </div>
+          <p class="text-xs text-slate-300">Fotografer festival komersial berpengalaman dengan akses ke 500+ komunitas fotografer se-Indonesia.</p>
+        </div>
+      </div>
+    </div>
+
+
+    <!-- SLIDE 12: THE ASK & CLOSING -->
+    <div class="slide slide-hidden-next flex-col justify-center max-w-5xl mx-auto space-y-6 w-full py-4 transition-all duration-300" data-slide="12" data-notes="Tutup dengan call to action yang kuat. Beritahu target pendanaan $300k untuk mencapai 1,5 juta transaksi dan cash flow positif dalam 14 bulan.">
+      <div class="space-y-1">
+        <span class="text-xs font-black uppercase tracking-wider text-pink-500">The Ask</span>
+        <h2 class="text-2xl sm:text-4xl font-extrabold text-white">Bergabunglah Membangun Masa Depan Dokumentasi</h2>
+        <p class="text-xs sm:text-sm text-slate-400">Mencari mitra investasi strategis untuk mengunci dominasi pasar di Indonesia.</p>
+      </div>
+
+      <div class="glass-card-deck p-6 sm:p-8 rounded-3xl border border-pink-500/30 space-y-6">
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 border-b border-white/10 pb-6">
+          <div>
+            <span class="text-xs font-bold text-slate-400 uppercase tracking-wider">Target Pendanaan Seed</span>
+            <div class="text-3xl sm:text-5xl font-black gradient-text-pink-purple">$300,000 USD</div>
+            <div class="text-xs text-slate-300 mt-1">Setara Rp 4,8 Miliar — SAFE / Convertible Note</div>
+          </div>
+          <div class="text-right sm:border-l sm:border-white/10 sm:pl-6 space-y-1">
+            <span class="px-3 py-1 rounded-full bg-emerald-500/20 text-emerald-400 text-xs font-bold">18-Month Target</span>
+            <div class="text-xl font-bold text-white">1,5 Juta Transaksi Foto</div>
+            <div class="text-xs text-slate-400">Cash Flow Positive di Bulan ke-14</div>
+          </div>
+        </div>
+
+        <!-- Fund Allocation Bar -->
+        <div class="space-y-2">
+          <div class="flex justify-between text-xs font-bold text-slate-300">
+            <span>Alokasi Penggunaan Dana</span>
+            <span>Runway 18 Bulan</span>
+          </div>
+          <div class="w-full h-3 rounded-full bg-white/10 overflow-hidden flex">
+            <div class="h-full bg-pink-500" style="width: 40%;" title="40% AI & Product Engineering"></div>
+            <div class="h-full bg-purple-500" style="width: 30%;" title="30% Partnership & GTM Marketing"></div>
+            <div class="h-full bg-indigo-500" style="width: 20%;" title="20% Operations, Legal, KYC"></div>
+            <div class="h-full bg-emerald-500" style="width: 10%;" title="10% Working Capital"></div>
+          </div>
+          <div class="grid grid-cols-2 sm:grid-cols-4 gap-2 text-[11px] text-slate-400 pt-1">
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-pink-500"></span> 40% Product & AI</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-purple-500"></span> 30% GTM & Event</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-indigo-500"></span> 20% Ops & Legal</span>
+            <span class="flex items-center gap-1.5"><span class="w-2 h-2 rounded-full bg-emerald-500"></span> 10% Reserve</span>
+          </div>
+        </div>
+
+        <!-- Closing CTA Buttons -->
+        <div class="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
+          <div class="text-xs text-slate-400">
+            <b>Kontak Langsung:</b> investor@picme.id | WhatsApp: +62 812-XXXX-XXXX
+          </div>
+          <div class="flex items-center gap-3 w-full sm:w-auto">
+            <a href="/" target="_blank" class="w-full sm:w-auto px-5 py-2.5 rounded-full bg-white/10 hover:bg-white/15 text-white text-xs font-bold transition text-center border border-white/20">
+              Buka Prototype
+            </a>
+            <a href="mailto:investor@picme.id?subject=PicMe%20Investment%20Inquiry" class="w-full sm:w-auto px-6 py-2.5 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white text-xs font-extrabold shadow-lg transition text-center flex items-center justify-center gap-2">
+              <i class="ph-bold ph-envelope"></i>
+              <span>Hubungi Founders</span>
+            </a>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+
+  <!-- ==================== BOTTOM FLOATING CONTROL DOCK ==================== -->
+  <footer class="w-full max-w-7xl mx-auto px-4 sm:px-8 py-3.5 z-40 relative flex items-center justify-between border-t border-white/5 bg-[#0a0b10]/80 backdrop-blur-md">
+    
+    <!-- Left: Slide Indicator & Title -->
+    <div class="flex items-center gap-3">
+      <div class="flex items-center gap-1.5 font-mono text-xs font-bold text-white bg-white/5 px-3 py-1.5 rounded-full border border-white/10">
+        <span id="currentSlideNum" class="text-pink-400 font-black">01</span>
+        <span class="text-slate-500">/</span>
+        <span id="totalSlideNum" class="text-slate-400">12</span>
+      </div>
+      <span id="currentSlideTitle" class="hidden sm:inline text-xs font-bold text-slate-400 truncate max-w-xs">
+        Cover & Vision
+      </span>
+    </div>
+
+    <!-- Center: Navigation Buttons (Previous, Next) -->
+    <div class="flex items-center gap-2">
+      <button onclick="prevSlide()" id="btnPrev" class="px-4 py-2 rounded-full bg-white/5 hover:bg-white/10 text-slate-300 hover:text-white text-xs font-bold transition flex items-center gap-1.5 border border-white/10 disabled:opacity-30 disabled:pointer-events-none">
+        <i class="ph-bold ph-caret-left text-sm"></i>
+        <span>Prev</span>
+      </button>
+
+      <button onclick="nextSlide()" id="btnNext" class="px-5 py-2 rounded-full bg-gradient-to-r from-pink-600 to-purple-600 hover:from-pink-500 hover:to-purple-500 text-white text-xs font-black transition flex items-center gap-1.5 shadow-md shadow-pink-500/20 disabled:opacity-30 disabled:pointer-events-none">
+        <span>Next</span>
+        <i class="ph-bold ph-caret-right text-sm"></i>
+      </button>
+    </div>
+
+    <!-- Right: Hotkeys hint -->
+    <div class="hidden lg:flex items-center gap-2 text-[11px] text-slate-500">
+      <span class="bg-white/5 px-2 py-0.5 rounded border border-white/10 text-slate-400 font-mono">←</span>
+      <span class="bg-white/5 px-2 py-0.5 rounded border border-white/10 text-slate-400 font-mono">→</span>
+      <span>Navigasi</span>
+      <span class="mx-1">•</span>
+      <span class="bg-white/5 px-2 py-0.5 rounded border border-white/10 text-slate-400 font-mono">F</span>
+      <span>Layar Penuh</span>
+    </div>
+  </footer>
+
+
+  <!-- ==================== SPEAKER NOTES DRAWER ==================== -->
+  <aside id="speakerNotesDrawer" class="hidden fixed bottom-16 right-4 sm:right-8 z-50 max-w-md w-full glass-deck p-5 rounded-3xl shadow-2xl border border-pink-500/30 text-xs space-y-2.5 transition-all">
+    <div class="flex items-center justify-between border-b border-white/10 pb-2">
+      <div class="flex items-center gap-1.5 font-bold text-pink-400">
+        <i class="ph-bold ph-notebook text-sm"></i>
+        <span>Catatan Presenter (Speaker Notes)</span>
+      </div>
+      <button onclick="toggleSpeakerNotes()" class="text-slate-400 hover:text-white">
+        <i class="ph-bold ph-x text-sm"></i>
+      </button>
+    </div>
+    <p id="speakerNotesContent" class="text-slate-200 leading-relaxed font-sans">
+      Buka dengan energi tinggi. Jelaskan one-liner PicMe dan tunjukkan badge bahwa web app sudah live di Edge Network.
+    </p>
+    <div class="text-[10px] text-slate-500 pt-1">
+      Tekan <kbd class="px-1.5 py-0.5 bg-white/10 rounded font-mono text-slate-300">N</kbd> untuk menyembunyikan catatan ini.
+    </div>
+  </aside>
+
+
+  <!-- ==================== OVERVIEW / INDEX MODAL ==================== -->
+  <div id="overviewModal" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-xl">
+    <div class="max-w-4xl w-full max-h-[85vh] flex flex-col glass-deck rounded-3xl p-6 border border-white/15 space-y-4">
+      <div class="flex items-center justify-between border-b border-white/10 pb-3">
+        <h3 class="font-extrabold text-white text-lg flex items-center gap-2">
+          <i class="ph-bold ph-squares-four text-pink-500"></i>
+          <span>Daftar Slide Presentasi (12 Slide)</span>
+        </h3>
+        <button onclick="toggleOverviewModal()" class="w-8 h-8 rounded-full bg-white/10 hover:bg-white/20 text-slate-300 flex items-center justify-center">
+          <i class="ph-bold ph-x"></i>
+        </button>
+      </div>
+
+      <div id="overviewGrid" class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-3 overflow-y-auto p-1">
+        <!-- Populated via JS -->
+      </div>
+    </div>
+  </div>
+
+
+  <!-- ==================== INTERACTIVE JAVASCRIPT LOGIC ==================== -->
+  <script>
+    let currentSlide = 1;
+    const totalSlides = 12;
+
+    const slideTitles = [
+      "Cover & Vision",
+      "The Problem (Monetisasi Bocor)",
+      "The Solution (Instant AI Search)",
+      "Tech Architecture & Flow",
+      "Market Opportunity (TAM / SAM / SOM)",
+      "8 Vertical Expansion Pillars",
+      "Business Model & Unit Economics",
+      "Competitive Moats & Matrix",
+      "Go-To-Market & Viral Flywheel",
+      "3-Year Financial Projections",
+      "The Founding Team",
+      "The Ask & 18-Month Milestones"
+    ];
+
+    function updateSlide() {
+      const slides = document.querySelectorAll('.slide');
+      slides.forEach((slide, idx) => {
+        const slideIndex = idx + 1;
+        slide.classList.remove('slide-active', 'slide-hidden-prev', 'slide-hidden-next');
+        
+        if (slideIndex === currentSlide) {
+          slide.classList.add('slide-active');
+        } else if (slideIndex < currentSlide) {
+          slide.classList.add('slide-hidden-prev');
+        } else {
+          slide.classList.add('slide-hidden-next');
+        }
+      });
+
+      // Update counters & title
+      document.getElementById('currentSlideNum').innerText = currentSlide.toString().padStart(2, '0');
+      document.getElementById('totalSlideNum').innerText = totalSlides.toString().padStart(2, '0');
+      document.getElementById('currentSlideTitle').innerText = slideTitles[currentSlide - 1] || '';
+
+      // Update Progress Bar
+      const progressPercent = (currentSlide / totalSlides) * 100;
+      document.getElementById('deckProgressBar').style.width = progressPercent + '%';
+
+      // Update Prev / Next Buttons state
+      document.getElementById('btnPrev').disabled = (currentSlide === 1);
+      document.getElementById('btnNext').disabled = (currentSlide === totalSlides);
+
+      // Update Speaker Notes
+      const activeSlideEl = document.querySelector(`.slide[data-slide="${currentSlide}"]`);
+      if (activeSlideEl) {
+        const notes = activeSlideEl.getAttribute('data-notes') || 'Tidak ada catatan khusus untuk slide ini.';
+        document.getElementById('speakerNotesContent').innerText = notes;
+      }
+    }
+
+    function nextSlide() {
+      if (currentSlide < totalSlides) {
+        currentSlide++;
+        updateSlide();
+      }
+    }
+
+    function prevSlide() {
+      if (currentSlide > 1) {
+        currentSlide--;
+        updateSlide();
+      }
+    }
+
+    function goToSlide(num) {
+      if (num >= 1 && num <= totalSlides) {
+        currentSlide = num;
+        updateSlide();
+        toggleOverviewModal(false);
+      }
+    }
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.key === 'ArrowRight' || e.key === ' ' || e.key === 'PageDown') {
+        e.preventDefault();
+        nextSlide();
+      } else if (e.key === 'ArrowLeft' || e.key === 'PageUp') {
+        e.preventDefault();
+        prevSlide();
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        toggleFullscreen();
+      } else if (e.key === 'n' || e.key === 'N') {
+        e.preventDefault();
+        toggleSpeakerNotes();
+      } else if (e.key === 'o' || e.key === 'O') {
+        e.preventDefault();
+        toggleOverviewModal();
+      } else if (e.key === 'Escape') {
+        toggleOverviewModal(false);
+        toggleSpeakerNotes(false);
+      }
+    });
+
+    // Touch Swipe Gestures for Mobile / iPad
+    let touchStartX = 0;
+    let touchEndX = 0;
+    document.addEventListener('touchstart', (e) => {
+      touchStartX = e.changedTouches[0].screenX;
+    }, false);
+    document.addEventListener('touchend', (e) => {
+      touchEndX = e.changedTouches[0].screenX;
+      if (touchEndX < touchStartX - 50) nextSlide();
+      if (touchEndX > touchStartX + 50) prevSlide();
+    }, false);
+
+    // Fullscreen Toggle
+    function toggleFullscreen() {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+        document.getElementById('fullscreenIcon').className = 'ph-bold ph-corners-in';
+      } else {
+        if (document.exitFullscreen) {
+          document.exitFullscreen().catch(() => {});
+          document.getElementById('fullscreenIcon').className = 'ph-bold ph-corners-out';
+        }
+      }
+    }
+
+    // Speaker Notes Toggle
+    function toggleSpeakerNotes(force) {
+      const drawer = document.getElementById('speakerNotesDrawer');
+      const btn = document.getElementById('btnNotes');
+      const isHidden = drawer.classList.contains('hidden');
+      const show = force !== undefined ? force : isHidden;
+
+      if (show) {
+        drawer.classList.remove('hidden');
+        btn.classList.add('bg-pink-500/20', 'text-pink-300', 'border-pink-500/40');
+      } else {
+        drawer.classList.add('hidden');
+        btn.classList.remove('bg-pink-500/20', 'text-pink-300', 'border-pink-500/40');
+      }
+    }
+
+    // Overview Grid Modal
+    function toggleOverviewModal(force) {
+      const modal = document.getElementById('overviewModal');
+      const isHidden = modal.classList.contains('hidden');
+      const show = force !== undefined ? force : isHidden;
+
+      if (show) {
+        renderOverviewGrid();
+        modal.classList.remove('hidden');
+      } else {
+        modal.classList.add('hidden');
+      }
+    }
+
+    function renderOverviewGrid() {
+      const grid = document.getElementById('overviewGrid');
+      grid.innerHTML = slideTitles.map((title, idx) => {
+        const num = idx + 1;
+        const isActive = num === currentSlide;
+        return `
+          <div onclick="goToSlide(${num})" class="p-3.5 rounded-2xl cursor-pointer transition border ${isActive ? 'bg-pink-600/20 border-pink-500 ring-2 ring-pink-500/40' : 'bg-white/5 hover:bg-white/10 border-white/10'} flex flex-col justify-between space-y-2">
+            <div class="flex items-center justify-between">
+              <span class="text-[10px] font-mono font-bold ${isActive ? 'text-pink-400' : 'text-slate-400'}">SLIDE ${num.toString().padStart(2, '0')}</span>
+              ${isActive ? '<span class="w-2 h-2 rounded-full bg-pink-400 animate-ping"></span>' : ''}
+            </div>
+            <h5 class="text-xs font-bold text-white leading-tight line-clamp-2">${title}</h5>
+          </div>
+        `;
+      }).join('');
+    }
+
+    // Init on Load
+    document.addEventListener('DOMContentLoaded', () => {
+      updateSlide();
+    });
+  </script>
+</body>
+</html>

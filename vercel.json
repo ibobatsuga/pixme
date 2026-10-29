@@ -4,6 +4,22 @@
   "trailingSlash": false,
   "routes": [
     {
+      "src": "/deck",
+      "dest": "/frontend/deck.html"
+    },
+    {
+      "src": "/deck/(.*)",
+      "dest": "/frontend/deck.html"
+    },
+    {
+      "src": "/pitch",
+      "dest": "/frontend/deck.html"
+    },
+    {
+      "src": "/pitch/(.*)",
+      "dest": "/frontend/deck.html"
+    },
+    {
       "src": "/photographer",
       "dest": "/frontend/photographer.html"
     },
