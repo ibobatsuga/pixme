@@ -20,24 +20,41 @@
             sans: ['"Plus Jakarta Sans"', 'Inter', 'sans-serif'],
           },
           colors: {
-            coral: {
-              50: '#fff7ed',
-              100: '#ffedd5',
-              200: '#fed7aa',
-              300: '#fdba74',
-              400: '#fb923c',
-              500: '#f97316',
-              600: '#ea580c',
-              700: '#c2410c',
-              800: '#9a3412',
-              900: '#7c2d12',
-              DEFAULT: '#FF5722',
+            purpleTheme: {
+              50: '#faf5ff',
+              100: '#f3e8ff',
+              200: '#e9d5ff',
+              300: '#d8b4fe',
+              400: '#c084fc',
+              500: '#a855f7',
+              600: '#9333ea',
+              700: '#7e22ce',
+              800: '#6b21a8',
+              900: '#581c87',
+            },
+            music: {
+              50: '#fdf2f8',
+              100: '#fce7f3',
+              500: '#ec4899',
+              600: '#db2777',
+              700: '#be185d',
+            },
+            brand: {
+              50: '#eff6ff',
+              100: '#dbeafe',
+              200: '#bfdbfe',
+              500: '#3b82f6',
+              600: '#2563eb',
+              700: '#1d4ed8',
+              800: '#1e40af',
+              900: '#1e3a8a',
             }
           },
           boxShadow: {
             'soft': '0 2px 8px -1px rgba(0, 0, 0, 0.05), 0 1px 3px -1px rgba(0, 0, 0, 0.03)',
             'card': '0 1px 3px rgba(0,0,0,0.05)',
-            'glow-coral': '0 4px 20px -2px rgba(255, 87, 34, 0.25)',
+            'glow-purple': '0 4px 20px -2px rgba(126, 34, 206, 0.35)',
+            'glow-pink': '0 4px 20px -2px rgba(236, 72, 153, 0.35)',
           }
         }
       }
@@ -68,7 +85,7 @@
     .custom-scrollbar::-webkit-scrollbar-thumb:hover {
       background: #94A3B8;
     }
-    .coral-bar-anim {
+    .picme-bar-anim {
       transition: height 0.6s cubic-bezier(0.16, 1, 0.3, 1);
     }
   </style>
@@ -90,7 +107,7 @@
     })();
   </script>
 </head>
-<body class="min-h-screen flex antialiased selection:bg-coral-100 selection:text-coral-900 overflow-x-hidden">
+<body class="min-h-screen flex antialiased selection:bg-purple-100 selection:text-purple-900 overflow-x-hidden">
 
   <!-- ==================== MOBILE SIDEBAR BACKDROP ==================== -->
   <div id="sidebarBackdrop" onclick="toggleSidebar(false)" class="fixed inset-0 bg-slate-900/40 backdrop-blur-sm z-40 hidden lg:hidden transition-opacity"></div>
@@ -101,13 +118,13 @@
     <!-- Sidebar Brand Header -->
     <div class="h-16 px-5 flex items-center justify-between border-b border-slate-100 shrink-0">
       <a href="/admin" class="flex items-center gap-2.5">
-        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-coral-600 to-amber-500 flex items-center justify-center text-white text-lg font-black shadow-glow-coral">
+        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-purple-900 via-purple-700 to-pink-500 flex items-center justify-center text-white text-lg font-black shadow-glow-purple">
           <i class="ph-bold ph-shield-check"></i>
         </div>
         <div>
           <div class="flex items-center gap-1.5">
-            <span class="font-extrabold text-base tracking-tight text-slate-900">Pic<span class="text-coral-600">Me</span></span>
-            <span class="text-[9px] font-black uppercase tracking-wider bg-coral-100 text-coral-700 px-1.5 py-0.5 rounded">Console</span>
+            <span class="font-extrabold text-base tracking-tight text-slate-900">Pic<span class="text-transparent bg-clip-text bg-gradient-to-r from-blue-600 to-pink-600">Me</span></span>
+            <span class="text-[9px] font-black uppercase tracking-wider bg-purple-100 text-purple-700 px-1.5 py-0.5 rounded">Console</span>
           </div>
           <span class="text-[10px] font-semibold text-slate-400 block -mt-0.5">Master Owner Dashboard</span>
         </div>
@@ -123,7 +140,7 @@
       <!-- Group 1: RINGKASAN -->
       <div class="space-y-1">
         <p class="px-3 text-[10px] font-extrabold tracking-wider text-slate-400 uppercase">Ringkasan</p>
-        <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition text-coral-600 bg-coral-50/80">
+        <button onclick="switchView('dashboard')" id="nav-dashboard" class="nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition text-purple-700 bg-purple-50/80">
           <i class="ph-bold ph-chart-pie text-base shrink-0"></i>
           <span>Dashboard</span>
         </button>
@@ -229,7 +246,7 @@
 
     <!-- Sidebar Footer (Back to Public PicMe App) -->
     <div class="p-3 border-t border-slate-100 bg-slate-50/50 shrink-0">
-      <a href="/" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-coral-600 bg-white border border-slate-200/90 hover:border-coral-200 shadow-sm transition">
+      <a href="/" class="w-full flex items-center justify-center gap-2 px-3 py-2.5 rounded-xl text-xs font-bold text-slate-600 hover:text-purple-700 bg-white border border-slate-200/90 hover:border-purple-200 shadow-sm transition">
         <i class="ph-bold ph-arrow-left"></i>
         <span>Kembali ke Aplikasi PicMe</span>
       </a>
@@ -258,7 +275,7 @@
       <div class="flex-1 max-w-md hidden md:block">
         <div class="relative">
           <i class="ph-bold ph-magnifying-glass absolute left-3.5 top-2.5 text-slate-400 text-sm"></i>
-          <input type="text" id="globalAdminSearch" onkeyup="handleGlobalSearch(event)" placeholder="Cari pengguna, fotografer, email, no. WA, ID foto..." class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-9 pr-12 py-2 text-xs font-medium focus:bg-white focus:ring-2 focus:ring-coral-500/20 focus:border-coral-500 focus:outline-none transition">
+          <input type="text" id="globalAdminSearch" onkeyup="handleGlobalSearch(event)" placeholder="Cari pengguna, fotografer, email, no. WA, ID foto..." class="w-full bg-slate-50 border border-slate-200/90 rounded-xl pl-9 pr-12 py-2 text-xs font-medium focus:bg-white focus:ring-2 focus:ring-purple-500/20 focus:border-purple-500 focus:outline-none transition">
           <span class="absolute right-3 top-2 text-[10px] font-mono text-slate-400 bg-white border border-slate-200 px-1.5 py-0.5 rounded shadow-2xs">⌘K</span>
         </div>
       </div>
@@ -275,7 +292,7 @@
         <!-- Notification Bell -->
         <button onclick="openNotificationDrawer()" class="relative p-2 rounded-xl text-slate-500 hover:text-slate-900 hover:bg-slate-100 transition" title="Notifikasi Sistem">
           <i class="ph-bold ph-bell text-lg"></i>
-          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-coral-500 ring-2 ring-white"></span>
+          <span class="absolute top-1.5 right-1.5 w-2 h-2 rounded-full bg-pink-500 ring-2 ring-white"></span>
         </button>
 
         <!-- Divider -->
@@ -283,12 +300,12 @@
 
         <!-- Admin Profile Pill -->
         <div class="flex items-center gap-2 p-1.5 sm:pr-3 rounded-2xl border border-slate-200/80 bg-slate-50/60 hover:bg-slate-100 transition cursor-pointer">
-          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-coral-600 to-amber-500 text-white font-extrabold flex items-center justify-center text-xs shadow-sm">
+          <div class="w-8 h-8 rounded-xl bg-gradient-to-tr from-purple-800 via-purple-600 to-pink-500 text-white font-extrabold flex items-center justify-center text-xs shadow-sm">
             AP
           </div>
           <div class="text-left hidden sm:block">
             <span class="text-xs font-extrabold text-slate-900 block leading-tight">Superadmin PicMe</span>
-            <span class="text-[9px] font-black uppercase tracking-wider text-coral-600">Owner Access</span>
+            <span class="text-[9px] font-black uppercase tracking-wider text-purple-600">Owner Access</span>
           </div>
           <button onclick="logoutAdmin()" class="text-slate-400 hover:text-rose-600 p-1" title="Keluar dari Console">
             <i class="ph-bold ph-sign-out text-base"></i>
@@ -328,7 +345,7 @@
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
             <div class="flex items-center justify-between text-slate-400">
               <span class="text-xs font-bold">Pendapatan Kotor (GMV)</span>
-              <div class="w-8 h-8 rounded-xl bg-coral-50 text-coral-600 flex items-center justify-center text-base">
+              <div class="w-8 h-8 rounded-xl bg-purple-50 text-purple-700 flex items-center justify-center text-base">
                 <i class="ph-bold ph-currency-circle-dollar"></i>
               </div>
             </div>
@@ -401,7 +418,7 @@
                 <p class="text-xs text-slate-400">Tren penjualan foto Ultra HD 24-50MP & Web Compressed</p>
               </div>
               <div class="flex items-center gap-3">
-                <span class="text-xs font-bold text-coral-600 bg-coral-50 px-2.5 py-1 rounded-full border border-coral-200">
+                <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
                   Total: Rp 48.750.000
                 </span>
                 <span class="text-[11px] text-slate-400">Rata-rata: Rp 1.625rb/hari</span>
@@ -417,11 +434,11 @@
             <div class="flex items-center justify-between text-xs text-slate-400 pt-1">
               <div class="flex items-center gap-4">
                 <span class="flex items-center gap-1.5">
-                  <span class="w-3 h-3 rounded-md bg-coral-500"></span>
+                  <span class="w-3 h-3 rounded-md bg-gradient-to-tr from-purple-600 to-pink-500"></span>
                   <span>Penjualan Harian (Lunas)</span>
                 </span>
                 <span class="flex items-center gap-1.5">
-                  <span class="w-3 h-3 rounded-md bg-coral-200"></span>
+                  <span class="w-3 h-3 rounded-md bg-purple-200"></span>
                   <span>Weekend Peak</span>
                 </span>
               </div>
@@ -456,17 +473,17 @@
               </div>
 
               <!-- Action Item 2: Antrean AI -->
-              <div onclick="switchView('photos-monitor')" class="p-3 rounded-xl border border-slate-200 hover:border-coral-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
+              <div onclick="switchView('photos-monitor')" class="p-3 rounded-xl border border-slate-200 hover:border-purple-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
                 <div class="flex items-center gap-2.5">
                   <div class="w-8 h-8 rounded-lg bg-purple-100 text-purple-600 flex items-center justify-center text-sm font-bold shrink-0">
                     <i class="ph-bold ph-hourglass-high"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-coral-600">18 Foto Antrean Indexing AI</span>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">18 Foto Antrean Indexing AI</span>
                     <span class="text-[10px] text-slate-500">Sedang diproses SCRFD InsightFace</span>
                   </div>
                 </div>
-                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-coral-600"></i>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-purple-700"></i>
               </div>
 
               <!-- Action Item 3: Tarik Saldo Menunggu -->
@@ -484,31 +501,31 @@
               </div>
 
               <!-- Action Item 4: KYC Fotografer Baru -->
-              <div onclick="switchView('kyc')" class="p-3 rounded-xl border border-slate-200 hover:border-coral-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
+              <div onclick="switchView('kyc')" class="p-3 rounded-xl border border-slate-200 hover:border-purple-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
                 <div class="flex items-center gap-2.5">
                   <div class="w-8 h-8 rounded-lg bg-blue-100 text-blue-600 flex items-center justify-center text-sm font-bold shrink-0">
                     <i class="ph-bold ph-identification-card"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-coral-600">3 Pengajuan KYC Fotografer Baru</span>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">3 Pengajuan KYC Fotografer Baru</span>
                     <span class="text-[10px] text-slate-500">KTP & portofolio kamera menunggu review</span>
                   </div>
                 </div>
-                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-coral-600"></i>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-purple-700"></i>
               </div>
 
               <!-- Action Item 5: Masukan Pengguna -->
-              <div onclick="switchView('feedback')" class="p-3 rounded-xl border border-slate-200 hover:border-coral-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
+              <div onclick="switchView('feedback')" class="p-3 rounded-xl border border-slate-200 hover:border-purple-300 bg-slate-50/50 hover:bg-white transition cursor-pointer flex items-center justify-between group">
                 <div class="flex items-center gap-2.5">
                   <div class="w-8 h-8 rounded-lg bg-emerald-100 text-emerald-700 flex items-center justify-center text-sm font-bold shrink-0">
                     <i class="ph-bold ph-chat-text"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-coral-600">2 Masukan / Komplain Baru</span>
+                    <span class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">2 Masukan / Komplain Baru</span>
                     <span class="text-[10px] text-slate-500">Terkait pencarian wajah di event lari</span>
                   </div>
                 </div>
-                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-coral-600"></i>
+                <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-purple-700"></i>
               </div>
 
             </div>
@@ -529,10 +546,10 @@
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-4">
             <div class="flex items-center justify-between border-b border-slate-100 pb-3">
               <h4 class="text-xs font-extrabold text-slate-900 uppercase tracking-wider flex items-center gap-1.5">
-                <i class="ph-bold ph-receipt text-coral-600 text-sm"></i>
+                <i class="ph-bold ph-receipt text-purple-600 text-sm"></i>
                 <span>Transaksi Foto Terbaru</span>
               </h4>
-              <button onclick="switchView('purchases')" class="text-[11px] text-coral-600 font-bold hover:underline">Lihat Semua →</button>
+              <button onclick="switchView('purchases')" class="text-[11px] text-purple-600 font-bold hover:underline">Lihat Semua →</button>
             </div>
             <div class="space-y-3" id="recentPurchasesList">
               <!-- Dynamically populated via JS -->
@@ -546,7 +563,7 @@
                 <i class="ph-bold ph-user-plus text-blue-600 text-sm"></i>
                 <span>Kreator & Pengguna Baru</span>
               </h4>
-              <button onclick="switchView('users')" class="text-[11px] text-coral-600 font-bold hover:underline">Kelola →</button>
+              <button onclick="switchView('users')" class="text-[11px] text-purple-600 font-bold hover:underline">Kelola →</button>
             </div>
             <div class="space-y-3" id="recentUsersList">
               <!-- Dynamically populated via JS -->
@@ -567,13 +584,13 @@
               <div class="space-y-1.5">
                 <div class="flex items-center justify-between text-xs">
                   <span class="font-bold text-slate-800 flex items-center gap-1.5">
-                    <span class="w-2.5 h-2.5 rounded-full bg-coral-500"></span>
+                    <span class="w-2.5 h-2.5 rounded-full bg-purple-600"></span>
                     <span>Master Ultra HD (24–50 MP)</span>
                   </span>
                   <span class="font-bold text-slate-900">68% <span class="text-slate-400 font-normal">(Rp 33.150.000)</span></span>
                 </div>
                 <div class="w-full bg-slate-100 h-2 rounded-full overflow-hidden">
-                  <div class="bg-coral-500 h-full rounded-full" style="width: 68%"></div>
+                  <div class="bg-gradient-to-r from-purple-600 to-pink-500 h-full rounded-full" style="width: 68%"></div>
                 </div>
               </div>
 
@@ -632,8 +649,8 @@
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
             <span class="text-xs font-bold text-slate-400">Laba Bersih Platform PicMe (40%)</span>
-            <div class="text-2xl font-black text-coral-600">Rp 19.500.000</div>
-            <p class="text-[11px] text-coral-700 font-bold">Margin profit bersih platform</p>
+            <div class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600">Rp 19.500.000</div>
+            <p class="text-[11px] text-purple-700 font-bold">Margin profit bersih platform</p>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
             <span class="text-xs font-bold text-slate-400">Saldo Fotografer Mengendap</span>
@@ -684,18 +701,18 @@
               </div>
 
               <!-- Step 3 -->
-              <div class="p-4 rounded-xl bg-coral-50/70 border border-coral-200 space-y-2">
-                <div class="flex items-center justify-between text-xs font-extrabold text-coral-950">
+              <div class="p-4 rounded-xl bg-purple-50/70 border border-purple-200 space-y-2">
+                <div class="flex items-center justify-between text-xs font-extrabold text-purple-950">
                   <span class="flex items-center gap-2">
-                    <span class="w-6 h-6 rounded-full bg-coral-600 text-white flex items-center justify-center text-[10px]">3</span>
+                    <span class="w-6 h-6 rounded-full bg-gradient-to-r from-purple-700 to-pink-600 text-white flex items-center justify-center text-[10px]">3</span>
                     <span>Membeli Foto (Paid Customer)</span>
                   </span>
-                  <span class="text-sm font-black text-coral-600">1.840 Pembeli (20.6%)</span>
+                  <span class="text-sm font-black text-purple-700">1.840 Pembeli (20.6%)</span>
                 </div>
-                <div class="w-full bg-coral-200 h-2.5 rounded-full overflow-hidden">
-                  <div class="bg-coral-600 h-full rounded-full" style="width: 20.6%"></div>
+                <div class="w-full bg-purple-200 h-2.5 rounded-full overflow-hidden">
+                  <div class="bg-gradient-to-r from-purple-600 to-pink-500 h-full rounded-full" style="width: 20.6%"></div>
                 </div>
-                <span class="text-[10px] text-coral-800 block">Konversi tinggi didukung kemudahan bayar QRIS & opsi resolusi terjangkau</span>
+                <span class="text-[10px] text-purple-800 block">Konversi tinggi didukung kemudahan bayar QRIS & opsi resolusi terjangkau</span>
               </div>
             </div>
           </div>
@@ -750,7 +767,7 @@
           </div>
           <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">Fotografer Terverifikasi</span>
-            <div class="text-2xl font-black text-coral-600">142 Kreator</div>
+            <div class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600">142 Kreator</div>
             <span class="text-[11px] text-emerald-600 font-bold">100% KYC Approved</span>
           </div>
           <div class="bg-white p-4 sm:p-5 rounded-2xl border border-slate-200 shadow-card">
@@ -805,10 +822,10 @@
             <!-- Actions -->
             <div class="flex items-center gap-2">
               <label class="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
-                <input type="checkbox" id="maskEmailToggle" checked onchange="toggleMaskEmail()" class="rounded border-slate-300 text-coral-600 focus:ring-coral-500">
+                <input type="checkbox" id="maskEmailToggle" checked onchange="toggleMaskEmail()" class="rounded border-slate-300 text-purple-600 focus:ring-purple-500">
                 <span>Samarkan Email</span>
               </label>
-              <button onclick="openModalCreateUser()" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
+              <button onclick="openModalCreateUser()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition flex items-center gap-1.5">
                 <i class="ph-bold ph-plus"></i>
                 <span>+ Buat Akun</span>
               </button>
@@ -925,7 +942,7 @@
               <h3 class="text-base font-extrabold text-slate-900">Katalog Event & Spot Foto PicMe</h3>
               <p class="text-xs text-slate-400">Event musik, marathon, car free day, dan spot street photography</p>
             </div>
-            <button onclick="alert('Buka modal tambah event baru')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+            <button onclick="alert('Buka modal tambah event baru')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
               + Tambah Event / Spot Baru
             </button>
           </div>
@@ -993,7 +1010,7 @@
             <button onclick="alert('Data komisi dan saldo fotografer berhasil disegarkan!')" class="px-3.5 py-1.5 rounded-xl bg-white border border-slate-200 text-slate-700 hover:bg-slate-50 text-xs font-bold transition">
               Segarkan Data
             </button>
-            <button onclick="switchView('pricing')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+            <button onclick="switchView('pricing')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
               + Atur Tier Komisi
             </button>
           </div>
@@ -1008,8 +1025,8 @@
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">2. Laba Bersih Platform (40%)</span>
-            <div class="text-xl font-black text-coral-600 mt-1">Rp 19.500.000</div>
-            <span class="text-[11px] text-coral-700 font-bold">Pendapatan bersih PicMe</span>
+            <div class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600 mt-1">Rp 19.500.000</div>
+            <span class="text-[11px] text-purple-700 font-bold">Pendapatan bersih PicMe</span>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">3. Fotografer Produktif</span>
@@ -1067,7 +1084,7 @@
             </div>
             <div class="flex items-center gap-2">
               <label class="flex items-center gap-1.5 text-xs text-slate-500 cursor-pointer">
-                <input type="checkbox" id="maskRekeningToggle" checked onchange="toggleMaskRekening()" class="rounded border-slate-300 text-coral-600 focus:ring-coral-500">
+                <input type="checkbox" id="maskRekeningToggle" checked onchange="toggleMaskRekening()" class="rounded border-slate-300 text-purple-600 focus:ring-purple-500">
                 <span>Sensor Rekening: ON</span>
               </label>
             </div>
@@ -1101,7 +1118,7 @@
               <h3 class="text-base font-extrabold text-slate-900">Manajemen Kode Promo & Diskon Event</h3>
               <p class="text-xs text-slate-400">Diskon foto satuan atau bundling event marathon & konser</p>
             </div>
-            <button onclick="alert('Buka modal buat kode promo baru')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+            <button onclick="alert('Buka modal buat kode promo baru')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
               + Buat Kode Promo Baru
             </button>
           </div>
@@ -1121,7 +1138,7 @@
               </thead>
               <tbody class="divide-y divide-slate-100">
                 <tr>
-                  <td class="py-3 px-3 font-mono font-bold text-coral-600">LARIPAGI10</td>
+                  <td class="py-3 px-3 font-mono font-bold text-purple-700">LARIPAGI10</td>
                   <td class="py-3 px-3 font-bold">Diskon 10% Potongan Langsung</td>
                   <td class="py-3 px-3 text-slate-500">Min. Pembelian 3 Foto</td>
                   <td class="py-3 px-3 font-bold text-slate-900">142 / 500 klaim</td>
@@ -1130,7 +1147,7 @@
                   <td class="py-3 px-3 text-right"><button class="text-slate-400 hover:text-rose-600 font-bold">Nonaktifkan</button></td>
                 </tr>
                 <tr>
-                  <td class="py-3 px-3 font-mono font-bold text-coral-600">KONSERASIK</td>
+                  <td class="py-3 px-3 font-mono font-bold text-purple-700">KONSERASIK</td>
                   <td class="py-3 px-3 font-bold">Potongan Rp 10.000</td>
                   <td class="py-3 px-3 text-slate-500">Khusus Foto Master 50MP</td>
                   <td class="py-3 px-3 font-bold text-slate-900">89 / Tanpa Batas</td>
@@ -1145,7 +1162,7 @@
                   <td class="py-3 px-3 text-slate-400">200 / 200 Kuota Habis</td>
                   <td class="py-3 px-3 text-slate-400">Kedaluwarsa</td>
                   <td class="py-3 px-3"><span class="px-2 py-0.5 rounded-full text-[10px] font-bold bg-slate-100 text-slate-500">NONAKTIF</span></td>
-                  <td class="py-3 px-3 text-right"><button class="text-coral-600 font-bold hover:underline">Aktifkan</button></td>
+                  <td class="py-3 px-3 text-right"><button class="text-purple-600 font-bold hover:underline">Aktifkan</button></td>
                 </tr>
               </tbody>
             </table>
@@ -1211,7 +1228,7 @@
               <div class="space-y-1">
                 <div class="flex items-center justify-between text-xs font-bold">
                   <span>Bagian Platform PicMe</span>
-                  <span class="text-coral-600 font-extrabold">40%</span>
+                  <span class="text-purple-700 font-extrabold">40%</span>
                 </div>
                 <span class="text-[10px] text-slate-400">Menutup biaya server Biznet GIO, Tripay gateway, dan laba operasional.</span>
               </div>
@@ -1219,7 +1236,7 @@
 
           </div>
 
-          <button onclick="savePricingRules()" class="px-5 py-2.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+          <button onclick="savePricingRules()" class="px-5 py-2.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
             Simpan Konfigurasi Harga & Komisi
           </button>
         </div>
@@ -1418,13 +1435,13 @@
             <span class="text-xs font-bold text-slate-400">Saldo Layanan Face AI Eksternal</span>
             <div class="text-2xl font-black text-slate-900">US$ 14.20</div>
             <p class="text-xs text-slate-500">Estimasi sisa kuota: ±9.400 pemindaian foto sebelum perlu top up.</p>
-            <button class="mt-2 text-xs font-bold text-coral-600 hover:underline">+ Top Up Saldo AI</button>
+            <button class="mt-2 text-xs font-bold text-purple-600 hover:underline">+ Top Up Saldo AI</button>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-2">
             <span class="text-xs font-bold text-slate-400">Kapasitas Cloud Storage S3 / R2</span>
             <div class="text-2xl font-black text-slate-900">184 GB / 500 GB</div>
             <p class="text-xs text-slate-500">Terpakai 36.8% • Estimasi muat ±45.000 foto 24–50MP lagi.</p>
-            <button class="mt-2 text-xs font-bold text-coral-600 hover:underline">+ Tambah Kuota Storage</button>
+            <button class="mt-2 text-xs font-bold text-purple-600 hover:underline">+ Tambah Kuota Storage</button>
           </div>
         </div>
 
@@ -1438,7 +1455,7 @@
               <h3 class="text-base font-extrabold text-slate-900">Status Layanan Publik & Pengumuman Pop-up</h3>
               <p class="text-xs text-slate-400">Kontrol banner pemberitahuan yang tampil di aplikasi publik PicMe</p>
             </div>
-            <button onclick="alert('Buka modal tambah info / pengumuman baru')" class="px-3.5 py-1.5 rounded-xl bg-coral-600 hover:bg-coral-700 text-white font-bold text-xs shadow-sm transition">
+            <button onclick="alert('Buka modal tambah info / pengumuman baru')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
               + Buat Info / Pembaruan
             </button>
           </div>
@@ -1539,7 +1556,7 @@
           <label class="block font-bold text-slate-700 mb-1">Password Sementara</label>
           <input type="password" id="newUserPassword" required value="Picme123!" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
         </div>
-        <button type="submit" class="w-full bg-coral-600 hover:bg-coral-700 text-white font-bold py-3 rounded-xl shadow-sm transition">
+        <button type="submit" class="w-full bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold py-3 rounded-xl shadow-sm transition">
           Simpan Akun
         </button>
       </form>
@@ -1693,7 +1710,7 @@
       });
       const activeNav = document.getElementById(`nav-${viewName}`);
       if (activeNav) {
-        activeNav.className = 'nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition text-coral-600 bg-coral-50/90 shadow-2xs';
+        activeNav.className = 'nav-item w-full flex items-center gap-2.5 px-3 py-2 rounded-xl text-xs font-bold transition text-purple-700 bg-purple-50/90 shadow-2xs';
       }
 
       // Update header
@@ -1735,7 +1752,7 @@
       container.innerHTML = data.map((val, idx) => {
         const heightPct = Math.round((val / maxVal) * 100);
         const isWeekend = (idx % 7 === 5 || idx % 7 === 6);
-        const bgClass = isWeekend ? 'bg-coral-600 hover:bg-coral-700' : 'bg-coral-400/80 hover:bg-coral-500';
+        const bgClass = isWeekend ? 'bg-gradient-to-t from-purple-700 via-purple-600 to-pink-500 hover:from-purple-800 hover:to-pink-600 shadow-sm' : 'bg-purple-400/80 hover:bg-purple-500';
         const formatted = new Intl.NumberFormat('id-ID').format(val * 1000);
 
         return `
@@ -1743,7 +1760,7 @@
             <div class="opacity-0 group-hover:opacity-100 absolute -top-8 bg-slate-900 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow whitespace-nowrap pointer-events-none transition z-20">
               Tgl ${idx + 1}: Rp ${formatted}
             </div>
-            <div class="w-full ${bgClass} rounded-t-sm coral-bar-anim" style="height: ${heightPct}%"></div>
+            <div class="w-full ${bgClass} rounded-t-sm picme-bar-anim" style="height: ${heightPct}%"></div>
           </div>
         `;
       }).join('');
@@ -1768,7 +1785,7 @@
         let roleBadge = 'bg-slate-100 text-slate-700';
         if (u.role === 'FOTOGRAFER VERIFIED') roleBadge = 'bg-purple-100 text-purple-800 border border-purple-200';
         if (u.role === 'MENUNGGU KYC') roleBadge = 'bg-amber-100 text-amber-800 border border-amber-200';
-        if (u.role === 'SUPERADMIN') roleBadge = 'bg-coral-100 text-coral-800 border border-coral-200';
+        if (u.role === 'SUPERADMIN') roleBadge = 'bg-purple-100 text-purple-800 border border-purple-200';
 
         return `
           <tr class="hover:bg-slate-50/80 transition">
@@ -1845,7 +1862,7 @@
             </td>
             <td class="py-3 px-3">
               <span class="font-bold text-slate-900 block truncate max-w-[200px]">${p.item}</span>
-              <span class="text-[10px] text-coral-600 font-bold">${p.tier}</span>
+              <span class="text-[10px] text-purple-700 font-bold">${p.tier}</span>
               <span class="text-[10px] text-slate-400">• ${p.photographer}</span>
             </td>
             <td class="py-3 px-3 font-semibold text-slate-700">${p.method}</td>
@@ -1910,9 +1927,9 @@
             <td class="py-3 px-3 font-semibold text-slate-700">${c.photos}</td>
             <td class="py-3 px-3 font-bold text-emerald-600">324 Foto Terjual</td>
             <td class="py-3 px-3 font-black text-slate-900">Rp 11.340.000</td>
-            <td class="py-3 px-3 font-black text-coral-600">Rp ${new Intl.NumberFormat('id-ID').format(c.balance)}</td>
+            <td class="py-3 px-3 font-black text-purple-700">Rp ${new Intl.NumberFormat('id-ID').format(c.balance)}</td>
             <td class="py-3 px-3 text-right">
-              <button onclick="openModalInjectBalance('${c.name}')" class="text-xs font-bold text-slate-600 hover:text-coral-600 underline">
+              <button onclick="openModalInjectBalance('${c.name}')" class="text-xs font-bold text-slate-600 hover:text-purple-700 underline">
                 Atur Saldo
               </button>
             </td>
@@ -1936,7 +1953,7 @@
               <p class="text-xs text-slate-500">${k.email} • WA: <a href="https://wa.me/${k.wa}" target="_blank" class="text-emerald-600 hover:underline">${k.wa}</a></p>
               <div class="text-[11px] text-slate-600 pt-1 space-y-0.5">
                 <p><b>Kamera & Lensa:</b> ${k.gear}</p>
-                <p><b>Portofolio:</b> <a href="https://${k.port}" target="_blank" class="text-coral-600 hover:underline">${k.port}</a></p>
+                <p><b>Portofolio:</b> <a href="https://${k.port}" target="_blank" class="text-purple-600 hover:underline">${k.port}</a></p>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
@@ -2045,7 +2062,7 @@
             </div>
             <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600 font-bold">
               <span>${e.photos}</span>
-              <span class="text-coral-600">${e.creators}</span>
+              <span class="text-purple-700">${e.creators}</span>
             </div>
           </div>
         `;
