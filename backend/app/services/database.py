@@ -249,14 +249,14 @@ class DatabaseService:
         tier: str = "high_res"
     ) -> Dict[str, Any]:
         """
-        Records a purchase for high_res (Rp 35.000) or compressed (Rp 20.000).
+        Records a purchase for high_res (Rp 35.000) or compressed (Rp 25.000).
         Revenue share: Photographer 50%, Venue/EO 10%, Platform PicMe 40%.
         """
         photo = self.get_photo(photo_id)
         if not photo:
             raise ValueError(f"Photo {photo_id} not found")
 
-        price = 35000 if tier == "high_res" else 20000
+        price = 35000 if tier == "high_res" else 25000
         photographer_share = int(price * 0.50)
         eo_share = int(price * 0.10)
         platform_share = price - photographer_share - eo_share

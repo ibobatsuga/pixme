@@ -188,7 +188,7 @@ async def search_faces(
 
 class PurchaseRequest(BaseModel):
     user_id: str
-    tier: str = "high_res"  # "high_res" (Rp 35.000) or "compressed" (Rp 20.000)
+    tier: str = "high_res"  # "high_res" (Rp 35.000) or "compressed" (Rp 25.000)
 
 
 @app.post("/api/photos/{photo_id}/purchase")
@@ -197,7 +197,7 @@ async def purchase_photo(photo_id: str, req: PurchaseRequest):
     Handles tiered photo purchase:
     - High-Res (Rp 35.000): Preserves high-res original 24-50MP master file in storage.
       User can download either high-res master or compressed version.
-    - Compressed (Rp 20.000): Automatically deletes raw high-res original
+    - Compressed (Rp 25.000): Automatically deletes raw high-res original
       from storage to optimize cloud storage COGS, preserving only compressed web version.
     """
     photo = db_service.get_photo(photo_id)
