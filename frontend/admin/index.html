@@ -1759,6 +1759,15 @@
     let liveAdminFeedback = [];
     let liveAdminAudits = [];
 
+    function escapeHtml(str) {
+      return String(str ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
     function readStorageList(key) {
       try {
         const raw = localStorage.getItem(key);
@@ -1835,15 +1844,16 @@
       const localOrders = readStorageList('picme_orders').map(o => {
         const items = Array.isArray(o.items) ? o.items : [];
         const total = Number(o.total || o.subtotal || 0);
-        const creatorShare = Math.round(total * 0.85);
+        const creatorShare = Math.round(total * 0.50);
+        const firstTitle = items.length > 0 ? (items[0].event_title || items[0].event || items[0].filename || 'Foto Event') : 'Pembelian Foto PicMe';
         return {
           ref: o.order_id || ('ORD-' + Date.now().toString(36)),
           date: o.created_at ? new Date(o.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Baru saja',
           created_at: o.created_at || new Date().toISOString(),
           buyerName: o.buyer_name || 'Pembeli PicMe',
           buyerContact: o.buyer_contact || '-',
-          item: items.length > 0 ? `${items[0].event || 'Foto Event'} (${items.length} foto)` : 'Pembelian Foto PicMe',
-          tier: items.length > 0 && items[0].tier ? items[0].tier : 'Original Master',
+          item: items.length > 0 ? `${firstTitle} (${items.length} foto)` : 'Pembelian Foto PicMe',
+          tier: items.length > 0 && items[0].tier ? (items[0].tier === 'high_res' ? 'Original Master' : items[0].tier) : 'Original Master',
           photographer: items.length > 0 && items[0].photographer ? items[0].photographer : 'Fotografer PicMe',
           method: o.payment_method || 'QRIS',
           amount: total,
@@ -1924,21 +1934,23 @@
 
     function apiPurchasesOverviewNormalize(list) {
       return list.map(p => {
-        const amt = Number(p.amount || 0);
-        const creatorShare = Number(p.creator_share || Math.round(amt * 0.85));
+        const amt = Number(p.price_idr ?? p.amount ?? 0);
+        const creatorShare = Number(p.photographer_share_idr ?? p.creator_share ?? Math.round(amt * 0.50));
+        const platformShare = Number(p.platform_share_idr ?? p.platform_share ?? Math.max(0, amt - creatorShare));
+        const tierLabel = p.tier === 'high_res' ? 'Original Master' : (p.tier === 'compressed' ? 'Web Compressed' : (p.tier || 'Original Master'));
         return {
-          ref: p.id || ('ORD-' + Date.now().toString(36)),
+          ref: p.id || p.purchase_id || ('ORD-' + Date.now().toString(36)),
           date: p.created_at ? new Date(p.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '-',
           created_at: p.created_at || new Date().toISOString(),
-          buyerName: p.buyer_name || 'Pembeli PicMe',
+          buyerName: p.buyer_name || p.user_id || 'Pembeli PicMe',
           buyerContact: p.buyer_contact || '-',
-          item: p.filename || p.photo_id || 'Foto Event',
-          tier: p.tier || 'Original Master',
+          item: p.event_title ? `${p.event_title} — ${p.filename || p.photo_id}` : (p.filename || p.photo_id || 'Foto Event'),
+          tier: tierLabel,
           photographer: p.photographer || 'Fotografer PicMe',
           method: p.payment_method || 'QRIS',
           amount: amt,
           creatorShare,
-          platformShare: Number(p.platform_share || (amt - creatorShare)),
+          platformShare,
           status: (p.status || 'LUNAS').toUpperCase()
         };
       });
@@ -2068,26 +2080,26 @@
       tbody.innerHTML = liveAdminOrders.map(p => {
         return `
           <tr class="hover:bg-slate-50/80 transition">
-            <td class="py-3 px-3 font-mono text-slate-500">${p.date}</td>
+            <td class="py-3 px-3 font-mono text-slate-500">${escapeHtml(p.date)}</td>
             <td class="py-3 px-3">
-              <span class="font-bold text-slate-900 block">${p.buyerName}</span>
-              <span class="text-[10px] text-slate-400">${p.buyerContact}</span>
+              <span class="font-bold text-slate-900 block">${escapeHtml(p.buyerName)}</span>
+              <span class="text-[10px] text-slate-400">${escapeHtml(p.buyerContact)}</span>
             </td>
             <td class="py-3 px-3">
-              <span class="font-bold text-slate-900 block truncate max-w-[200px]">${p.item}</span>
-              <span class="text-[10px] text-purple-700 font-bold">${p.tier}</span>
-              <span class="text-[10px] text-slate-400">• ${p.photographer}</span>
+              <span class="font-bold text-slate-900 block truncate max-w-[200px]">${escapeHtml(p.item)}</span>
+              <span class="text-[10px] text-purple-700 font-bold">${escapeHtml(p.tier)}</span>
+              <span class="text-[10px] text-slate-400">• ${escapeHtml(p.photographer)}</span>
             </td>
-            <td class="py-3 px-3 font-semibold text-slate-700">${p.method}</td>
+            <td class="py-3 px-3 font-semibold text-slate-700">${escapeHtml(p.method)}</td>
             <td class="py-3 px-3">
               <span class="font-black text-slate-900 block">${formatIDR(p.amount)}</span>
               <span class="text-[10px] text-slate-400">Fotografer: ${formatIDR(p.creatorShare)} • PicMe: ${formatIDR(p.platformShare)}</span>
             </td>
             <td class="py-3 px-3 text-right">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">
-                ${p.status}
+                ${escapeHtml(p.status)}
               </span>
-              <span class="block text-[9px] font-mono text-slate-400 mt-0.5">${p.ref}</span>
+              <span class="block text-[9px] font-mono text-slate-400 mt-0.5">${escapeHtml(p.ref)}</span>
             </td>
           </tr>
         `;
@@ -2204,12 +2216,12 @@
           <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/40 space-y-3">
             <div class="flex items-center justify-between">
               <div>
-                <span class="font-extrabold text-xs text-slate-900">${fb.user}</span>
-                <span class="text-[11px] text-slate-400">(${fb.email}) • ${fb.page} • ${fb.time}</span>
+                <span class="font-extrabold text-xs text-slate-900">${escapeHtml(fb.user)}</span>
+                <span class="text-[11px] text-slate-400">(${escapeHtml(fb.email)}) • ${escapeHtml(fb.page)} • ${escapeHtml(fb.time)}</span>
               </div>
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-100 text-blue-800">${fb.cat}</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-100 text-blue-800">${escapeHtml(fb.cat)}</span>
             </div>
-            <p class="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-slate-100">${fb.body}</p>
+            <p class="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-slate-100">${escapeHtml(fb.body)}</p>
           </div>
         `;
       }).join('');
@@ -2244,14 +2256,14 @@
         return `
           <div class="p-3.5 rounded-2xl border ${isFailed ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-slate-50/40'} flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
-              ${p.thumb ? `<img src="${p.thumb}" class="w-12 h-14 object-cover rounded-xl border border-slate-200 shrink-0">` : `<div class="w-12 h-14 rounded-xl bg-slate-200 flex items-center justify-center text-slate-400 shrink-0"><i class="ph-bold ph-image"></i></div>`}
+              ${p.thumb ? `<img src="${escapeHtml(p.thumb)}" class="w-12 h-14 object-cover rounded-xl border border-slate-200 shrink-0">` : `<div class="w-12 h-14 rounded-xl bg-slate-200 flex items-center justify-center text-slate-400 shrink-0"><i class="ph-bold ph-image"></i></div>`}
               <div class="space-y-0.5 min-w-0">
                 <div class="flex items-center gap-2">
-                  <span class="font-extrabold text-xs text-slate-900 truncate">${p.file}</span>
-                  <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isFailed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${p.status}</span>
+                  <span class="font-extrabold text-xs text-slate-900 truncate">${escapeHtml(p.file)}</span>
+                  <span class="px-2 py-0.5 rounded-full text-[9px] font-bold ${isFailed ? 'bg-rose-100 text-rose-700' : 'bg-emerald-100 text-emerald-700'}">${escapeHtml(p.status)}</span>
                 </div>
-                <p class="text-[11px] text-slate-500">${p.creator} • Event: <b>${p.event}</b> (${p.time})</p>
-                <p class="text-[10px] font-mono ${isFailed ? 'text-rose-600 font-bold' : 'text-slate-400'}">${p.log}</p>
+                <p class="text-[11px] text-slate-500">${escapeHtml(p.creator)} • Event: <b>${escapeHtml(p.event)}</b> (${escapeHtml(p.time)})</p>
+                <p class="text-[10px] font-mono ${isFailed ? 'text-rose-600 font-bold' : 'text-slate-400'}">${escapeHtml(p.log)}</p>
               </div>
             </div>
           </div>
@@ -2275,14 +2287,14 @@
           <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-3">
             <div class="flex items-center justify-between">
               <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800">AKTIF</span>
-              <span class="text-[11px] text-slate-400 font-medium">${e.event_date || '-'}</span>
+              <span class="text-[11px] text-slate-400 font-medium">${escapeHtml(e.event_date || '-')}</span>
             </div>
             <div>
-              <h4 class="font-extrabold text-sm text-slate-900">${e.title}</h4>
-              <p class="text-xs text-slate-500"><i class="ph-bold ph-map-pin"></i> ${e.location || '-'}</p>
+              <h4 class="font-extrabold text-sm text-slate-900">${escapeHtml(e.title)}</h4>
+              <p class="text-xs text-slate-500"><i class="ph-bold ph-map-pin"></i> ${escapeHtml(e.location || '-')}</p>
             </div>
             <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600 font-bold">
-              <span>${e.category || 'event'} • ${photoCount} foto</span>
+              <span>${escapeHtml(e.category || 'event')} • ${photoCount} foto</span>
               <span class="text-purple-700">Live</span>
             </div>
           </div>
@@ -2303,13 +2315,13 @@
         return `
           <div class="p-3 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div class="flex items-center gap-2.5">
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-${a.color || 'purple'}-100 text-${a.color || 'purple'}-800 border border-${a.color || 'purple'}-200">${a.action}</span>
-              <span class="font-bold text-slate-900">${a.text}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-${escapeHtml(a.color || 'purple')}-100 text-${escapeHtml(a.color || 'purple')}-800 border border-${escapeHtml(a.color || 'purple')}-200">${escapeHtml(a.action)}</span>
+              <span class="font-bold text-slate-900">${escapeHtml(a.text)}</span>
             </div>
             <div class="flex items-center gap-2 text-[11px] text-slate-400">
-              <span>Oleh: <b>${a.actor}</b></span>
+              <span>Oleh: <b>${escapeHtml(a.actor)}</b></span>
               <span>•</span>
-              <span>${a.time}</span>
+              <span>${escapeHtml(a.time)}</span>
             </div>
           </div>
         `;

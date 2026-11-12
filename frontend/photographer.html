@@ -1661,7 +1661,18 @@
         });
       }
 
-      localStorage.setItem('picme_prod_photos', JSON.stringify(sharedPhotos));
+      try {
+        localStorage.setItem('picme_prod_photos', JSON.stringify(sharedPhotos));
+      } catch (quotaErr) {
+        // Trim oldest stored thumbnails if browser 5MB localStorage quota is reached
+        while (sharedPhotos.length > 1) {
+          sharedPhotos.pop();
+          try {
+            localStorage.setItem('picme_prod_photos', JSON.stringify(sharedPhotos));
+            break;
+          } catch (e2) {}
+        }
+      }
       localStorage.setItem('picme_prod_events', JSON.stringify(sharedEvents));
       appendAuditLog('PHOTO_UPLOADED', 'blue', `${selectedBatchFiles.length} foto diunggah ke ${eventTitle}`, studioName, eventId);
 
@@ -1817,6 +1828,13 @@
       checkUserRole();
       loadPhotographerEventsDropdown();
       loadPhotographerLiveData();
+    });
+
+    window.addEventListener('storage', (e) => {
+      if (e.key && e.key.startsWith('picme_')) {
+        loadPhotographerEventsDropdown();
+        loadPhotographerLiveData();
+      }
     });
   </script>
 </body>

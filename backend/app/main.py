@@ -1,10 +1,10 @@
 import os
-from typing import List, Optional
+from typing import List, Optional, Literal
 from fastapi import FastAPI, UploadFile, File, Form, HTTPException
 from fastapi.staticfiles import StaticFiles
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse, HTMLResponse
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 from backend.app.services.face_engine import FaceEngine
 from backend.app.services.storage import StorageService
@@ -42,9 +42,9 @@ app.mount("/static", StaticFiles(directory=frontend_path), name="static")
 
 
 class CreateEventRequest(BaseModel):
-    title: str
-    location: str
-    event_date: str
+    title: str = Field(..., min_length=1, max_length=200)
+    location: str = Field(..., min_length=1, max_length=200)
+    event_date: str = Field(..., min_length=1, max_length=80)
     category: Optional[str] = "music"
     description: Optional[str] = ""
 
@@ -101,9 +101,16 @@ async def upload_photos(event_id: str, files: List[UploadFile] = File(...)):
     if not event:
         raise HTTPException(status_code=404, detail="Event not found")
 
+    MAX_FILE_BYTES = 25 * 1024 * 1024  # 25 MB per photo guard
     processed = []
     for file in files:
         contents = await file.read()
+        if not contents:
+            processed.append({"filename": file.filename, "error": "Empty file"})
+            continue
+        if len(contents) > MAX_FILE_BYTES:
+            processed.append({"filename": file.filename, "error": "File exceeds 25MB limit"})
+            continue
         try:
             # Decode for AI processing
             img = face_engine.decode_image(contents)
@@ -187,8 +194,8 @@ async def search_faces(
 
 
 class PurchaseRequest(BaseModel):
-    user_id: str
-    tier: str = "high_res"  # "high_res" (Rp 35.000) or "compressed" (Rp 25.000)
+    user_id: str = Field(..., min_length=1, max_length=128)
+    tier: Literal["high_res", "compressed"] = "high_res"  # "high_res" (Rp 35.000) or "compressed" (Rp 25.000)
 
 
 @app.post("/api/photos/{photo_id}/purchase")

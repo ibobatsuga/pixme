@@ -2631,6 +2631,8 @@
         const orders = getOrdersList();
         orders.unshift({
           order_id: orderId,
+          buyer_name: currentUser ? (currentUser.full_name || currentUser.name || 'Pembeli PicMe') : 'Pembeli PicMe',
+          buyer_contact: currentUser ? (currentUser.email || currentUser.phone || '-') : '-',
           items: [savedPurchases[photoId]],
           subtotal: price,
           discount: 0,

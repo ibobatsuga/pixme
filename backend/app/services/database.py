@@ -12,8 +12,10 @@ class DatabaseService:
         self._init_db()
 
     def _get_connection(self):
-        conn = sqlite3.connect(self.db_path)
+        conn = sqlite3.connect(self.db_path, timeout=30.0)
         conn.row_factory = sqlite3.Row
+        conn.execute("PRAGMA journal_mode=WAL;")
+        conn.execute("PRAGMA foreign_keys=ON;")
         return conn
 
     def _init_db(self):
@@ -255,6 +257,9 @@ class DatabaseService:
         photo = self.get_photo(photo_id)
         if not photo:
             raise ValueError(f"Photo {photo_id} not found")
+
+        if tier not in ("high_res", "compressed"):
+            raise ValueError(f"Invalid tier '{tier}'. Must be 'high_res' or 'compressed'.")
 
         price = 35000 if tier == "high_res" else 25000
         photographer_share = int(price * 0.50)
