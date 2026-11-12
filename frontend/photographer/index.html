@@ -1331,40 +1331,15 @@
 
   <!-- ==================== JAVASCRIPT LOGIC ==================== -->
   <script>
-    // Mock Photographer Data
-    let availableBalance = 4250000;
+    // Production Photographer Data (populated from backend API / uploads)
+    let availableBalance = 0;
     let selectedBatchFiles = [];
 
-    const mockRecentSales = [
-      { id: 'TRX-894101', photo: 'WTF26_MAIN_STAGE_0842.JPG', event: 'We The Fest 2026', price: 35000, share: 17500, time: '12 menit lalu' },
-      { id: 'TRX-894102', photo: 'WTF26_CROWD_CHEER_1029.JPG', event: 'We The Fest 2026', price: 25000, share: 12500, time: '1 jam lalu' },
-      { id: 'TRX-894103', photo: 'JOGJA_MARATHON_KM21_0441.JPG', event: 'Jogja Marathon 2026', price: 35000, share: 17500, time: '2 jam lalu' },
-      { id: 'TRX-894104', photo: 'CFD_SUDIRMAN_CYCLING_0112.JPG', event: 'CFD Sudirman Jakarta', price: 25000, share: 12500, time: '3 jam lalu' },
-      { id: 'TRX-894105', photo: 'WTF26_BARRIER_FRONT_1184.JPG', event: 'We The Fest 2026', price: 35000, share: 17500, time: '5 jam lalu' }
-    ];
+    const mockRecentSales = [];
 
-    const mockTopEvents = [
-      { name: 'Jogja Marathon 2026 - KM 10', cat: 'Marathon', sales: 142, revenue: 1950000, conv: '24.2%' },
-      { name: 'We The Fest 2026 - Main Stage', cat: 'Konser', sales: 98, revenue: 1340000, conv: '21.8%' },
-      { name: 'Sunmori Kaliurang - Tikungan 4', cat: 'Sunmori', sales: 46, revenue: 580000, conv: '17.4%' },
-      { name: 'Wisuda UGM Periode II 2026', cat: 'Wisuda', sales: 32, revenue: 380000, conv: '15.1%' }
-    ];
+    const mockTopEvents = [];
 
-    const mockDailySales = [
-      { day: '01', amount: 80000 }, { day: '02', amount: 120000 }, { day: '03', amount: 65000 },
-      { day: '04', amount: 95000 }, { day: '05', amount: 150000 }, { day: '06', amount: 320000 }, // Sat
-      { day: '07', amount: 480000 }, // Sun
-      { day: '08', amount: 110000 }, { day: '09', amount: 85000 }, { day: '10', amount: 90000 },
-      { day: '11', amount: 140000 }, { day: '12', amount: 160000 }, { day: '13', amount: 350000 }, // Sat
-      { day: '14', amount: 520000 }, // Sun
-      { day: '15', amount: 95000 }, { day: '16', amount: 75000 }, { day: '17', amount: 130000 },
-      { day: '18', amount: 145000 }, { day: '19', amount: 180000 }, { day: '20', amount: 390000 }, // Sat
-      { day: '21', amount: 560000 }, // Sun
-      { day: '22', amount: 120000 }, { day: '23', amount: 95000 }, { day: '24', amount: 110000 },
-      { day: '25', amount: 170000 }, { day: '26', amount: 190000 }, { day: '27', amount: 410000 }, // Sat
-      { day: '28', amount: 610000 }, // Sun
-      { day: '29', amount: 130000 }, { day: '30', amount: 155000 }
-    ];
+    const mockDailySales = [];
 
     let aiQueue = [
       { filename: 'DSC_8492_FINISH_SPRINT.JPG', res: '6000x4000 (24MP)', faces: '3 Wajah', bib: 'BIB #1042', status: 'Terbit' },

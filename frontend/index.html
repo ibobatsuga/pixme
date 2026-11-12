@@ -331,12 +331,12 @@
       <div class="flex items-center justify-between z-10 flex-wrap gap-2">
         <div class="flex items-center gap-2">
           <span class="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-white/15 backdrop-blur-md text-xs font-semibold tracking-wide border border-white/20">
-            <i id="heroCategoryIcon" class="ph-bold ph-music-note text-pink-300"></i>
-            <span id="heroCategory">Music Festival</span>
+            <i id="heroCategoryIcon" class="ph-bold ph-camera text-pink-300"></i>
+            <span id="heroCategory">Event Resmi</span>
           </span>
           <span class="text-xs font-medium text-pink-200 flex items-center gap-1">
             <i class="ph-bold ph-map-pin"></i>
-            <span id="heroLocation">Jakarta, Indonesia</span>
+            <span id="heroLocation">Indonesia</span>
           </span>
         </div>
 
@@ -356,13 +356,13 @@
       <div class="mt-6 sm:mt-8 z-10 flex flex-col sm:flex-row sm:items-end justify-between gap-4">
         <div class="space-y-1.5">
           <h1 id="heroTitle" class="text-2xl sm:text-3xl lg:text-4xl font-extrabold tracking-tight text-white leading-tight">
-            We The Fest 2026
+            PicMe Event Gallery
           </h1>
           <p id="heroDate" class="text-xs sm:text-sm text-pink-100/90 font-medium flex items-center gap-2">
             <i class="ph-bold ph-calendar"></i>
-            <span>14 Agustus 2026</span>
+            <span>Menunggu Event Aktif</span>
             <span class="text-white/40">•</span>
-            <span>Main Stage, Barrier & Crowd Coverage</span>
+            <span>Galeri foto resmi akan tampil saat event dipublikasikan</span>
           </p>
         </div>
 
@@ -1855,201 +1855,8 @@
       await fetchEvents();
     });
 
-    // Catalog of Default Events Across All Categories - Chronologically Sorted by Date
-    const DEFAULT_MOCK_EVENTS = [
-      {
-        id: 'evt-pkb48',
-        title: 'Pesta Kesenian Bali (PKB) XLVIII',
-        location: 'Art Center Denpasar, Bali',
-        event_date: '22 Juni 2026',
-        date_iso: '2026-06-22',
-        category: 'culture',
-        description: 'Pawai Budaya, Penari Tradisional & Tabuh Gamelan',
-        cover_url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=800&auto=format&fit=crop&q=80',
-        photos_count: '6.420 Foto',
-        creators_count: '18 Fotografer'
-      },
-      {
-        id: 'evt-pik2-meet',
-        title: 'Morning Run & Meet PIK 2 Supercar',
-        location: 'Pantai Indah Kapuk 2, Jakarta',
-        event_date: '28 Juni 2026',
-        date_iso: '2026-06-28',
-        category: 'automotive',
-        description: 'Sports Cars, JDM & Automotive Photography',
-        cover_url: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=800&auto=format&fit=crop&q=80',
-        photos_count: '4.850 Foto',
-        creators_count: '14 Fotografer'
-      },
-      {
-        id: 'evt-sunmori26',
-        title: 'Sunmori Kaliurang & Merapi Ride',
-        location: 'Kaliurang KM 21, Yogyakarta',
-        event_date: '12 Juli 2026',
-        date_iso: '2026-07-12',
-        category: 'automotive',
-        description: 'Biker Convoy, Cornering & Rolling Shots',
-        cover_url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=800&auto=format&fit=crop&q=80',
-        photos_count: '8.120 Foto',
-        creators_count: '24 Fotografer'
-      },
-      {
-        id: 'evt-itb-grad',
-        title: 'Wisuda Akbar ITB Bandung',
-        location: 'Sabuga ITB, Bandung',
-        event_date: '18 Juli 2026',
-        date_iso: '2026-07-18',
-        category: 'graduation',
-        description: 'Dokumentasi Wisuda & Parade Himpunan Mahasiswa',
-        cover_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=800&auto=format&fit=crop&q=80',
-        photos_count: '5.200 Foto',
-        creators_count: '16 Fotografer'
-      },
-      {
-        id: 'evt-jfc26',
-        title: 'Jember Fashion Carnaval (JFC) 2026',
-        location: 'Alun-Alun Jember, Jawa Timur',
-        event_date: '7 Agustus 2026',
-        date_iso: '2026-08-07',
-        category: 'culture',
-        description: 'Costume Art Parade Sepanjang 3,6 KM',
-        cover_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=800&auto=format&fit=crop&q=80',
-        photos_count: '9.800 Foto',
-        creators_count: '31 Fotografer'
-      },
-      {
-        id: 'evt-wtf26',
-        title: 'We The Fest 2026',
-        location: 'GBK Senayan, Jakarta',
-        event_date: '14 Agustus 2026',
-        date_iso: '2026-08-14',
-        category: 'music',
-        description: 'Main Stage, Barrier & Crowd Coverage',
-        cover_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800&auto=format&fit=crop&q=80',
-        photos_count: '14.280 Foto',
-        creators_count: '42 Fotografer'
-      },
-      {
-        id: 'evt-marathon26',
-        title: 'Maybank Marathon Bali 2026',
-        location: 'Gianyar, Bali',
-        event_date: '23 Agustus 2026',
-        date_iso: '2026-08-23',
-        category: 'sports',
-        description: 'Full Marathon & Half Marathon Finishers',
-        cover_url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=800&auto=format&fit=crop&q=80',
-        photos_count: '11.450 Foto',
-        creators_count: '35 Fotografer'
-      },
-      {
-        id: 'evt-ugm-grad',
-        title: 'Wisuda Periode IV UGM Yogyakarta',
-        location: 'Grha Sabha Pramana UGM',
-        event_date: '26 Agustus 2026',
-        date_iso: '2026-08-26',
-        category: 'graduation',
-        description: 'Momen Wisudawan, Toga & Kebersamaan Keluarga',
-        cover_url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=800&auto=format&fit=crop&q=80',
-        photos_count: '7.600 Foto',
-        creators_count: '22 Fotografer'
-      },
-      {
-        id: 'evt-malioboro-street',
-        title: 'Street Photography Malioboro Night',
-        location: 'Kawasan Malioboro, Yogyakarta',
-        event_date: '5 September 2026',
-        date_iso: '2026-09-05',
-        category: 'street',
-        description: 'Candid Street, Wisatawan & Suasana Malam',
-        cover_url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=800&auto=format&fit=crop&q=80',
-        photos_count: '3.900 Foto',
-        creators_count: '12 Fotografer'
-      },
-      {
-        id: 'evt-kotatua-street',
-        title: 'Kota Tua Heritage Walking Tour',
-        location: 'Taman Fatahillah, Jakarta',
-        event_date: '20 September 2026',
-        date_iso: '2026-09-20',
-        category: 'street',
-        description: 'Human Interest, Arsitektur Kolonial & Wisatawan',
-        cover_url: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=800&auto=format&fit=crop&q=80',
-        photos_count: '4.150 Foto',
-        creators_count: '15 Fotografer'
-      },
-      {
-        id: 'evt-sync26',
-        title: 'Synchronize Fest 2026',
-        location: 'Gambir Expo Kemayoran, Jakarta',
-        event_date: '4 Oktober 2026',
-        date_iso: '2026-10-04',
-        category: 'music',
-        description: 'Dynamic Live Stages & Festival Vibe',
-        cover_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=800&auto=format&fit=crop&q=80',
-        photos_count: '12.800 Foto',
-        creators_count: '38 Fotografer'
-      },
-      {
-        id: 'evt-comifuro19',
-        title: 'Comic Frontier (Comifuro) 19',
-        location: 'ICE BSD City, Tangerang',
-        event_date: '10 Oktober 2026',
-        date_iso: '2026-10-10',
-        category: 'cosplay',
-        description: 'Cosplayer Parade, Photoshoot Hall & Stage',
-        cover_url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=800&auto=format&fit=crop&q=80',
-        photos_count: '9.300 Foto',
-        creators_count: '28 Fotografer'
-      },
-      {
-        id: 'evt-pialapresiden',
-        title: 'Piala Presiden Esports Grand Final',
-        location: 'Tennis Indoor Senayan, Jakarta',
-        event_date: '8 November 2026',
-        date_iso: '2026-11-08',
-        category: 'tournament',
-        description: 'Player Stages, Trophy Ceremony & Fans Arena',
-        cover_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=800&auto=format&fit=crop&q=80',
-        photos_count: '6.900 Foto',
-        creators_count: '20 Fotografer'
-      },
-      {
-        id: 'evt-borobudur26',
-        title: 'Borobudur Marathon 2026',
-        location: 'Magelang, Jawa Tengah',
-        event_date: '15 November 2026',
-        date_iso: '2026-11-15',
-        category: 'sports',
-        description: 'Heritage Track & Runners Crowd',
-        cover_url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=800&auto=format&fit=crop&q=80',
-        photos_count: '10.500 Foto',
-        creators_count: '30 Fotografer'
-      },
-      {
-        id: 'evt-inacon26',
-        title: 'Indonesia Anime Con (INACON) 2026',
-        location: 'JCC Senayan, Jakarta',
-        event_date: '15 November 2026',
-        date_iso: '2026-11-15',
-        category: 'cosplay',
-        description: 'International Cosplay Showcase & Meetup',
-        cover_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=800&auto=format&fit=crop&q=80',
-        photos_count: '8.400 Foto',
-        creators_count: '25 Fotografer'
-      },
-      {
-        id: 'evt-kejurnas-badminton',
-        title: 'Kejurnas Bulutangkis Djarum Super',
-        location: 'Istora Senayan, Jakarta',
-        event_date: '12 Desember 2026',
-        date_iso: '2026-12-12',
-        category: 'tournament',
-        description: 'Aksi Smash Atlet & Riuh Penonton Istora',
-        cover_url: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?w=800&auto=format&fit=crop&q=80',
-        photos_count: '7.100 Foto',
-        creators_count: '19 Fotografer'
-      }
-    ];
+    // Production: No dummy events — all events load from /api/events
+    const DEFAULT_MOCK_EVENTS = [];
 
     const CATEGORY_META = {
       music: {
@@ -2152,23 +1959,19 @@
       handleSearchEvents('');
     }
 
-    // 1. Fetch Events List
+    // 1. Fetch Events List (Production: Backend API only)
     async function fetchEvents(category = null) {
       try {
         const url = category && category !== 'all' ? `/api/events?category=${category}` : '/api/events';
         const res = await fetch(url);
         if (res.ok) {
           const data = await res.json();
-          if (data && data.events && data.events.length > 0) {
-            eventsList = data.events;
-          } else {
-            eventsList = filterDefaultEvents(category);
-          }
+          eventsList = (data && Array.isArray(data.events)) ? data.events : [];
         } else {
-          eventsList = filterDefaultEvents(category);
+          eventsList = [];
         }
       } catch (err) {
-        eventsList = filterDefaultEvents(category);
+        eventsList = [];
       }
 
       // Ensure chronological ordering by date_iso
@@ -2182,6 +1985,22 @@
         if (!currentEventId || !eventsList.some(e => e.id === currentEventId)) {
           syncEventSelection(eventsList[0].id, false);
         }
+      } else {
+        currentEventId = null;
+        allCurrentEventPhotos = [];
+        const heroTitle = document.getElementById('heroTitle');
+        const heroLocation = document.getElementById('heroLocation');
+        const heroCategory = document.getElementById('heroCategory');
+        const heroDate = document.getElementById('heroDate');
+        const statPhotos = document.getElementById('statTotalPhotos');
+        const statFaces = document.getElementById('statTotalFaces');
+        if (heroTitle) heroTitle.innerText = 'PicMe Event Gallery';
+        if (heroLocation) heroLocation.innerText = 'Indonesia';
+        if (heroCategory) heroCategory.innerText = 'Event Resmi';
+        if (heroDate) heroDate.innerHTML = '<i class="ph-bold ph-calendar"></i> <span>Belum Ada Event Aktif</span> <span class="text-white/40">•</span> <span>Event resmi akan tampil setelah dipublikasikan</span>';
+        if (statPhotos) statPhotos.innerText = '0';
+        if (statFaces) statFaces.innerText = '0';
+        renderGallery([], false);
       }
     }
 
@@ -2239,29 +2058,44 @@
       }
 
       if (filtered.length === 0) {
-        container.innerHTML = `
-          <div class="col-span-full py-12 text-center bg-white dark:bg-[#1a1c2b] rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 p-6">
-            <div class="w-12 h-12 mx-auto rounded-full bg-pink-50 dark:bg-pink-950/40 text-pink-600 flex items-center justify-center text-2xl mb-2">
-              <i class="ph-bold ph-calendar-x"></i>
+        if (eventsList.length === 0) {
+          container.innerHTML = `
+            <div class="col-span-full py-12 text-center bg-white dark:bg-[#1a1c2b] rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 p-6">
+              <div class="w-12 h-12 mx-auto rounded-full bg-purple-50 dark:bg-purple-950/40 text-purple-600 dark:text-purple-400 flex items-center justify-center text-2xl mb-2">
+                <i class="ph-bold ph-camera"></i>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Belum Ada Event Aktif Saat Ini</h4>
+              <p class="text-xs text-slate-400 mt-1 max-w-md mx-auto">Event dan galeri foto resmi akan tampil di sini segera setelah promotor atau fotografer mempublikasikan event produksi.</p>
             </div>
-            <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Tidak ada event yang cocok</h4>
-            <p class="text-xs text-slate-400 mt-1">Coba kata kunci lain atau klik "Semua Event".</p>
-            <button onclick="clearSearchEvents(); filterByCategory('all');" class="mt-3 px-4 py-1.5 rounded-full bg-pink-600 text-white text-xs font-bold shadow-sm hover:bg-pink-700 transition">
-              Reset Pencarian
-            </button>
-          </div>
-        `;
+          `;
+        } else {
+          container.innerHTML = `
+            <div class="col-span-full py-12 text-center bg-white dark:bg-[#1a1c2b] rounded-2xl border border-dashed border-slate-200 dark:border-slate-800 p-6">
+              <div class="w-12 h-12 mx-auto rounded-full bg-pink-50 dark:bg-pink-950/40 text-pink-600 flex items-center justify-center text-2xl mb-2">
+                <i class="ph-bold ph-calendar-x"></i>
+              </div>
+              <h4 class="text-sm font-bold text-slate-800 dark:text-slate-200">Tidak ada event yang cocok</h4>
+              <p class="text-xs text-slate-400 mt-1">Coba kata kunci lain atau klik "Semua Event".</p>
+              <button onclick="clearSearchEvents(); filterByCategory('all');" class="mt-3 px-4 py-1.5 rounded-full bg-pink-600 text-white text-xs font-bold shadow-sm hover:bg-pink-700 transition">
+                Reset Pencarian
+              </button>
+            </div>
+          `;
+        }
         return;
       }
 
       container.innerHTML = filtered.map(ev => {
         const isSelected = ev.id === currentEventId;
         const meta = CATEGORY_META[ev.category] || CATEGORY_META.music;
+        const coverMarkup = ev.cover_url
+          ? `<img src="${ev.cover_url}" alt="${ev.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">`
+          : `<div class="w-full h-full bg-gradient-to-br from-purple-900 via-slate-900 to-pink-800 flex items-center justify-center text-white/30 text-4xl"><i class="${meta.iconPh || 'ph-bold ph-camera'}"></i></div>`;
         return `
           <div onclick="selectEventCard('${ev.id}')" id="eventCard-${ev.id}" class="group relative rounded-2xl overflow-hidden cursor-pointer transition-all duration-300 bg-white dark:bg-[#1a1c2b] border ${isSelected ? 'border-pink-500 ring-2 ring-pink-500/60 shadow-xl -translate-y-1' : 'border-slate-200/80 dark:border-slate-800 hover:border-pink-300 dark:hover:border-slate-700 hover:shadow-lg hover:-translate-y-0.5'} flex flex-col justify-between">
             <!-- Card Header & Cover Image -->
             <div class="relative h-44 w-full overflow-hidden bg-slate-900">
-              <img src="${ev.cover_url || 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=800'}" alt="${ev.title}" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500 opacity-90">
+              ${coverMarkup}
               <div class="absolute inset-0 bg-gradient-to-t from-black/85 via-black/30 to-black/10"></div>
               
               <!-- Top Floating Badges -->
@@ -2428,85 +2262,26 @@
       await loadEventPhotos(eventId);
     }
 
-    // Curated Sample Photos Per Category for Instant Experience
-    function getSamplePhotosForCategory(category, eventId) {
-      const photosMap = {
-        music: [
-          { id: 'p-m1', filename: 'WTF26_MAIN_STAGE_0842.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=3840&auto=format&fit=crop&q=100', faces_detected: 8, similarity: 0.96 },
-          { id: 'p-m2', filename: 'WTF26_CROWD_CHEER_1029.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=3840&auto=format&fit=crop&q=100', faces_detected: 14, similarity: 0.92 },
-          { id: 'p-m3', filename: 'WTF26_BARRIER_FRONT_1184.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.89 },
-          { id: 'p-m4', filename: 'WTF26_STAGE_LASER_0991.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=3840&auto=format&fit=crop&q=100', faces_detected: 11, similarity: 0.94 }
-        ],
-        sports: [
-          { id: 'p-s1', filename: 'MARATHON_FINISH_LINE_4401.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1452626038306-9aae5e071dd3?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.95 },
-          { id: 'p-s2', filename: 'MARATHON_KM21_SPRINT_4412.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1530549387789-4c1017266635?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.91 },
-          { id: 'p-s3', filename: 'MARATHON_RUNNERS_PACK_4425.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1552674605-db6ffd4facb5?w=3840&auto=format&fit=crop&q=100', faces_detected: 9, similarity: 0.88 },
-          { id: 'p-s4', filename: 'MARATHON_CHEERING_POINT_4438.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1461896836934-ffe607ba8211?w=3840&auto=format&fit=crop&q=100', faces_detected: 7, similarity: 0.93 }
-        ],
-        automotive: [
-          { id: 'p-a1', filename: 'SUNMORI_KALIURANG_CORNER_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1558981403-c5f9899a28bc?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.95 },
-          { id: 'p-a2', filename: 'SUNMORI_BIKER_CONVOY_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1568772585407-9361f9bf3a87?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.92 },
-          { id: 'p-a3', filename: 'PIK2_SUPERCAR_MEET_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1617788138017-80ad40651399?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.90 },
-          { id: 'p-a4', filename: 'AUTOMOTIVE_ROLLING_SHOT_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1503376780353-7e6692767b70?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.94 }
-        ],
-        graduation: [
-          { id: 'p-g1', filename: 'WISUDA_UGM_CELEBRATION_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1523240795612-9a054b0db644?w=3840&auto=format&fit=crop&q=100', faces_detected: 8, similarity: 0.96 },
-          { id: 'p-g2', filename: 'WISUDA_TOGA_THROW_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1541339907198-e08756dedf3f?w=3840&auto=format&fit=crop&q=100', faces_detected: 12, similarity: 0.93 },
-          { id: 'p-g3', filename: 'WISUDA_PORTRAIT_DIPLOMA_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1627556704302-624286467c65?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1627556704302-624286467c65?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.97 },
-          { id: 'p-g4', filename: 'WISUDA_CAMPUS_SMILE_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1535982330050-f1c2fb79ff78?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1535982330050-f1c2fb79ff78?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.91 }
-        ],
-        street: [
-          { id: 'p-st1', filename: 'MALIOBORO_NIGHT_STREET_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1519501025264-65ba15a82390?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.94 },
-          { id: 'p-st2', filename: 'KOTATUA_CANDID_HUMAN_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1477959858617-67f30bc75b82?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.90 },
-          { id: 'p-st3', filename: 'STREET_TRAVEL_MOMENT_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1509198397868-475647b2a1e5?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.89 },
-          { id: 'p-st4', filename: 'URBAN_PEDESTRIAN_WALK_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1449824913935-59a10b8d2000?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.92 }
-        ],
-        cosplay: [
-          { id: 'p-c1', filename: 'COMIFURO19_CHARACTER_POSE_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1563089145-599997674d42?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.96 },
-          { id: 'p-c2', filename: 'INACON_WARRIOR_ARMOR_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1607604276583-eef5d076aa5f?w=3840&auto=format&fit=crop&q=100', faces_detected: 2, similarity: 0.93 },
-          { id: 'p-c3', filename: 'COSPLAY_ANIME_COSTUME_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1578632767115-351597cf2477?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.95 },
-          { id: 'p-c4', filename: 'HALL_PHOTOSHOOT_CON_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1534447677768-be436bb09401?w=3840&auto=format&fit=crop&q=100', faces_detected: 3, similarity: 0.91 }
-        ],
-        tournament: [
-          { id: 'p-t1', filename: 'ESPORTS_ARENA_FINALS_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1542751371-adc38448a05e?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.95 },
-          { id: 'p-t2', filename: 'GAMING_CHAMPIONSHIP_STAGE_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1511512578047-dfb367046420?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.92 },
-          { id: 'p-t3', filename: 'TOURNAMENT_COMPETITORS_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1574629810360-7efbbe195018?w=3840&auto=format&fit=crop&q=100', faces_detected: 8, similarity: 0.90 },
-          { id: 'p-t4', filename: 'ISTORA_BADMINTON_CROWD_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1526676037777-05a232554f77?w=3840&auto=format&fit=crop&q=100', faces_detected: 10, similarity: 0.94 }
-        ],
-        culture: [
-          { id: 'p-cl1', filename: 'JFC_CARNAVAL_COSTUME_01.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1533174072545-7a4b6ad7a6c3?w=3840&auto=format&fit=crop&q=100', faces_detected: 5, similarity: 0.96 },
-          { id: 'p-cl2', filename: 'BALI_TRADITIONAL_DANCE_02.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1516450360452-9312f5e86fc7?w=3840&auto=format&fit=crop&q=100', faces_detected: 4, similarity: 0.93 },
-          { id: 'p-cl3', filename: 'CULTURE_PARADE_ART_03.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1549488344-1f9b8d2bd1f3?w=3840&auto=format&fit=crop&q=100', faces_detected: 6, similarity: 0.91 },
-          { id: 'p-cl4', filename: 'CARNAVAL_FESTIVAL_CHEER_04.JPG', thumbnail_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=900&auto=format&fit=crop&q=80', file_url: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=3840&auto=format&fit=crop&q=100', faces_detected: 9, similarity: 0.94 }
-        ]
-      };
-
-      const list = photosMap[category] || photosMap.music;
-      return list.map(item => ({
-        ...item,
-        photo_id: item.id,
-        event_id: eventId,
-        width: 6000,
-        height: 4000,
-        distance: (1 - item.similarity).toFixed(2)
-      }));
-    }
-
-    // 6. Load All Photos for Current Event
+    // 6. Load All Photos for Current Event (Production: Backend API only)
     async function loadEventPhotos(eventId) {
-      const currentEv = eventsList.find(e => e.id === eventId);
-      const cat = currentEv ? currentEv.category : 'music';
+      if (!eventId) {
+        allCurrentEventPhotos = [];
+        document.getElementById('statTotalPhotos').innerText = '0';
+        document.getElementById('statTotalFaces').innerText = '0';
+        renderGallery([], false);
+        return;
+      }
 
       try {
         const res = await fetch(`/api/events/${eventId}/photos`);
         if (res.ok) {
           const data = await res.json();
-          allCurrentEventPhotos = (data && data.photos && data.photos.length > 0) ? data.photos : getSamplePhotosForCategory(cat, eventId);
+          allCurrentEventPhotos = (data && Array.isArray(data.photos)) ? data.photos : [];
         } else {
-          allCurrentEventPhotos = getSamplePhotosForCategory(cat, eventId);
+          allCurrentEventPhotos = [];
         }
       } catch (err) {
-        allCurrentEventPhotos = getSamplePhotosForCategory(cat, eventId);
+        allCurrentEventPhotos = [];
       }
 
       document.getElementById('statTotalPhotos').innerText = allCurrentEventPhotos.length;
@@ -3277,23 +3052,8 @@
         }, 450);
 
       } catch (err) {
-        // Fallback curation when backend AI is offline / Cloudflare Pages static hosting
-        progressBar.style.width = '100%';
-        setTimeout(() => {
-          toggleModal('modalUploadProgress', false);
-          const fallbackPool = (allCurrentEventPhotos || []).slice(0, 6);
-          if (fallbackPool.length > 0) {
-            const scores = [0.96, 0.93, 0.89, 0.82, 0.91, 0.78];
-            const simulatedMatches = fallbackPool.map((p, idx) => ({
-              ...p,
-              similarity: scores[idx % scores.length]
-            }));
-            renderGallery(simulatedMatches, true);
-          } else {
-            renderGallery([], true);
-          }
-          document.getElementById('photosMasonryGrid').scrollIntoView({ behavior: 'smooth' });
-        }, 450);
+        toggleModal('modalUploadProgress', false);
+        alert('Gagal memproses pencarian wajah AI: ' + (err.message || 'Server backend belum terhubung.'));
       }
     }
 

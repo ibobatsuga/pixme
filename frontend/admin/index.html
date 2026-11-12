@@ -1669,41 +1669,15 @@
       { id: 'usr-07', name: 'Administrator PicMe', email: 'superadmin@picme.id', wa: '081199988776', role: 'SUPERADMIN', photos: 'System Owner', storage: 'Unlimited', joined: '01 Jan 2026', balance: 19500000 }
     ];
 
-    const mockPurchases = [
-      { id: 'TRX-894101', date: 'Hari ini, 11:24', buyer: 'Anisa Maharani (anisa.runner@yahoo.com)', item: 'WTF26_MAIN_STAGE_0842.JPG', tier: 'Master 24-50MP', photographer: 'Rian Santoso', method: 'QRIS by ShopeePay', amount: 35000, creatorShare: 17500, eoShare: 3500, platformShare: 14000, status: 'Lunas', ref: 'TPY-982341' },
-      { id: 'TRX-894102', date: 'Hari ini, 10:48', buyer: 'Bambang Pamungkas (bambang.p@gmail.com)', item: 'WTF26_CROWD_CHEER_1029.JPG', tier: 'Web Compressed', photographer: 'Dimas Wicaksono', method: 'BCA Virtual Account', amount: 25000, creatorShare: 12500, eoShare: 2500, platformShare: 10000, status: 'Lunas', ref: 'TPY-982342' },
-      { id: 'TRX-894103', date: 'Hari ini, 09:15', buyer: 'Siti Nurhaliza (siti.fest@gmail.com)', item: 'JOGJA_MARATHON_KM21_0441.JPG', tier: 'Master 24-50MP', photographer: 'Rian Santoso', method: 'QRIS by GoPay', amount: 35000, creatorShare: 17500, eoShare: 3500, platformShare: 14000, status: 'Lunas', ref: 'TPY-982343' },
-      { id: 'TRX-894104', date: 'Kemarin, 21:05', buyer: 'Reza Fahlevi (reza.runner@gmail.com)', item: 'CFD_SUDIRMAN_CYCLING_0112.JPG', tier: 'Web Compressed', photographer: 'Dimas Wicaksono', method: 'Mandiri VA', amount: 25000, creatorShare: 12500, eoShare: 2500, platformShare: 10000, status: 'Lunas', ref: 'TPY-982344' },
-      { id: 'TRX-894105', date: 'Kemarin, 19:40', buyer: 'Kevin Sanjaya (kevin.s@gmail.com)', item: 'WTF26_BARRIER_FRONT_1184.JPG', tier: 'Master 24-50MP', photographer: 'Rian Santoso', method: 'QRIS by Dana', amount: 35000, creatorShare: 17500, eoShare: 3500, platformShare: 14000, status: 'Lunas', ref: 'TPY-982345' }
-    ];
+    const mockPurchases = [];
 
-    const mockWithdrawals = [
-      { id: 'WD-01', creator: 'Rian Santoso', bank: 'BCA', acc: '8492019482', name: 'Rian Santoso', amount: 1450000, time: '2 jam lalu' },
-      { id: 'WD-02', creator: 'Dimas Wicaksono', bank: 'Mandiri', acc: '1370019284716', name: 'Dimas Wicaksono', amount: 1850000, time: '4 jam lalu' },
-      { id: 'WD-03', creator: 'Aris Munandar', bank: 'BNI', acc: '0839218491', name: 'Aris Munandar', amount: 800000, time: '6 jam lalu' },
-      { id: 'WD-04', creator: 'Fajar Nugraha', bank: 'BCA', acc: '5271829401', name: 'Fajar Nugraha', amount: 750000, time: '1 hari lalu' }
-    ];
+    const mockWithdrawals = [];
 
-    const mockKyc = [
-      { id: 'kyc-01', name: 'Bayu Saputra', email: 'bayu.lens@outlook.com', wa: '082155566778', gear: 'Sony A7 IV + 70-200mm f/2.8 GM II', port: 'instagram.com/bayupics', idImg: 'KTP Terlampir' },
-      { id: 'kyc-02', name: 'Irfan Hakim', email: 'irfan.snap@gmail.com', wa: '081923481726', gear: 'Canon EOS R6 Mark II + 24-70mm f/2.8', port: 'drive.google.com/portofolio-irfan', idImg: 'KTP Terlampir' },
-      { id: 'kyc-03', name: 'Nadia Pratiwi', email: 'nadia.shot@gmail.com', wa: '085819283746', gear: 'Nikon Z8 + 85mm f/1.4', port: 'instagram.com/nadiashoot', idImg: 'KTP Terlampir' }
-    ];
+    const mockKyc = [];
 
-    const mockPhotosMonitor = [
-      { id: 'PM-01', file: 'DSC_0942_CORRUPT.JPG', creator: 'Rian Santoso', event: 'We The Fest 2026', time: '10 menit lalu', status: 'Gagal', log: 'Wajah tidak terdeteksi / file unreadable by OpenCV', thumb: 'https://images.unsplash.com/photo-1514525253161-7a46d19cd819?w=300&q=50' },
-      { id: 'PM-02', file: 'DSC_0943_BLUR.JPG', creator: 'Dimas Wicaksono', event: 'Jogja Marathon 2026', time: '25 menit lalu', status: 'Gagal', log: 'Resolution below minimum / severe motion blur', thumb: 'https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=300&q=50' },
-      { id: 'PM-03', file: 'WTF26_MAIN_0842.JPG', creator: 'Rian Santoso', event: 'We The Fest 2026', time: '1 jam lalu', status: 'Terbit', log: 'Berhasil diindeks (8 wajah, 512-d ArcFace)', thumb: 'https://images.unsplash.com/photo-1492684223066-81342ee5ff30?w=300&q=80' },
-      { id: 'PM-04', file: 'WTF26_CROWD_1029.JPG', creator: 'Rian Santoso', event: 'We The Fest 2026', time: '1 jam lalu', status: 'Terbit', log: 'Berhasil diindeks (14 wajah, 512-d ArcFace)', thumb: 'https://images.unsplash.com/photo-1501386761578-eac5c94b800a?w=300&q=80' }
-    ];
+    const mockPhotosMonitor = [];
 
-    const mockAudit = [
-      { action: 'PAYMENT_TRIPAY_PAID', color: 'emerald', text: 'Pembelian Foto Lunas Rp 35.000 via QRIS (Ref: TPY-982341)', actor: 'webhook@tripay.co.id', target: 'anisa.runner@yahoo.com', time: '11:24 WIB' },
-      { action: 'PHOTOGRAPHER_PAYOUT_APPROVED', color: 'blue', text: 'Persetujuan Payout Saldo Rp 1.450.000 via BCA', actor: 'superadmin@picme.id', target: 'rian.photo@gmail.com', time: '10:15 WIB' },
-      { action: 'FACE_SCAN_SEARCH', color: 'purple', text: 'Pencarian wajah selfie tamu cocok 3 foto di We The Fest 2026', actor: 'guest-session-8419', target: 'We The Fest 2026', time: '09:40 WIB' },
-      { action: 'SUNTIK_SALDO', color: 'amber', text: 'Penambahan saldo kredit kreator Rp 100.000 (Bonus Event)', actor: 'superadmin@picme.id', target: 'dimas.wicak@gmail.com', time: '08:30 WIB' },
-      { action: 'DELETE_HIGHRES_RAW', color: 'rose', text: 'Auto-delete file high-res master setelah pembelian tier Web Compressed', actor: 'system-worker@picme.id', target: 'photo-id-849102', time: 'Kemarin, 21:05 WIB' }
-    ];
+    const mockAudit = [];
 
     // Navigation Switcher
     function switchView(viewName) {
