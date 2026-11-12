@@ -985,7 +985,7 @@
         </button>
       </div>
 
-      <div class="space-y-1.5 max-h-72 overflow-y-auto pr-1">
+      <div id="cityPickerList" class="space-y-1.5 max-h-72 overflow-y-auto pr-1">
         <button onclick="selectCity('Semua Kota')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
           <span class="flex items-center gap-2.5">
             <i class="ph-bold ph-globe text-slate-400 group-hover:text-purple-600 text-base"></i>
@@ -993,41 +993,7 @@
           </span>
           <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
         </button>
-        <button onclick="selectCity('Jakarta')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
-          <span class="flex items-center gap-2.5">
-            <i class="ph-bold ph-buildings text-slate-400 group-hover:text-purple-600 text-base"></i>
-            <span>Jakarta (We The Fest, Synchronize, DWP)</span>
-          </span>
-          <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
-        </button>
-        <button onclick="selectCity('Bandung')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
-          <span class="flex items-center gap-2.5">
-            <i class="ph-bold ph-buildings text-slate-400 group-hover:text-purple-600 text-base"></i>
-            <span>Bandung (Now Playing, Lalala Fest)</span>
-          </span>
-          <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
-        </button>
-        <button onclick="selectCity('Surabaya')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
-          <span class="flex items-center gap-2.5">
-            <i class="ph-bold ph-buildings text-slate-400 group-hover:text-purple-600 text-base"></i>
-            <span>Surabaya (Pesta Semalam Minggu)</span>
-          </span>
-          <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
-        </button>
-        <button onclick="selectCity('Bali')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
-          <span class="flex items-center gap-2.5">
-            <i class="ph-bold ph-island text-slate-400 group-hover:text-purple-600 text-base"></i>
-            <span>Bali (Joyland Bali, Atlas Festival)</span>
-          </span>
-          <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
-        </button>
-        <button onclick="selectCity('Yogyakarta')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
-          <span class="flex items-center gap-2.5">
-            <i class="ph-bold ph-buildings text-slate-400 group-hover:text-purple-600 text-base"></i>
-            <span>Yogyakarta (Prambanan Jazz, JogjaROCK)</span>
-          </span>
-          <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
-        </button>
+        <p class="px-3 py-2 text-[11px] text-slate-400">Belum ada kota dengan event aktif.</p>
       </div>
 
     </div>
@@ -1959,24 +1925,70 @@
       handleSearchEvents('');
     }
 
-    // 1. Fetch Events List (Production: Backend API only)
+    function renderCityPicker() {
+      const container = document.getElementById('cityPickerList');
+      if (!container) return;
+
+      const cities = [...new Set((eventsList || []).map(e => (e.location || '').trim()).filter(Boolean))];
+      let html = `
+        <button onclick="selectCity('Semua Kota')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
+          <span class="flex items-center gap-2.5">
+            <i class="ph-bold ph-globe text-slate-400 group-hover:text-purple-600 text-base"></i>
+            <span>Semua Kota</span>
+          </span>
+          <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
+        </button>
+      `;
+
+      if (cities.length === 0) {
+        html += `<p class="px-3 py-2 text-[11px] text-slate-400">Belum ada kota dengan event aktif.</p>`;
+      } else {
+        html += cities.map(city => `
+          <button onclick="selectCity('${city.replace(/'/g, "\\'")}')" class="w-full text-left p-3 rounded-2xl hover:bg-purple-50 hover:text-purple-700 flex items-center justify-between text-xs font-bold transition group">
+            <span class="flex items-center gap-2.5">
+              <i class="ph-bold ph-buildings text-slate-400 group-hover:text-purple-600 text-base"></i>
+              <span>${city}</span>
+            </span>
+            <i class="ph-bold ph-check text-purple-600 opacity-0 group-hover:opacity-100"></i>
+          </button>
+        `).join('');
+      }
+
+      container.innerHTML = html;
+    }
+
+    // 1. Fetch Events List (Production: Backend API + Cross-Portal Shared Events)
     async function fetchEvents(category = null) {
+      let apiEvents = [];
       try {
         const url = category && category !== 'all' ? `/api/events?category=${category}` : '/api/events';
         const res = await fetch(url);
         if (res.ok) {
           const data = await res.json();
-          eventsList = (data && Array.isArray(data.events)) ? data.events : [];
-        } else {
-          eventsList = [];
+          apiEvents = (data && Array.isArray(data.events)) ? data.events : [];
         }
       } catch (err) {
-        eventsList = [];
+        apiEvents = [];
       }
 
-      // Ensure chronological ordering by date_iso
-      eventsList.sort((a, b) => (a.date_iso || '').localeCompare(b.date_iso || ''));
+      let sharedEvents = [];
+      try {
+        sharedEvents = JSON.parse(localStorage.getItem('picme_prod_events') || '[]');
+      } catch { sharedEvents = []; }
+      if (category && category !== 'all') {
+        sharedEvents = sharedEvents.filter(e => e.category === category);
+      }
 
+      const mergedMap = new Map();
+      [...apiEvents, ...sharedEvents].forEach(ev => {
+        if (ev && ev.id) mergedMap.set(ev.id, ev);
+      });
+      eventsList = Array.from(mergedMap.values());
+
+      // Ensure chronological ordering by date_iso
+      eventsList.sort((a, b) => (a.date_iso || a.event_date || '').localeCompare(b.date_iso || b.event_date || ''));
+
+      renderCityPicker();
       renderEventCards();
       renderEventSelectors();
       renderCreatorEventList();
@@ -2262,7 +2274,7 @@
       await loadEventPhotos(eventId);
     }
 
-    // 6. Load All Photos for Current Event (Production: Backend API only)
+    // 6. Load All Photos for Current Event (Backend API + Photographer Shared Uploads)
     async function loadEventPhotos(eventId) {
       if (!eventId) {
         allCurrentEventPhotos = [];
@@ -2272,17 +2284,29 @@
         return;
       }
 
+      let apiPhotos = [];
       try {
         const res = await fetch(`/api/events/${eventId}/photos`);
         if (res.ok) {
           const data = await res.json();
-          allCurrentEventPhotos = (data && Array.isArray(data.photos)) ? data.photos : [];
-        } else {
-          allCurrentEventPhotos = [];
+          apiPhotos = (data && Array.isArray(data.photos)) ? data.photos : [];
         }
       } catch (err) {
-        allCurrentEventPhotos = [];
+        apiPhotos = [];
       }
+
+      let sharedPhotos = [];
+      try {
+        sharedPhotos = JSON.parse(localStorage.getItem('picme_prod_photos') || '[]')
+          .filter(p => p.event_id === eventId);
+      } catch { sharedPhotos = []; }
+
+      const mergedMap = new Map();
+      [...apiPhotos, ...sharedPhotos].forEach(p => {
+        const pid = p.id || p.photo_id;
+        if (pid) mergedMap.set(pid, p);
+      });
+      allCurrentEventPhotos = Array.from(mergedMap.values());
 
       document.getElementById('statTotalPhotos').innerText = allCurrentEventPhotos.length;
       const totalFaces = allCurrentEventPhotos.reduce((sum, p) => sum + (p.faces_detected || 0), 0);
@@ -2617,6 +2641,7 @@
           created_at: now.toISOString()
         });
         saveOrdersList(orders);
+        appendPicMeAuditLog('PHOTO_PURCHASED', 'emerald', `Beli cepat ${savedPurchases[photoId].filename} (${formatRupiah(price)})`, currentUser ? (currentUser.email || currentUser.full_name) : 'Pembeli', orderId);
 
         saveCartItems(getCartItems().filter(c => c.photo_id !== photoId));
         updateCartBadge();
@@ -3310,6 +3335,22 @@
       try { return JSON.parse(localStorage.getItem('picme_support_tickets') || '[]'); } catch { return []; }
     }
 
+    function appendPicMeAuditLog(action, color, text, actor, target) {
+      try {
+        const logs = JSON.parse(localStorage.getItem('picme_audit_logs') || '[]');
+        logs.unshift({
+          action,
+          color,
+          text,
+          actor: actor || 'user@picme.id',
+          target: target || '-',
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('picme_audit_logs', JSON.stringify(logs.slice(0, 100)));
+      } catch (e) {}
+    }
+
     function updateCartBadge() {
       const cart = getCartItems();
       const purchases = Object.keys(getPurchasesMap());
@@ -3660,6 +3701,7 @@
         created_at: now.toISOString()
       });
       saveOrdersList(orders);
+      appendPicMeAuditLog('PHOTO_PURCHASED', 'emerald', `Checkout ${orderItems.length} foto lunas (${formatRupiah(total)}) via ${payMethod}`, `${buyerName} (${buyerContact})`, orderId);
 
       saveCartItems([]);
       appliedCartPromo = null;

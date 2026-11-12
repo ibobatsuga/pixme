@@ -360,11 +360,10 @@
                 <i class="ph-bold ph-currency-circle-dollar"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900 tracking-tight">Rp 48.750.000</div>
-            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
-              <i class="ph-bold ph-trend-up"></i>
-              <span>+18.4%</span>
-              <span class="text-slate-400 font-normal">vs 30 hari lalu</span>
+            <div id="adminKpiGmv" class="text-2xl font-black text-slate-900 tracking-tight">Rp 0</div>
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+              <span>0%</span>
+              <span class="font-normal">vs 30 hari lalu</span>
             </div>
           </div>
 
@@ -376,11 +375,10 @@
                 <i class="ph-bold ph-shopping-bag"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900 tracking-tight">1.240 Pembeli</div>
-            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
-              <i class="ph-bold ph-user-plus"></i>
-              <span>+342 user baru</span>
-              <span class="text-slate-400 font-normal">minggu ini</span>
+            <div id="adminKpiBuyers" class="text-2xl font-black text-slate-900 tracking-tight">0 Pembeli</div>
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+              <span id="adminKpiOrdersCount">0 transaksi</span>
+              <span class="font-normal">lunas</span>
             </div>
           </div>
 
@@ -392,11 +390,9 @@
                 <i class="ph-bold ph-users-three"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900 tracking-tight">3.820 Akun</div>
-            <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
-              <i class="ph-bold ph-trend-up"></i>
-              <span>+24.5%</span>
-              <span class="text-slate-400 font-normal">(142 Fotografer)</span>
+            <div id="adminKpiUsers" class="text-2xl font-black text-slate-900 tracking-tight">0 Akun</div>
+            <div class="flex items-center gap-1.5 text-[11px] font-bold text-slate-400">
+              <span id="adminKpiUsersSub">(0 Fotografer)</span>
             </div>
           </div>
 
@@ -408,7 +404,7 @@
                 <i class="ph-bold ph-scan"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900 tracking-tight">24.680 Foto</div>
+            <div id="adminKpiPhotos" class="text-2xl font-black text-slate-900 tracking-tight">0 Foto</div>
             <div class="flex items-center gap-1.5 text-[11px] font-bold text-emerald-600">
               <i class="ph-bold ph-check-circle"></i>
               <span>SCRFD + ArcFace</span>
@@ -429,10 +425,10 @@
                 <p class="text-xs text-slate-400">Tren penjualan foto Ultra HD 24-50MP & Web Compressed</p>
               </div>
               <div class="flex items-center gap-3">
-                <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
-                  Total: Rp 48.750.000
+                <span id="adminChartTotalGmv" class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200">
+                  Total: Rp 0
                 </span>
-                <span class="text-[11px] text-slate-400">Rata-rata: Rp 1.625rb/hari</span>
+                <span id="adminChartAvgGmv" class="text-[11px] text-slate-400">Rata-rata: Rp 0/hari</span>
               </div>
             </div>
 
@@ -453,7 +449,7 @@
                   <span>Weekend Peak</span>
                 </span>
               </div>
-              <span class="text-[11px] font-mono">1 Okt — 30 Okt 2026</span>
+              <span class="text-[11px] font-mono">30 Hari Terakhir</span>
             </div>
           </div>
 
@@ -476,7 +472,7 @@
                     <i class="ph-bold ph-warning-circle"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-rose-700">5 Foto Gagal Ekstrak Wajah</span>
+                    <span id="adminActionFailedPhotos" class="text-xs font-bold text-slate-900 block group-hover:text-rose-700">0 Foto Gagal Ekstrak Wajah</span>
                     <span class="text-[10px] text-slate-500">Foto blur atau format rusak (7 hari terakhir)</span>
                   </div>
                 </div>
@@ -490,8 +486,8 @@
                     <i class="ph-bold ph-hourglass-high"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">18 Foto Antrean Indexing AI</span>
-                    <span class="text-[10px] text-slate-500">Sedang diproses SCRFD InsightFace</span>
+                    <span id="adminActionQueuePhotos" class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">0 Foto Antrean Indexing AI</span>
+                    <span class="text-[10px] text-slate-500">Antrean SCRFD InsightFace kosong</span>
                   </div>
                 </div>
                 <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-purple-700"></i>
@@ -504,8 +500,8 @@
                     <i class="ph-bold ph-bank"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-amber-800">4 Payout Menunggu Persetujuan</span>
-                    <span class="text-[10px] text-amber-800 font-bold">Total: Rp 4.850.000 via BCA & Mandiri</span>
+                    <span id="adminActionPendingPayouts" class="text-xs font-bold text-slate-900 block group-hover:text-amber-800">0 Payout Menunggu Persetujuan</span>
+                    <span id="adminActionPendingPayoutsSub" class="text-[10px] text-amber-800 font-bold">Total: Rp 0</span>
                   </div>
                 </div>
                 <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-amber-600"></i>
@@ -518,7 +514,7 @@
                     <i class="ph-bold ph-identification-card"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">3 Pengajuan KYC Fotografer Baru</span>
+                    <span id="adminActionKycCount" class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">0 Pengajuan KYC Fotografer Baru</span>
                     <span class="text-[10px] text-slate-500">KTP & portofolio kamera menunggu review</span>
                   </div>
                 </div>
@@ -532,8 +528,8 @@
                     <i class="ph-bold ph-chat-text"></i>
                   </div>
                   <div>
-                    <span class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">2 Masukan / Komplain Baru</span>
-                    <span class="text-[10px] text-slate-500">Terkait pencarian wajah di event lari</span>
+                    <span id="adminActionFeedbackCount" class="text-xs font-bold text-slate-900 block group-hover:text-purple-700">0 Masukan / Laporan Baru</span>
+                    <span class="text-[10px] text-slate-500">Laporan mismatch wajah & tiket bantuan user</span>
                   </div>
                 </div>
                 <i class="ph-bold ph-caret-right text-slate-400 group-hover:text-purple-700"></i>
@@ -650,23 +646,23 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
             <span class="text-xs font-bold text-slate-400">Omset Kotor (Gross GMV)</span>
-            <div class="text-2xl font-black text-slate-900">Rp 48.750.000</div>
-            <p class="text-[11px] text-emerald-600 font-bold">+18.4% pertumbuhan bulanan</p>
+            <div class="text-2xl font-black text-slate-900">Rp 0</div>
+            <p class="text-[11px] text-slate-400 font-bold">Menunggu transaksi pertama</p>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
             <span class="text-xs font-bold text-slate-400">Bagian Hak Fotografer (50%)</span>
-            <div class="text-2xl font-black text-slate-900">Rp 24.375.000</div>
+            <div class="text-2xl font-black text-slate-900">Rp 0</div>
             <p class="text-[11px] text-slate-500">Kredit otomatis ke dompet kreator</p>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
             <span class="text-xs font-bold text-slate-400">Laba Bersih Platform PicMe (40%)</span>
-            <div class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600">Rp 19.500.000</div>
+            <div class="text-2xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600">Rp 0</div>
             <p class="text-[11px] text-purple-700 font-bold">Margin profit bersih platform</p>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card space-y-1.5">
             <span class="text-xs font-bold text-slate-400">Saldo Fotografer Mengendap</span>
-            <div class="text-2xl font-black text-slate-900">Rp 8.420.000</div>
-            <p class="text-[11px] text-amber-700 font-bold">Belum ditarik oleh fotografer</p>
+            <div class="text-2xl font-black text-slate-900">Rp 0</div>
+            <p class="text-[11px] text-slate-500 font-bold">Belum ditarik oleh fotografer</p>
           </div>
         </div>
 
@@ -953,7 +949,7 @@
               <h3 class="text-base font-extrabold text-slate-900">Katalog Event & Spot Foto PicMe</h3>
               <p class="text-xs text-slate-400">Event musik, marathon, car free day, dan spot street photography</p>
             </div>
-            <button onclick="alert('Buka modal tambah event baru')" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
+            <button onclick="openModalAdminCreateEvent()" class="px-3.5 py-1.5 rounded-xl bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold text-xs shadow-sm transition">
               + Tambah Event / Spot Baru
             </button>
           </div>
@@ -973,8 +969,8 @@
               <p class="text-xs text-slate-400">Semua transaksi masuk via QRIS ShopeePay / Virtual Account Tripay</p>
             </div>
             <div class="flex items-center gap-2">
-              <span class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
-                Lunas: 2.410 Transaksi
+              <span id="adminPurchasesCountBadge" class="text-xs font-bold text-emerald-700 bg-emerald-50 px-3 py-1 rounded-full border border-emerald-200">
+                Lunas: 0 Transaksi
               </span>
             </div>
           </div>
@@ -1031,28 +1027,28 @@
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">1. Total Omset Foto (GMV)</span>
-            <div class="text-xl font-black text-slate-900 mt-1">Rp 48.750.000</div>
+            <div class="text-xl font-black text-slate-900 mt-1">Rp 0</div>
             <span class="text-[11px] text-slate-500">Seluruh transaksi penjualan</span>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">2. Laba Bersih Platform (40%)</span>
-            <div class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600 mt-1">Rp 19.500.000</div>
+            <div class="text-xl font-black text-transparent bg-clip-text bg-gradient-to-r from-purple-700 to-pink-600 mt-1">Rp 0</div>
             <span class="text-[11px] text-purple-700 font-bold">Pendapatan bersih PicMe</span>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">3. Fotografer Produktif</span>
-            <div class="text-xl font-black text-slate-900 mt-1">98 Kreator</div>
-            <span class="text-[11px] text-emerald-600 font-bold">Minimal 1 foto terjual</span>
+            <div class="text-xl font-black text-slate-900 mt-1">0 Kreator</div>
+            <span class="text-[11px] text-slate-500 font-bold">Minimal 1 foto terjual</span>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">4. Hak Bagi Hasil Fotografer (50%)</span>
-            <div class="text-xl font-black text-slate-900 mt-1">Rp 24.375.000</div>
+            <div class="text-xl font-black text-slate-900 mt-1">Rp 0</div>
             <span class="text-[11px] text-slate-500">Total komisi fotografer</span>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">5. Permintaan Tarik Saldo</span>
-            <div class="text-xl font-black text-amber-600 mt-1">Rp 4.850.000</div>
-            <span class="text-[11px] text-amber-800 font-bold">4 permintaan pending transfer</span>
+            <div class="text-xl font-black text-amber-600 mt-1">Rp 0</div>
+            <span class="text-[11px] text-slate-500 font-bold">0 permintaan pending transfer</span>
           </div>
           <div class="bg-white p-5 rounded-2xl border border-slate-200 shadow-card">
             <span class="text-xs font-bold text-slate-400">6. Saldo Ditransfer (Payout)</span>
@@ -1536,6 +1532,51 @@
 
   </div>
 
+  <!-- ==================== MODAL: TAMBAH EVENT / SPOT BARU ==================== -->
+  <div id="modalAdminCreateEvent" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
+    <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModalAdminCreateEvent()"></div>
+    <div class="bg-white rounded-3xl p-6 max-w-md w-full relative z-10 shadow-2xl border border-slate-200 space-y-4">
+      <div class="flex items-center justify-between border-b border-slate-100 pb-3">
+        <h4 class="text-sm font-extrabold text-slate-900">Buat Event / Spot Foto Baru</h4>
+        <button onclick="closeModalAdminCreateEvent()" class="w-8 h-8 rounded-full bg-slate-100 text-slate-500 flex items-center justify-center">
+          <i class="ph-bold ph-x text-sm"></i>
+        </button>
+      </div>
+      <form onsubmit="handleAdminCreateEvent(event)" class="space-y-3 text-xs">
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Nama Event / Spot</label>
+          <input type="text" id="adminNewEventTitle" required placeholder="Contoh: Jakarta Night Run 10K" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+        </div>
+        <div class="grid grid-cols-2 gap-3">
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Lokasi / Kota</label>
+            <input type="text" id="adminNewEventLocation" required placeholder="GBK Senayan, Jakarta" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+          </div>
+          <div>
+            <label class="block font-bold text-slate-700 mb-1">Tanggal Event</label>
+            <input type="date" id="adminNewEventDate" required class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5">
+          </div>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Kategori</label>
+          <select id="adminNewEventCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5 font-bold">
+            <option value="lari">Olahraga / Lari</option>
+            <option value="street">Street Photography / CFD</option>
+            <option value="konser">Konser & Festival</option>
+            <option value="wisuda">Wisuda / Komunitas</option>
+          </select>
+        </div>
+        <div>
+          <label class="block font-bold text-slate-700 mb-1">Deskripsi Singkat</label>
+          <textarea id="adminNewEventDesc" rows="2" placeholder="Catatan event atau titik spot fotografer..." class="w-full bg-slate-50 border border-slate-200 rounded-xl p-2.5"></textarea>
+        </div>
+        <button type="submit" class="w-full bg-gradient-to-r from-purple-700 via-purple-600 to-pink-600 hover:from-purple-800 hover:to-pink-700 text-white font-bold py-3 rounded-xl shadow-sm transition">
+          Publikasikan Event
+        </button>
+      </form>
+    </div>
+  </div>
+
   <!-- ==================== MODAL: BUAT AKUN BARU ==================== -->
   <div id="modalCreateUser" class="hidden fixed inset-0 z-50 flex items-center justify-center p-4">
     <div class="absolute inset-0 bg-slate-900/40 backdrop-blur-sm" onclick="closeModalCreateUser()"></div>
@@ -1614,9 +1655,9 @@
       <div class="text-xs space-y-3">
         <div class="p-3 rounded-xl bg-slate-50 border border-slate-200 space-y-1">
           <span class="text-slate-400 font-bold block">Penerima Payout:</span>
-          <span id="payoutTargetCreator" class="font-bold text-slate-900 block">Rian Santoso</span>
-          <span id="payoutTargetBank" class="text-slate-600 block">BCA • 8492019482</span>
-          <span id="payoutTargetNominal" class="text-sm font-black text-emerald-600 block pt-1">Rp 1.450.000</span>
+          <span id="payoutTargetCreator" class="font-bold text-slate-900 block">-</span>
+          <span id="payoutTargetBank" class="text-slate-600 block">-</span>
+          <span id="payoutTargetNominal" class="text-sm font-black text-emerald-600 block pt-1">Rp 0</span>
         </div>
         <div>
           <label class="block font-bold text-slate-700 mb-1">Unggah Bukti Transfer (Opsional)</label>
@@ -1658,16 +1699,8 @@
       'audit': { title: 'Audit Log Sistem', sub: 'Jejak rekaman aktivitas owner, transaksi, dan perubahan konfigurasi' }
     };
 
-    // Realistic Indonesian Mock Data
-    const mockUsers = [
-      { id: 'usr-01', name: 'Rian Santoso', email: 'rian.photo@gmail.com', wa: '081234567890', role: 'FOTOGRAFER VERIFIED', photos: '1.240 foto', storage: '14.2 GB', joined: '12 Jan 2026', balance: 3450000 },
-      { id: 'usr-02', name: 'Dimas Wicaksono', email: 'dimas.wicak@gmail.com', wa: '081398765432', role: 'FOTOGRAFER VERIFIED', photos: '890 foto', storage: '9.8 GB', joined: '03 Feb 2026', balance: 1850000 },
-      { id: 'usr-03', name: 'Anisa Maharani', email: 'anisa.runner@yahoo.com', wa: '085712345678', role: 'PEMBELI', photos: '14 foto dibeli', storage: '320 MB', joined: '15 Agu 2026', balance: 0 },
-      { id: 'usr-04', name: 'Bambang Pamungkas', email: 'bambang.p@gmail.com', wa: '081809876543', role: 'PEMBELI', photos: '8 foto dibeli', storage: '190 MB', joined: '18 Agu 2026', balance: 0 },
-      { id: 'usr-05', name: 'Bayu Saputra', email: 'bayu.lens@outlook.com', wa: '082155566778', role: 'MENUNGGU KYC', photos: '0 foto', storage: '0 MB', joined: '28 Okt 2026', balance: 0 },
-      { id: 'usr-06', name: 'Siti Nurhaliza', email: 'siti.fest@gmail.com', wa: '087812983476', role: 'PEMBELI', photos: '6 foto dibeli', storage: '140 MB', joined: '20 Okt 2026', balance: 0 },
-      { id: 'usr-07', name: 'Administrator PicMe', email: 'superadmin@picme.id', wa: '081199988776', role: 'SUPERADMIN', photos: 'System Owner', storage: 'Unlimited', joined: '01 Jan 2026', balance: 19500000 }
-    ];
+    // Production Users & Creators State
+    const mockUsers = [];
 
     const mockPurchases = [];
 
@@ -1719,35 +1752,225 @@
       }
     }
 
-    // Chart Renderer: Interactive Coral Bars (30 Days)
+    let liveAdminEvents = [];
+    let liveAdminPhotos = [];
+    let liveAdminOrders = [];
+    let liveAdminKyc = [];
+    let liveAdminFeedback = [];
+    let liveAdminAudits = [];
+
+    function readStorageList(key) {
+      try {
+        const raw = localStorage.getItem(key);
+        const parsed = raw ? JSON.parse(raw) : [];
+        return Array.isArray(parsed) ? parsed : [];
+      } catch (e) {
+        return [];
+      }
+    }
+
+    function appendAdminAuditLog(action, color, text, actor = 'Master Admin') {
+      try {
+        const list = readStorageList('picme_audit_logs');
+        const now = new Date();
+        const hh = String(now.getHours()).padStart(2, '0');
+        const mm = String(now.getMinutes()).padStart(2, '0');
+        list.unshift({
+          action,
+          color: color || 'purple',
+          text,
+          actor,
+          time: `${now.toLocaleDateString('id-ID', { day: '2-digit', month: 'short' })} ${hh}:${mm}`,
+          created_at: now.toISOString()
+        });
+        localStorage.setItem('picme_audit_logs', JSON.stringify(list.slice(0, 100)));
+      } catch (e) {}
+    }
+
+    function formatIDR(val) {
+      return 'Rp ' + new Intl.NumberFormat('id-ID').format(Math.round(val || 0));
+    }
+
+    async function loadAdminLiveMonitoring() {
+      let apiOverview = null;
+      let apiEvents = [];
+
+      try {
+        const [ovRes, evRes] = await Promise.all([
+          fetch('/api/admin/overview').catch(() => null),
+          fetch('/api/events').catch(() => null)
+        ]);
+        if (ovRes && ovRes.ok) apiOverview = await ovRes.json();
+        if (evRes && evRes.ok) {
+          const evData = await evRes.json();
+          if (evData && Array.isArray(evData.events)) apiEvents = evData.events;
+        }
+      } catch (e) {}
+
+      // Merge Events (API + localStorage)
+      const localEvents = readStorageList('picme_prod_events');
+      const eventMap = new Map();
+      apiEvents.forEach(ev => { if (ev && ev.id) eventMap.set(ev.id, ev); });
+      localEvents.forEach(ev => {
+        if (ev && ev.id && !eventMap.has(ev.id)) eventMap.set(ev.id, ev);
+      });
+      liveAdminEvents = Array.from(eventMap.values());
+
+      // Merge Photos (API overview + localStorage)
+      const apiPhotos = (apiOverview && Array.isArray(apiOverview.photos)) ? apiOverview.photos : [];
+      const localPhotos = readStorageList('picme_prod_photos');
+      const photoMap = new Map();
+      apiPhotos.forEach(p => {
+        const pid = p.id || p.photo_id;
+        if (pid) photoMap.set(pid, p);
+      });
+      localPhotos.forEach(p => {
+        const pid = p.id || p.photo_id;
+        if (pid && !photoMap.has(pid)) photoMap.set(pid, p);
+      });
+      liveAdminPhotos = Array.from(photoMap.values());
+
+      // Merge Orders / Purchases (API overview + localStorage)
+      const apiPurchases = (apiOverview && Array.isArray(apiOverview.purchases)) ? apiPurchasesOverviewNormalize(apiOverview.purchases) : [];
+      const localOrders = readStorageList('picme_orders').map(o => {
+        const items = Array.isArray(o.items) ? o.items : [];
+        const total = Number(o.total || o.subtotal || 0);
+        const creatorShare = Math.round(total * 0.85);
+        return {
+          ref: o.order_id || ('ORD-' + Date.now().toString(36)),
+          date: o.created_at ? new Date(o.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Baru saja',
+          created_at: o.created_at || new Date().toISOString(),
+          buyerName: o.buyer_name || 'Pembeli PicMe',
+          buyerContact: o.buyer_contact || '-',
+          item: items.length > 0 ? `${items[0].event || 'Foto Event'} (${items.length} foto)` : 'Pembelian Foto PicMe',
+          tier: items.length > 0 && items[0].tier ? items[0].tier : 'Original Master',
+          photographer: items.length > 0 && items[0].photographer ? items[0].photographer : 'Fotografer PicMe',
+          method: o.payment_method || 'QRIS',
+          amount: total,
+          creatorShare,
+          platformShare: total - creatorShare,
+          status: (o.status || 'LUNAS').toUpperCase()
+        };
+      });
+      const orderMap = new Map();
+      apiPurchases.forEach(p => orderMap.set(p.ref, p));
+      localOrders.forEach(p => { if (!orderMap.has(p.ref)) orderMap.set(p.ref, p); });
+      liveAdminOrders = Array.from(orderMap.values());
+
+      // KYC Applications & Feedback (mismatch reports + support tickets)
+      liveAdminKyc = readStorageList('picme_photographer_applications');
+      const mismatches = readStorageList('picme_mismatch_reports').map(m => ({
+        user: 'Pembeli (Laporan Wajah)',
+        email: m.event_id || '-',
+        time: m.created_at ? new Date(m.created_at).toLocaleString('id-ID') : 'Baru saja',
+        page: 'User Gallery',
+        cat: 'Mismatch Wajah',
+        body: `${m.reason || 'Foto tidak sesuai'}${m.notes ? ' — ' + m.notes : ''} (Foto: ${m.filename || m.photo_id || '-'})`,
+        status: m.status || 'Baru'
+      }));
+      const tickets = readStorageList('picme_support_tickets').map(t => ({
+        user: 'Pengguna PicMe',
+        email: t.reference || '-',
+        time: t.created_at ? new Date(t.created_at).toLocaleString('id-ID') : 'Baru saja',
+        page: 'Bantuan User',
+        cat: t.category || 'Tiket Bantuan',
+        body: t.description || '-',
+        status: t.status || 'Baru'
+      }));
+      liveAdminFeedback = [...mismatches, ...tickets];
+
+      // Audit logs
+      liveAdminAudits = readStorageList('picme_audit_logs');
+
+      // Update KPI Cards & Action Needed
+      const totalGmv = liveAdminOrders.reduce((acc, o) => acc + (Number(o.amount) || 0), 0);
+      const uniqueBuyers = new Set(liveAdminOrders.map(o => `${o.buyerName}|${o.buyerContact}`)).size;
+      const creatorsSet = new Set([
+        ...liveAdminPhotos.map(p => p.uploaded_by).filter(Boolean),
+        ...liveAdminKyc.map(k => k.name).filter(Boolean)
+      ]);
+      const totalUsers = uniqueBuyers + creatorsSet.size;
+      const failedPhotos = liveAdminPhotos.filter(p => p.status === 'Gagal').length;
+
+      const setElText = (id, txt) => {
+        const el = document.getElementById(id);
+        if (el) el.innerText = txt;
+      };
+      setElText('adminKpiGmv', formatIDR(totalGmv));
+      setElText('adminKpiBuyers', `${uniqueBuyers} Pembeli`);
+      setElText('adminKpiOrdersCount', `${liveAdminOrders.length} transaksi`);
+      setElText('adminKpiUsers', `${totalUsers} Akun`);
+      setElText('adminKpiUsersSub', `(${creatorsSet.size} Fotografer)`);
+      setElText('adminKpiPhotos', `${liveAdminPhotos.length} Foto`);
+      setElText('adminChartTotalGmv', `Total: ${formatIDR(totalGmv)}`);
+      setElText('adminChartAvgGmv', `Rata-rata: ${formatIDR(totalGmv / 30)}/hari`);
+      setElText('adminActionFailedPhotos', `${failedPhotos} Foto Gagal Ekstrak Wajah`);
+      setElText('adminActionQueuePhotos', `0 Foto Antrean Indexing AI`);
+      setElText('adminActionPendingPayouts', `${mockWithdrawals.length} Payout Menunggu Persetujuan`);
+      setElText('adminActionPendingPayoutsSub', `Total: ${formatIDR(0)}`);
+      setElText('adminActionKycCount', `${liveAdminKyc.length} Pengajuan KYC Fotografer Baru`);
+      setElText('adminActionFeedbackCount', `${liveAdminFeedback.length} Masukan / Laporan Baru`);
+      setElText('adminPurchasesCountBadge', `Lunas: ${liveAdminOrders.length} Transaksi`);
+
+      renderDailyRevenueChart();
+      renderDashboardWidgets();
+      renderPurchasesTable();
+      renderKycQueue();
+      renderFeedbackFeed();
+      renderPhotoMonitorList();
+      renderEventsGrid();
+      renderAuditLogs();
+    }
+
+    function apiPurchasesOverviewNormalize(list) {
+      return list.map(p => {
+        const amt = Number(p.amount || 0);
+        const creatorShare = Number(p.creator_share || Math.round(amt * 0.85));
+        return {
+          ref: p.id || ('ORD-' + Date.now().toString(36)),
+          date: p.created_at ? new Date(p.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : '-',
+          created_at: p.created_at || new Date().toISOString(),
+          buyerName: p.buyer_name || 'Pembeli PicMe',
+          buyerContact: p.buyer_contact || '-',
+          item: p.filename || p.photo_id || 'Foto Event',
+          tier: p.tier || 'Original Master',
+          photographer: p.photographer || 'Fotografer PicMe',
+          method: p.payment_method || 'QRIS',
+          amount: amt,
+          creatorShare,
+          platformShare: Number(p.platform_share || (amt - creatorShare)),
+          status: (p.status || 'LUNAS').toUpperCase()
+        };
+      });
+    }
+
+    // Chart Renderer: Live 30 Days or Production Empty State
     function renderDailyRevenueChart() {
       const container = document.getElementById('chartDailyRevenue');
       if (!container) return;
+      if (!liveAdminOrders || liveAdminOrders.length === 0) {
+        container.innerHTML = '<div class="w-full h-full flex items-center justify-center text-xs text-slate-400">Belum ada transaksi masuk dalam 30 hari terakhir.</div>';
+        return;
+      }
 
-      // 30 days dummy revenue data (Rp 800rb - 2.8jt)
-      const data = [
-        950, 1100, 1350, 1200, 1800, 2400, 2650,
-        1150, 1280, 1400, 1650, 1900, 2750, 2800,
-        1250, 1300, 1420, 1550, 1850, 2500, 2600,
-        1200, 1350, 1480, 1600, 1950, 2700, 2850,
-        1400, 1650
-      ];
-      const maxVal = Math.max(...data);
+      const dayTotals = Array(30).fill(0);
+      const today = new Date();
+      today.setHours(0, 0, 0, 0);
+      liveAdminOrders.forEach(o => {
+        const d = o.created_at ? new Date(o.created_at) : new Date();
+        d.setHours(0, 0, 0, 0);
+        const diffDays = Math.floor((today - d) / 86400000);
+        if (diffDays >= 0 && diffDays < 30) {
+          dayTotals[29 - diffDays] += (Number(o.amount) || 0);
+        }
+      });
 
-      container.innerHTML = data.map((val, idx) => {
-        const heightPct = Math.round((val / maxVal) * 100);
-        const isWeekend = (idx % 7 === 5 || idx % 7 === 6);
-        const bgClass = isWeekend ? 'bg-gradient-to-t from-purple-700 via-purple-600 to-pink-500 hover:from-purple-800 hover:to-pink-600 shadow-sm' : 'bg-purple-400/80 hover:bg-purple-500';
-        const formatted = new Intl.NumberFormat('id-ID').format(val * 1000);
-
-        return `
-          <div class="flex-1 flex flex-col items-center gap-1 group relative h-full justify-end cursor-pointer">
-            <div class="opacity-0 group-hover:opacity-100 absolute -top-8 bg-slate-900 text-white text-[9px] font-bold px-2 py-0.5 rounded shadow whitespace-nowrap pointer-events-none transition z-20">
-              Tgl ${idx + 1}: Rp ${formatted}
-            </div>
-            <div class="w-full ${bgClass} rounded-t-sm picme-bar-anim" style="height: ${heightPct}%"></div>
-          </div>
-        `;
+      const maxVal = Math.max(...dayTotals, 1);
+      container.innerHTML = dayTotals.map((val, idx) => {
+        const pct = Math.max(4, Math.round((val / maxVal) * 100));
+        return `<div class="flex-1 h-full flex items-end group relative" title="Hari ke-${idx + 1}: ${formatIDR(val)}">
+          <div style="height: ${val > 0 ? pct : 3}%" class="w-full rounded-t-md ${val > 0 ? 'bg-gradient-to-t from-purple-600 to-pink-500' : 'bg-slate-100'} transition-all"></div>
+        </div>`;
       }).join('');
     }
 
@@ -1837,13 +2060,18 @@
       const tbody = document.getElementById('purchasesTableBody');
       if (!tbody) return;
 
-      tbody.innerHTML = mockPurchases.map(p => {
+      if (!liveAdminOrders || liveAdminOrders.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="6" class="py-10 text-center text-xs text-slate-400">Belum ada transaksi pembelian foto dari PicMe User.</td></tr>';
+        return;
+      }
+
+      tbody.innerHTML = liveAdminOrders.map(p => {
         return `
           <tr class="hover:bg-slate-50/80 transition">
             <td class="py-3 px-3 font-mono text-slate-500">${p.date}</td>
             <td class="py-3 px-3">
-              <span class="font-bold text-slate-900 block">${p.buyer.split('(')[0]}</span>
-              <span class="text-[10px] text-slate-400">${p.buyer.split('(')[1].replace(')', '')}</span>
+              <span class="font-bold text-slate-900 block">${p.buyerName}</span>
+              <span class="text-[10px] text-slate-400">${p.buyerContact}</span>
             </td>
             <td class="py-3 px-3">
               <span class="font-bold text-slate-900 block truncate max-w-[200px]">${p.item}</span>
@@ -1852,8 +2080,8 @@
             </td>
             <td class="py-3 px-3 font-semibold text-slate-700">${p.method}</td>
             <td class="py-3 px-3">
-              <span class="font-black text-slate-900 block">Rp ${new Intl.NumberFormat('id-ID').format(p.amount)}</span>
-              <span class="text-[10px] text-slate-400">Fotografer: Rp ${new Intl.NumberFormat('id-ID').format(p.creatorShare)} • PicMe: Rp ${new Intl.NumberFormat('id-ID').format(p.platformShare)}</span>
+              <span class="font-black text-slate-900 block">${formatIDR(p.amount)}</span>
+              <span class="text-[10px] text-slate-400">Fotografer: ${formatIDR(p.creatorShare)} • PicMe: ${formatIDR(p.platformShare)}</span>
             </td>
             <td class="py-3 px-3 text-right">
               <span class="px-2.5 py-0.5 rounded-full text-[10px] font-extrabold bg-emerald-100 text-emerald-800">
@@ -1927,7 +2155,15 @@
       const container = document.getElementById('kycQueueList');
       if (!container) return;
 
-      container.innerHTML = mockKyc.map(k => {
+      const kycList = liveAdminKyc.length > 0 ? liveAdminKyc : mockKyc;
+      if (kycList.length === 0) {
+        container.innerHTML = '<div class="py-10 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Belum ada pengajuan KYC fotografer baru.</div>';
+        return;
+      }
+
+      container.innerHTML = kycList.map((k, idx) => {
+        const wa = k.wa || k.whatsapp || '-';
+        const port = k.port || k.portfolio || '-';
         return `
           <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/50 flex flex-col md:flex-row md:items-center justify-between gap-4">
             <div class="space-y-1">
@@ -1935,17 +2171,17 @@
                 <span class="font-extrabold text-sm text-slate-900">${k.name}</span>
                 <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-amber-100 text-amber-800">Menunggu Review</span>
               </div>
-              <p class="text-xs text-slate-500">${k.email} • WA: <a href="https://wa.me/${k.wa}" target="_blank" class="text-emerald-600 hover:underline">${k.wa}</a></p>
+              <p class="text-xs text-slate-500">${k.email || '-'} • WA: ${wa}</p>
               <div class="text-[11px] text-slate-600 pt-1 space-y-0.5">
-                <p><b>Kamera & Lensa:</b> ${k.gear}</p>
-                <p><b>Portofolio:</b> <a href="https://${k.port}" target="_blank" class="text-purple-600 hover:underline">${k.port}</a></p>
+                <p><b>Kamera & Lensa:</b> ${k.gear || '-'}</p>
+                <p><b>Portofolio:</b> ${port}</p>
               </div>
             </div>
             <div class="flex items-center gap-2 shrink-0">
-              <button onclick="approveKyc('${k.id}', '${k.name}')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">
+              <button onclick="approveKyc('${k.id || idx}', '${k.name}')" class="px-4 py-2 rounded-xl bg-emerald-600 hover:bg-emerald-700 text-white font-bold text-xs shadow-sm transition">
                 Setujui KYC (Verified)
               </button>
-              <button onclick="rejectKyc('${k.id}', '${k.name}')" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-bold text-xs transition">
+              <button onclick="rejectKyc('${k.id || idx}', '${k.name}')" class="px-3.5 py-2 rounded-xl bg-slate-100 hover:bg-rose-50 text-slate-600 hover:text-rose-600 font-bold text-xs transition">
                 Tolak
               </button>
             </div>
@@ -1958,29 +2194,22 @@
       const container = document.getElementById('feedbackFeedList');
       if (!container) return;
 
-      const feedbacks = [
-        { user: 'Bambang Pamungkas', email: 'bambang.p@gmail.com', time: '1 jam lalu', page: '/index.html (Pencarian Wajah)', cat: 'Saran Fitur', body: 'Fitur selfie-nya cepat banget! Kalau bisa tambahkan filter nomor dada (BIB) untuk lari marathon agar makin akurat.', status: 'Baru' },
-        { user: 'Siti Nurhaliza', email: 'siti.fest@gmail.com', time: '3 jam lalu', page: '/login.html (Face ID)', cat: 'Pujian', body: 'Keren banget login pakai deteksi mata terbuka, terasa sangat aman!', status: 'Selesai' }
-      ];
+      if (!liveAdminFeedback || liveAdminFeedback.length === 0) {
+        container.innerHTML = '<div class="py-10 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Belum ada laporan mismatch wajah atau tiket bantuan pengguna.</div>';
+        return;
+      }
 
-      container.innerHTML = feedbacks.map((fb, idx) => {
+      container.innerHTML = liveAdminFeedback.map((fb) => {
         return `
           <div class="p-4 rounded-2xl border border-slate-200 bg-slate-50/40 space-y-3">
             <div class="flex items-center justify-between">
               <div>
                 <span class="font-extrabold text-xs text-slate-900">${fb.user}</span>
-                <span class="text-[11px] text-slate-400">(${fb.email}) • Halaman: <code>${fb.page}</code></span>
+                <span class="text-[11px] text-slate-400">(${fb.email}) • ${fb.page} • ${fb.time}</span>
               </div>
               <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-blue-100 text-blue-800">${fb.cat}</span>
             </div>
             <p class="text-xs text-slate-700 leading-relaxed bg-white p-3 rounded-xl border border-slate-100">${fb.body}</p>
-            <div class="flex flex-col sm:flex-row sm:items-center justify-between gap-2 pt-1">
-              <input type="text" placeholder="Tulis catatan admin atau tindak lanjut..." class="flex-1 bg-white border border-slate-200 rounded-xl px-3 py-1.5 text-xs">
-              <div class="flex items-center gap-2 shrink-0">
-                <button onclick="alert('Catatan admin berhasil disimpan!')" class="px-3 py-1.5 rounded-xl bg-slate-900 text-white font-bold text-xs hover:bg-slate-800 transition">Simpan</button>
-                <button onclick="alert('Balasan diteruskan ke WhatsApp pengguna')" class="px-3 py-1.5 rounded-xl bg-emerald-600 text-white font-bold text-xs hover:bg-emerald-700 transition">Balas WA</button>
-              </div>
-            </div>
           </div>
         `;
       }).join('');
@@ -1990,16 +2219,32 @@
       const container = document.getElementById('photoMonitorList');
       if (!container) return;
 
-      let filtered = mockPhotosMonitor;
-      if (filter === 'failed') filtered = mockPhotosMonitor.filter(p => p.status === 'Gagal');
-      if (filter === 'published') filtered = mockPhotosMonitor.filter(p => p.status === 'Terbit');
+      const sourceList = liveAdminPhotos.map(p => ({
+        id: p.id || p.photo_id,
+        file: p.filename || 'photo.jpg',
+        thumb: p.thumbnail_url || p.file_url || '',
+        creator: p.uploaded_by || 'Fotografer PicMe',
+        event: p.event_title || p.event_id || '-',
+        time: p.created_at ? new Date(p.created_at).toLocaleString('id-ID', { day: '2-digit', month: 'short', hour: '2-digit', minute: '2-digit' }) : 'Baru saja',
+        status: p.status || 'Terbit',
+        log: `AI Index: ${p.faces_detected || 0} wajah terdeteksi • ${p.width || 0}x${p.height || 0}px`
+      }));
+
+      let filtered = sourceList;
+      if (filter === 'failed') filtered = sourceList.filter(p => p.status === 'Gagal');
+      if (filter === 'published') filtered = sourceList.filter(p => p.status === 'Terbit');
+
+      if (filtered.length === 0) {
+        container.innerHTML = '<div class="py-10 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Belum ada foto yang diupload fotografer.</div>';
+        return;
+      }
 
       container.innerHTML = filtered.map(p => {
         const isFailed = p.status === 'Gagal';
         return `
           <div class="p-3.5 rounded-2xl border ${isFailed ? 'border-rose-200 bg-rose-50/40' : 'border-slate-200 bg-slate-50/40'} flex items-center justify-between gap-3">
             <div class="flex items-center gap-3 min-w-0">
-              <img src="${p.thumb}" class="w-12 h-14 object-cover rounded-xl border border-slate-200 shrink-0">
+              ${p.thumb ? `<img src="${p.thumb}" class="w-12 h-14 object-cover rounded-xl border border-slate-200 shrink-0">` : `<div class="w-12 h-14 rounded-xl bg-slate-200 flex items-center justify-center text-slate-400 shrink-0"><i class="ph-bold ph-image"></i></div>`}
               <div class="space-y-0.5 min-w-0">
                 <div class="flex items-center gap-2">
                   <span class="font-extrabold text-xs text-slate-900 truncate">${p.file}</span>
@@ -2009,45 +2254,36 @@
                 <p class="text-[10px] font-mono ${isFailed ? 'text-rose-600 font-bold' : 'text-slate-400'}">${p.log}</p>
               </div>
             </div>
-            <div class="flex items-center gap-2 shrink-0">
-              ${isFailed ? `
-                <button onclick="alert('Memulai proses ulang ekstraksi wajah SCRFD untuk foto ini...')" class="px-3 py-1.5 rounded-xl bg-rose-600 hover:bg-rose-700 text-white text-xs font-bold shadow-sm transition">
-                  Proses Ulang AI
-                </button>
-              ` : ''}
-              <button onclick="alert('Foto berhasil dihapus')" class="p-1.5 text-slate-400 hover:text-rose-600 rounded">
-                <i class="ph-bold ph-trash"></i>
-              </button>
-            </div>
           </div>
         `;
       }).join('');
     }
 
-    function renderEventsGrid() {
+    async function renderEventsGrid() {
       const container = document.getElementById('adminEventsGrid');
       if (!container) return;
 
-      const events = [
-        { title: 'We The Fest 2026', date: '14 Agustus 2026', loc: 'GBK Senayan, Jakarta', photos: '14.280 Foto', creators: '42 Fotografer', status: 'AKTIF' },
-        { title: 'Jogja International Marathon', date: '28 September 2026', loc: 'Candi Prambanan, DIY', photos: '8.450 Foto', creators: '28 Fotografer', status: 'AKTIF' },
-        { title: 'CFD Sudirman Street Hunting', date: 'Minggu, 25 Okt 2026', loc: 'Jl. Sudirman, Jakarta', photos: '1.950 Foto', creators: '14 Fotografer', status: 'SELESAI' }
-      ];
+      const events = liveAdminEvents;
+      if (!events || events.length === 0) {
+        container.innerHTML = '<div class="col-span-full py-10 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Belum ada event aktif di database produksi.</div>';
+        return;
+      }
 
       container.innerHTML = events.map(e => {
+        const photoCount = liveAdminPhotos.filter(p => p.event_id === e.id).length || e.photos_count || 0;
         return `
           <div class="p-5 rounded-2xl border border-slate-200 bg-slate-50/60 space-y-3">
             <div class="flex items-center justify-between">
-              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800">${e.status}</span>
-              <span class="text-[11px] text-slate-400 font-medium">${e.date}</span>
+              <span class="px-2 py-0.5 rounded-full text-[9px] font-bold bg-emerald-100 text-emerald-800">AKTIF</span>
+              <span class="text-[11px] text-slate-400 font-medium">${e.event_date || '-'}</span>
             </div>
             <div>
               <h4 class="font-extrabold text-sm text-slate-900">${e.title}</h4>
-              <p class="text-xs text-slate-500"><i class="ph-bold ph-map-pin"></i> ${e.loc}</p>
+              <p class="text-xs text-slate-500"><i class="ph-bold ph-map-pin"></i> ${e.location || '-'}</p>
             </div>
             <div class="pt-2 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600 font-bold">
-              <span>${e.photos}</span>
-              <span class="text-purple-700">${e.creators}</span>
+              <span>${e.category || 'event'} • ${photoCount} foto</span>
+              <span class="text-purple-700">Live</span>
             </div>
           </div>
         `;
@@ -2058,11 +2294,16 @@
       const container = document.getElementById('auditLogList');
       if (!container) return;
 
-      container.innerHTML = mockAudit.map(a => {
+      if (!liveAdminAudits || liveAdminAudits.length === 0) {
+        container.innerHTML = '<div class="py-10 text-center text-xs text-slate-400 border border-dashed border-slate-200 rounded-2xl">Belum ada aktivitas tercatat di audit log produksi.</div>';
+        return;
+      }
+
+      container.innerHTML = liveAdminAudits.map(a => {
         return `
           <div class="p-3 rounded-xl border border-slate-200 bg-slate-50/50 flex flex-col sm:flex-row sm:items-center justify-between gap-2 text-xs">
             <div class="flex items-center gap-2.5">
-              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-${a.color}-100 text-${a.color}-800 border border-${a.color}-200">${a.action}</span>
+              <span class="px-2 py-0.5 rounded text-[10px] font-mono font-bold bg-${a.color || 'purple'}-100 text-${a.color || 'purple'}-800 border border-${a.color || 'purple'}-200">${a.action}</span>
               <span class="font-bold text-slate-900">${a.text}</span>
             </div>
             <div class="flex items-center gap-2 text-[11px] text-slate-400">
@@ -2078,37 +2319,111 @@
     function renderDashboardWidgets() {
       const recentP = document.getElementById('recentPurchasesList');
       if (recentP) {
-        recentP.innerHTML = mockPurchases.slice(0, 4).map(p => `
-          <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
-            <div>
-              <span class="font-bold text-slate-900 block truncate max-w-[160px]">${p.item}</span>
-              <span class="text-[10px] text-slate-400">${p.buyer.split('(')[0]} • ${p.date.split(',')[1]}</span>
+        if (!liveAdminOrders || liveAdminOrders.length === 0) {
+          recentP.innerHTML = '<div class="py-6 text-center text-xs text-slate-400">Belum ada pembelian masuk.</div>';
+        } else {
+          recentP.innerHTML = liveAdminOrders.slice(0, 4).map(p => `
+            <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
+              <div>
+                <span class="font-bold text-slate-900 block truncate max-w-[160px]">${p.item}</span>
+                <span class="text-[10px] text-slate-400">${p.buyerName} • ${p.date}</span>
+              </div>
+              <div class="text-right">
+                <span class="font-black text-slate-900 block">${formatIDR(p.amount)}</span>
+                <span class="text-[9px] font-bold text-emerald-600">${p.status}</span>
+              </div>
             </div>
-            <div class="text-right">
-              <span class="font-black text-slate-900 block">Rp ${new Intl.NumberFormat('id-ID').format(p.amount)}</span>
-              <span class="text-[9px] font-bold text-emerald-600">Lunas</span>
-            </div>
-          </div>
-        `).join('');
+          `).join('');
+        }
       }
 
       const recentU = document.getElementById('recentUsersList');
       if (recentU) {
-        recentU.innerHTML = mockUsers.slice(0, 4).map(u => `
-          <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
-            <div class="flex items-center gap-2">
-              <div class="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 font-extrabold flex items-center justify-center text-[10px]">
-                ${u.name.substring(0, 2).toUpperCase()}
+        const recentActors = [];
+        liveAdminKyc.forEach(k => recentActors.push({ name: k.name || 'Fotografer', role: 'CALON FOTOGRAFER', joined: 'Baru saja' }));
+        liveAdminOrders.forEach(o => recentActors.push({ name: o.buyerName || 'Pembeli', role: 'PEMBELI', joined: o.date || 'Baru saja' }));
+
+        if (recentActors.length === 0) {
+          recentU.innerHTML = '<div class="py-6 text-center text-xs text-slate-400">Belum ada pengguna atau fotografer aktif.</div>';
+        } else {
+          recentU.innerHTML = recentActors.slice(0, 4).map(u => `
+            <div class="flex items-center justify-between text-xs py-1 border-b border-slate-100 last:border-0">
+              <div class="flex items-center gap-2">
+                <div class="w-6 h-6 rounded-lg bg-slate-100 text-slate-700 font-extrabold flex items-center justify-center text-[10px]">
+                  ${u.name.substring(0, 2).toUpperCase()}
+                </div>
+                <div>
+                  <span class="font-bold text-slate-900 block">${u.name}</span>
+                  <span class="text-[10px] text-slate-400">${u.role}</span>
+                </div>
               </div>
-              <div>
-                <span class="font-bold text-slate-900 block">${u.name}</span>
-                <span class="text-[10px] text-slate-400">${u.role}</span>
-              </div>
+              <span class="text-[10px] text-slate-400">${u.joined}</span>
             </div>
-            <span class="text-[10px] text-slate-400">${u.joined}</span>
-          </div>
-        `).join('');
+          `).join('');
+        }
       }
+    }
+
+    function openModalAdminCreateEvent() {
+      const dateInput = document.getElementById('adminNewEventDate');
+      if (dateInput && !dateInput.value) {
+        dateInput.value = new Date().toISOString().slice(0, 10);
+      }
+      document.getElementById('modalAdminCreateEvent').classList.remove('hidden');
+    }
+    function closeModalAdminCreateEvent() {
+      document.getElementById('modalAdminCreateEvent').classList.add('hidden');
+    }
+    async function handleAdminCreateEvent(e) {
+      e.preventDefault();
+      const title = document.getElementById('adminNewEventTitle').value.trim();
+      const location = document.getElementById('adminNewEventLocation').value.trim();
+      const dateIso = document.getElementById('adminNewEventDate').value;
+      const category = document.getElementById('adminNewEventCategory').value;
+      const description = document.getElementById('adminNewEventDesc').value.trim();
+      if (!title || !location) return;
+
+      const formattedDate = dateIso ? new Date(dateIso).toLocaleDateString('id-ID', { day: '2-digit', month: 'short', year: 'numeric' }) : 'Hari Ini';
+      let createdEvent = null;
+
+      try {
+        const res = await fetch('/api/events', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ title, location, event_date: formattedDate, category, description })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          createdEvent = data.event || null;
+        }
+      } catch (err) {}
+
+      if (!createdEvent) {
+        createdEvent = {
+          id: 'evt-' + Date.now().toString(36),
+          title,
+          location,
+          event_date: formattedDate,
+          date_iso: dateIso,
+          category,
+          description,
+          photos_count: 0,
+          creators_count: 0,
+          created_at: new Date().toISOString()
+        };
+      }
+
+      const storedEvents = readStorageList('picme_prod_events').filter(ev => ev.id !== createdEvent.id);
+      storedEvents.unshift(createdEvent);
+      localStorage.setItem('picme_prod_events', JSON.stringify(storedEvents));
+
+      appendAdminAuditLog('EVENT_CREATED', 'emerald', `Admin membuat event "${title}" (${location})`, 'Master Admin');
+      closeModalAdminCreateEvent();
+      document.getElementById('adminNewEventTitle').value = '';
+      document.getElementById('adminNewEventLocation').value = '';
+      document.getElementById('adminNewEventDesc').value = '';
+      await loadAdminLiveMonitoring();
+      alert(`Event "${title}" berhasil dipublikasikan ke PicMe User & Fotografer!`);
     }
 
     // Modal Action Handlers
@@ -2230,22 +2545,22 @@
 
     // Initialize all views on load
     window.addEventListener('DOMContentLoaded', () => {
-      renderDailyRevenueChart();
-      renderDashboardWidgets();
       renderUsersTable();
-      renderPurchasesTable();
       renderWithdrawalsTable();
       renderCommissionsTable();
-      renderKycQueue();
-      renderFeedbackFeed();
-      renderPhotoMonitorList();
-      renderEventsGrid();
-      renderAuditLogs();
+      loadAdminLiveMonitoring();
 
       // Check hash route if any
       const hash = window.location.hash.replace('#', '');
       if (hash && viewMetadata[hash]) {
         switchView(hash);
+      }
+    });
+
+    // Live cross-portal sync when User or Fotografer updates shared localStorage
+    window.addEventListener('storage', (e) => {
+      if (e.key && e.key.startsWith('picme_')) {
+        loadAdminLiveMonitoring();
       }
     });
   </script>

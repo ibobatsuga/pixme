@@ -232,6 +232,11 @@ async def purchase_photo(photo_id: str, req: PurchaseRequest):
     }
 
 
+@app.get("/api/admin/overview")
+def admin_overview():
+    return db_service.get_admin_overview()
+
+
 @app.get("/", response_class=HTMLResponse)
 def index_page():
     index_html = os.path.join(frontend_path, "index.html")

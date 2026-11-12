@@ -125,7 +125,7 @@
       </div>
       <div class="truncate flex-1">
         <div class="flex items-center gap-1">
-          <span id="sidebarPhotographerName" class="font-bold text-xs text-slate-900 truncate">Rian Santoso Photo</span>
+          <span id="sidebarPhotographerName" class="font-bold text-xs text-slate-900 truncate">Studio Fotografer</span>
           <i class="ph-fill ph-seal-check text-blue-500 text-sm shrink-0" title="Terverifikasi KYC"></i>
         </div>
         <span class="text-[10px] text-purple-700 font-semibold block truncate">Pro Event Photographer</span>
@@ -265,7 +265,7 @@
                 </span>
               </div>
               <p class="text-xs text-slate-300 mt-0.5">
-                Kapasitas Cloud S3: <b>142.5 GB</b> dari <b>500 GB</b> terpakai (28.5% aman) • AI Indexing aktif
+                Kapasitas Cloud S3: <b>0 GB</b> dari <b>500 GB</b> terpakai • AI Indexing siap
               </p>
             </div>
           </div>
@@ -289,9 +289,9 @@
                 <i class="ph-bold ph-wallet"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900" id="cardAvailableBalance">Rp 4.250.000</div>
+            <div class="text-2xl font-black text-slate-900" id="cardAvailableBalance">Rp 0</div>
             <div class="flex items-center justify-between pt-1">
-              <span class="text-[11px] text-slate-400">Settled & siap cair</span>
+              <span class="text-[11px] text-slate-400">Settled &amp; siap cair</span>
               <button onclick="openModalWithdraw()" class="text-xs font-extrabold text-purple-700 hover:text-purple-800 underline">Tarik Dana →</button>
             </div>
           </div>
@@ -304,10 +304,9 @@
                 <i class="ph-bold ph-shopping-cart-simple"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900">318 Unduhan</div>
-            <div class="flex items-center gap-1 text-[11px] font-bold text-emerald-600">
-              <i class="ph-bold ph-arrow-up-right"></i>
-              <span>+18.4% dibanding bulan lalu</span>
+            <div id="kpiSoldCount" class="text-2xl font-black text-slate-900">0 Unduhan</div>
+            <div class="flex items-center gap-1 text-[11px] font-bold text-slate-400">
+              <span>Menunggu transaksi pertama</span>
             </div>
           </div>
 
@@ -319,7 +318,7 @@
                 <i class="ph-bold ph-scan"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900">1.482 Match</div>
+            <div id="kpiMatchCount" class="text-2xl font-black text-slate-900">0 Match</div>
             <div class="text-[11px] text-slate-400">Muncul di hasil selfie peserta</div>
           </div>
 
@@ -331,8 +330,8 @@
                 <i class="ph-bold ph-images"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900">3.840 Foto</div>
-            <div class="text-[11px] text-slate-400">Terbit di 14 spot & album</div>
+            <div id="kpiActivePhotos" class="text-2xl font-black text-slate-900">0 Foto</div>
+            <div class="text-[11px] text-slate-400">Belum ada album terbit</div>
           </div>
 
         </div>
@@ -351,7 +350,7 @@
                 <p class="text-xs text-slate-400">Akumulasi komisi bersih fotografer (50% dari harga jual)</p>
               </div>
               <span class="text-xs font-bold text-purple-700 bg-purple-50 px-2.5 py-1 rounded-full border border-purple-200 self-start sm:self-auto">
-                Total Komisi 30 Hari: Rp 4.250.000
+                Total Komisi 30 Hari: Rp 0
               </span>
             </div>
 
@@ -594,32 +593,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-medium">
                   <tr>
-                    <td class="py-3 px-2 font-bold text-slate-900">Jogja Marathon 2026 - KM 10</td>
-                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-blue-100 text-blue-700 text-[10px] font-bold">Marathon</span></td>
-                    <td class="py-3 px-2 text-right">1.240</td>
-                    <td class="py-3 px-2 text-right font-bold text-emerald-600">142 foto</td>
-                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 1.950.000</td>
-                  </tr>
-                  <tr>
-                    <td class="py-3 px-2 font-bold text-slate-900">We The Fest 2026 - Main Stage</td>
-                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-pink-100 text-pink-700 text-[10px] font-bold">Musik</span></td>
-                    <td class="py-3 px-2 text-right">980</td>
-                    <td class="py-3 px-2 text-right font-bold text-emerald-600">98 foto</td>
-                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 1.340.000</td>
-                  </tr>
-                  <tr>
-                    <td class="py-3 px-2 font-bold text-slate-900">Sunmori Kaliurang - Tikungan 4</td>
-                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-amber-100 text-amber-700 text-[10px] font-bold">Sunmori</span></td>
-                    <td class="py-3 px-2 text-right">720</td>
-                    <td class="py-3 px-2 text-right font-bold text-emerald-600">46 foto</td>
-                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 580.000</td>
-                  </tr>
-                  <tr>
-                    <td class="py-3 px-2 font-bold text-slate-900">Wisuda UGM Periode II 2026</td>
-                    <td class="py-3 px-2"><span class="px-2 py-0.5 rounded-full bg-purple-100 text-purple-700 text-[10px] font-bold">Wisuda</span></td>
-                    <td class="py-3 px-2 text-right">900</td>
-                    <td class="py-3 px-2 text-right font-bold text-emerald-600">32 foto</td>
-                    <td class="py-3 px-2 text-right font-black text-purple-700">Rp 380.000</td>
+                    <td colspan="5" class="py-8 px-2 text-center text-slate-400 text-xs">Belum ada performa spot atau event yang tercatat.</td>
                   </tr>
                 </tbody>
               </table>
@@ -706,38 +680,41 @@
               <div class="space-y-3">
                 <div class="space-y-1">
                   <label class="block text-xs font-bold text-slate-700">Nama Event / Spot Foto</label>
-                  <select id="uploadSelectEvent" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                    <option value="evt-001">Jogja Marathon 2026 (KM 10 - Titik Nol)</option>
-                    <option value="evt-002">We The Fest 2026 (Main Stage & Barrier)</option>
-                    <option value="evt-003">CFD Sudirman Jakarta (Bundaran HI)</option>
-                    <option value="evt-004">Sunmori Kaliurang Jogja (Tikungan 4)</option>
-                    <option value="new">+ Buat Spot / Event Baru</option>
+                  <select id="uploadSelectEvent" onchange="onUploadEventSelectChanged()" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2.5 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                    <option value="new">+ Buat Event / Spot Baru</option>
                   </select>
                 </div>
 
-                <div class="grid grid-cols-2 gap-3">
+                <div id="newEventFields" class="space-y-3">
                   <div class="space-y-1">
-                    <label class="block text-xs font-bold text-slate-700">Tanggal Pemotretan</label>
-                    <input type="date" id="uploadDate" value="2026-10-29" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                    <label class="block text-xs font-bold text-slate-700">Judul Event Baru</label>
+                    <input type="text" id="newEventTitle" placeholder="Contoh: Jakarta Night Run 2026" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
                   </div>
-                  <div class="space-y-1">
-                    <label class="block text-xs font-bold text-slate-700">Kategori</label>
-                    <select id="uploadCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
-                      <option value="Konser & Festival Musik">Konser & Festival Musik</option>
-                      <option value="Lari & Olahraga">Lari & Olahraga</option>
-                      <option value="Sunmori & Otomotif">Sunmori & Otomotif</option>
-                      <option value="Wisuda & Kampus">Wisuda & Kampus</option>
-                      <option value="Wisata & Street">Wisata & Street</option>
-                      <option value="Cosplay & Hobi">Cosplay & Hobi</option>
-                      <option value="Turnamen & Kompetisi">Turnamen & Kompetisi</option>
-                      <option value="Karnaval & Budaya">Karnaval & Budaya</option>
-                    </select>
-                  </div>
-                </div>
 
-                <div class="space-y-1">
-                  <label class="block text-xs font-bold text-slate-700">Lokasi / Kota</label>
-                  <input type="text" id="uploadLocation" value="Yogyakarta, D.I. Yogyakarta" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                  <div class="grid grid-cols-2 gap-3">
+                    <div class="space-y-1">
+                      <label class="block text-xs font-bold text-slate-700">Tanggal Pemotretan</label>
+                      <input type="date" id="uploadDate" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                    </div>
+                    <div class="space-y-1">
+                      <label class="block text-xs font-bold text-slate-700">Kategori</label>
+                      <select id="uploadCategory" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                        <option value="music">Konser &amp; Festival Musik</option>
+                        <option value="sports">Lari &amp; Olahraga</option>
+                        <option value="automotive">Sunmori &amp; Otomotif</option>
+                        <option value="graduation">Wisuda &amp; Kampus</option>
+                        <option value="street">Wisata &amp; Street</option>
+                        <option value="cosplay">Cosplay &amp; Hobi</option>
+                        <option value="tournament">Turnamen &amp; Kompetisi</option>
+                        <option value="culture">Karnaval &amp; Budaya</option>
+                      </select>
+                    </div>
+                  </div>
+
+                  <div class="space-y-1">
+                    <label class="block text-xs font-bold text-slate-700">Lokasi / Kota</label>
+                    <input type="text" id="uploadLocation" placeholder="Contoh: Jakarta Selatan" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-3.5 py-2 text-xs font-semibold focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                  </div>
                 </div>
               </div>
             </div>
@@ -897,7 +874,7 @@
                 <i class="ph-bold ph-wallet"></i>
               </div>
             </div>
-            <div class="text-2xl font-black text-slate-900">Rp 4.250.000</div>
+            <div class="text-2xl font-black text-slate-900">Rp 0</div>
             <button onclick="openModalWithdraw()" class="w-full py-2 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-600 hover:from-emerald-700 hover:to-teal-700 text-white font-extrabold text-xs shadow-sm transition flex items-center justify-center gap-1.5">
               <i class="ph-bold ph-hand-coins"></i>
               <span>Tarik Saldo Sekarang</span>
@@ -1004,28 +981,7 @@
                 </thead>
                 <tbody class="divide-y divide-slate-100 font-medium">
                   <tr>
-                    <td class="py-3 px-3 font-mono font-bold text-slate-800">PO-20261022-01</td>
-                    <td class="py-3 px-3">22 Okt 2026, 14:15</td>
-                    <td class="py-3 px-3">BCA • 8492019482 (Rian Santoso)</td>
-                    <td class="py-3 px-3 text-right font-black text-slate-900">Rp 1.450.000</td>
-                    <td class="py-3 px-3 text-center"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Berhasil Ditransfer</span></td>
-                    <td class="py-3 px-3 text-right"><button onclick="alert('Bukti Transfer BCA: No Ref 984918294 (Lunas)')" class="text-purple-700 font-bold hover:underline">Lihat Bukti →</button></td>
-                  </tr>
-                  <tr>
-                    <td class="py-3 px-3 font-mono font-bold text-slate-800">PO-20261015-02</td>
-                    <td class="py-3 px-3">15 Okt 2026, 09:30</td>
-                    <td class="py-3 px-3">BCA • 8492019482 (Rian Santoso)</td>
-                    <td class="py-3 px-3 text-right font-black text-slate-900">Rp 2.150.000</td>
-                    <td class="py-3 px-3 text-center"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Berhasil Ditransfer</span></td>
-                    <td class="py-3 px-3 text-right"><button onclick="alert('Bukti Transfer BCA: No Ref 849219481 (Lunas)')" class="text-purple-700 font-bold hover:underline">Lihat Bukti →</button></td>
-                  </tr>
-                  <tr>
-                    <td class="py-3 px-3 font-mono font-bold text-slate-800">PO-20261001-03</td>
-                    <td class="py-3 px-3">01 Okt 2026, 17:00</td>
-                    <td class="py-3 px-3">BCA • 8492019482 (Rian Santoso)</td>
-                    <td class="py-3 px-3 text-right font-black text-slate-900">Rp 5.000.000</td>
-                    <td class="py-3 px-3 text-center"><span class="px-2 py-0.5 rounded-full bg-emerald-100 text-emerald-800 text-[10px] font-extrabold">Berhasil Ditransfer</span></td>
-                    <td class="py-3 px-3 text-right"><button onclick="alert('Bukti Transfer BCA: No Ref 739182941 (Lunas)')" class="text-purple-700 font-bold hover:underline">Lihat Bukti →</button></td>
+                    <td colspan="6" class="py-8 px-3 text-center text-slate-400 text-xs">Belum ada riwayat penarikan dana.</td>
                   </tr>
                 </tbody>
               </table>
@@ -1079,18 +1035,18 @@
             <div class="space-y-4 text-xs">
               <div class="space-y-1">
                 <label class="block font-bold text-slate-700">Nama Studio / Panggilan Fotografer</label>
-                <input type="text" id="accStudioName" value="Rian Santoso Photo" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-bold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                <input type="text" id="accStudioName" value="" placeholder="Nama Studio Anda" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-bold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
               </div>
 
               <div class="space-y-1">
                 <label class="block font-bold text-slate-700">Bio Singkat (Tampil di Katalog Foto)</label>
-                <textarea rows="2" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-medium text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">Professional Sport & Stage Photographer. Meliput Jogja Marathon, WTF, dan DBL sejak 2021.</textarea>
+                <textarea rows="2" placeholder="Ceritakan pengalaman liputan Anda..." class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2 font-medium text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none"></textarea>
               </div>
 
               <div class="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div class="space-y-1">
                   <label class="block font-bold text-slate-700">Akun Instagram / Portofolio</label>
-                  <input type="text" value="instagram.com/riansantoso.raw" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+                  <input type="text" value="" placeholder="instagram.com/akunanda" class="w-full bg-slate-50 border border-slate-200 rounded-xl px-4 py-2.5 font-semibold text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
                 </div>
                 <div class="space-y-1">
                   <label class="block font-bold text-slate-700">Nomor WhatsApp Aktif</label>
@@ -1287,7 +1243,7 @@
 
       <div class="p-3.5 rounded-xl bg-purple-50 border border-purple-200 flex items-center justify-between text-xs">
         <span class="text-purple-900 font-bold">Saldo Siap Ditarik:</span>
-        <span class="text-purple-900 font-black text-sm" id="modalWithdrawMaxBalance">Rp 4.250.000</span>
+        <span class="text-purple-900 font-black text-sm" id="modalWithdrawMaxBalance">Rp 0</span>
       </div>
 
       <form onsubmit="executeWithdrawal(event)" class="space-y-3.5 text-xs">
@@ -1295,7 +1251,7 @@
           <label class="block font-bold text-slate-700">Nominal Penarikan (Min. Rp 50.000)</label>
           <div class="relative">
             <span class="absolute left-3.5 top-2.5 text-slate-400 font-bold">Rp</span>
-            <input type="number" id="inputWithdrawAmount" min="50000" max="4250000" value="1000000" required class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 font-black text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
+            <input type="number" id="inputWithdrawAmount" min="50000" max="0" value="" placeholder="50000" required class="w-full bg-slate-50 border border-slate-200 rounded-xl pl-10 pr-4 py-2.5 font-black text-slate-900 focus:ring-2 focus:ring-purple-600 focus:outline-none">
           </div>
           <div class="flex justify-between text-[10px] text-slate-400 pt-0.5">
             <span>Batas Minimal: Rp 50.000</span>
@@ -1341,12 +1297,7 @@
 
     const mockDailySales = [];
 
-    let aiQueue = [
-      { filename: 'DSC_8492_FINISH_SPRINT.JPG', res: '6000x4000 (24MP)', faces: '3 Wajah', bib: 'BIB #1042', status: 'Terbit' },
-      { filename: 'DSC_8493_FINISH_SMILE.JPG', res: '8192x5464 (45MP)', faces: '1 Wajah', bib: 'BIB #0849', status: 'Terbit' },
-      { filename: 'DSC_8494_CHEERING_CROWD.JPG', res: '6000x4000 (24MP)', faces: '7 Wajah', bib: 'BIB #2291', status: 'Terbit' },
-      { filename: 'DSC_8495_MEDAL_POSE.JPG', res: '8192x5464 (45MP)', faces: '2 Wajah', bib: 'BIB #1184', status: 'Terbit' }
-    ];
+    let aiQueue = [];
 
     // 1. Navigation Switcher
     function switchView(viewName) {
@@ -1389,6 +1340,10 @@
     function renderSalesChart() {
       const container = document.getElementById('photographerSalesChart');
       if (!container) return;
+      if (!mockDailySales || mockDailySales.length === 0) {
+        container.innerHTML = '<div class="w-full h-full flex items-center justify-center text-xs text-slate-400">Belum ada data penjualan 30 hari terakhir.</div>';
+        return;
+      }
       const max = Math.max(...mockDailySales.map(d => d.amount));
 
       container.innerHTML = mockDailySales.map((d, idx) => {
@@ -1413,7 +1368,9 @@
     function renderDashboardTables() {
       const tbSales = document.getElementById('tableRecentSales');
       if (tbSales) {
-        tbSales.innerHTML = mockRecentSales.map(s => `
+        tbSales.innerHTML = mockRecentSales.length === 0
+          ? '<tr><td colspan="5" class="py-8 px-2 text-center text-xs text-slate-400">Belum ada penjualan foto terbaru.</td></tr>'
+          : mockRecentSales.map(s => `
           <tr class="hover:bg-slate-50/80 transition">
             <td class="py-3 px-2">
               <span class="font-bold text-slate-900 block truncate max-w-[160px]">${s.photo}</span>
@@ -1429,7 +1386,9 @@
 
       const listEvents = document.getElementById('listTopEvents');
       if (listEvents) {
-        listEvents.innerHTML = mockTopEvents.map(e => `
+        listEvents.innerHTML = mockTopEvents.length === 0
+          ? '<div class="py-6 text-center text-xs text-slate-400">Belum ada event dengan transaksi penjualan.</div>'
+          : mockTopEvents.map(e => `
           <div class="p-3 rounded-xl bg-slate-50/80 border border-slate-100 flex items-center justify-between">
             <div class="truncate pr-2">
               <span class="font-bold text-xs text-slate-900 block truncate">${e.name}</span>
@@ -1443,7 +1402,9 @@
       // Commission details table
       const tbComm = document.getElementById('tableCommissionDetails');
       if (tbComm) {
-        tbComm.innerHTML = mockRecentSales.map(s => {
+        tbComm.innerHTML = mockRecentSales.length === 0
+          ? '<tr><td colspan="7" class="py-8 px-3 text-center text-xs text-slate-400">Belum ada rincian komisi transaksi.</td></tr>'
+          : mockRecentSales.map(s => {
           const platformFee = Math.round(s.price * 0.40);
           const eoFee = Math.round(s.price * 0.10);
           return `
@@ -1495,7 +1456,140 @@
       }
     }
 
-    function simulateBatchUpload() {
+    function createImagePreviewDataUrl(file, maxWidth = 900) {
+      return new Promise((resolve) => {
+        const reader = new FileReader();
+        reader.onload = (ev) => {
+          const img = new Image();
+          img.onload = () => {
+            const scale = Math.min(1, maxWidth / (img.width || maxWidth));
+            const canvas = document.createElement('canvas');
+            canvas.width = Math.round((img.width || maxWidth) * scale);
+            canvas.height = Math.round((img.height || maxWidth) * scale);
+            const ctx = canvas.getContext('2d');
+            ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+            resolve({ dataUrl: canvas.toDataURL('image/jpeg', 0.8), width: img.width || 6000, height: img.height || 4000 });
+          };
+          img.onerror = () => resolve({ dataUrl: ev.target.result, width: 6000, height: 4000 });
+          img.src = ev.target.result;
+        };
+        reader.readAsDataURL(file);
+      });
+    }
+
+    function appendAuditLog(action, color, text, actor, target) {
+      try {
+        const logs = JSON.parse(localStorage.getItem('picme_audit_logs') || '[]');
+        logs.unshift({
+          action,
+          color,
+          text,
+          actor: actor || 'photographer@picme.id',
+          target: target || '-',
+          time: new Date().toLocaleTimeString('id-ID', { hour: '2-digit', minute: '2-digit' }) + ' WIB',
+          created_at: new Date().toISOString()
+        });
+        localStorage.setItem('picme_audit_logs', JSON.stringify(logs.slice(0, 100)));
+      } catch (e) {}
+    }
+
+    function onUploadEventSelectChanged() {
+      const sel = document.getElementById('uploadSelectEvent');
+      const box = document.getElementById('newEventFields');
+      if (sel && box) {
+        box.classList.toggle('hidden', sel.value !== 'new');
+      }
+    }
+
+    async function loadPhotographerEventsDropdown() {
+      const sel = document.getElementById('uploadSelectEvent');
+      if (!sel) return;
+
+      let apiEvents = [];
+      try {
+        const res = await fetch('/api/events');
+        if (res.ok) {
+          const d = await res.json();
+          apiEvents = (d && Array.isArray(d.events)) ? d.events : [];
+        }
+      } catch (e) {}
+
+      let sharedEvents = [];
+      try { sharedEvents = JSON.parse(localStorage.getItem('picme_prod_events') || '[]'); } catch {}
+
+      const merged = new Map();
+      [...apiEvents, ...sharedEvents].forEach(ev => { if (ev && ev.id) merged.set(ev.id, ev); });
+
+      const options = Array.from(merged.values()).map(ev => `<option value="${ev.id}">${ev.title} (${ev.location || '-'})</option>`);
+      options.push('<option value="new">+ Buat Event / Spot Baru</option>');
+      sel.innerHTML = options.join('');
+      onUploadEventSelectChanged();
+    }
+
+    async function simulateBatchUpload() {
+      if (!selectedBatchFiles || selectedBatchFiles.length === 0) {
+        alert('Pilih minimal 1 file foto terlebih dahulu.');
+        return;
+      }
+
+      const sel = document.getElementById('uploadSelectEvent');
+      let eventId = sel ? sel.value : 'new';
+      let eventTitle = sel && sel.selectedIndex >= 0 ? sel.options[sel.selectedIndex].text : 'Event PicMe';
+      const studioName = document.getElementById('accStudioName')?.value.trim() || document.getElementById('sidebarPhotographerName')?.innerText || 'Fotografer PicMe';
+
+      if (eventId === 'new') {
+        const title = (document.getElementById('newEventTitle')?.value || '').trim();
+        const dateIso = (document.getElementById('uploadDate')?.value || new Date().toISOString().slice(0, 10));
+        const category = document.getElementById('uploadCategory')?.value || 'music';
+        const location = (document.getElementById('uploadLocation')?.value || '').trim();
+        if (!title || !location) {
+          alert('Harap isi Judul Event dan Lokasi/Kota untuk membuat event baru.');
+          return;
+        }
+        const formattedDate = new Date(dateIso).toLocaleDateString('id-ID', { day: 'numeric', month: 'long', year: 'numeric' });
+        let createdEvent = null;
+        try {
+          const res = await fetch('/api/events', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ title, location, event_date: formattedDate, category, description: `Liputan resmi oleh ${studioName}` })
+          });
+          if (res.ok) {
+            const d = await res.json();
+            createdEvent = d.event;
+          }
+        } catch (e) {}
+
+        if (!createdEvent) {
+          createdEvent = {
+            id: 'evt-' + Date.now().toString(36),
+            title,
+            location,
+            event_date: formattedDate,
+            date_iso: dateIso,
+            category,
+            description: `Liputan resmi oleh ${studioName}`,
+            cover_url: '',
+            photos_count: '0 Foto',
+            creators_count: studioName,
+            created_at: new Date().toISOString()
+          };
+        } else {
+          createdEvent.date_iso = dateIso;
+        }
+
+        const sharedEvents = JSON.parse(localStorage.getItem('picme_prod_events') || '[]');
+        sharedEvents.unshift(createdEvent);
+        localStorage.setItem('picme_prod_events', JSON.stringify(sharedEvents));
+        appendAuditLog('EVENT_CREATED', 'purple', `Event baru dibuat: ${createdEvent.title} (${createdEvent.location})`, studioName, createdEvent.id);
+
+        eventId = createdEvent.id;
+        eventTitle = createdEvent.title;
+        await loadPhotographerEventsDropdown();
+        if (sel) sel.value = eventId;
+        onUploadEventSelectChanged();
+      }
+
       const progressSec = document.getElementById('uploadProgressSection');
       const bar = document.getElementById('uploadProgressBar');
       const pct = document.getElementById('uploadProgressPct');
@@ -1504,37 +1598,81 @@
 
       progressSec.classList.remove('hidden');
       btn.disabled = true;
+      bar.style.width = '20%';
+      pct.innerText = '20%';
+      label.innerText = 'Mengunggah foto & mengekstrak preview katalog...';
 
-      let currentPct = 0;
-      const interval = setInterval(() => {
-        currentPct += 15;
-        if (currentPct > 100) currentPct = 100;
-
-        bar.style.width = currentPct + '%';
-        pct.innerText = currentPct + '%';
-
-        if (currentPct < 40) {
-          label.innerText = 'Mengunggah file original ke Cloud Storage S3...';
-        } else if (currentPct < 80) {
-          label.innerText = 'Mendeteksi Wajah (InsightFace) & Nomor Dada (BIB)...';
-        } else if (currentPct < 100) {
-          label.innerText = 'Memasang Watermark Grid Studio & Menerbitkan Katalog...';
-        } else {
-          clearInterval(interval);
-          label.innerText = '✓ Berhasil! Semua foto terindeks & tayang di katalog PicMe.';
-          
-          // Add dummy to queue
-          aiQueue.unshift({
-            filename: `IMG_BATCH_${Date.now().toString().slice(-4)}.JPG`,
-            res: '6000x4000 (24MP)',
-            faces: '4 Wajah Terdeteksi',
-            bib: 'BIB #3018',
-            status: 'Terbit'
-          });
-          renderAiQueue();
-          alert(`Sukses mengunggah dan memproses ${selectedBatchFiles.length || 12} foto! Foto kini dapat dicocokkan oleh selfie peserta.`);
+      // Call backend upload API if reachable
+      let backendUploaded = [];
+      try {
+        const fd = new FormData();
+        selectedBatchFiles.forEach(f => fd.append('files', f));
+        const res = await fetch(`/api/events/${eventId}/photos`, { method: 'POST', body: fd });
+        if (res.ok) {
+          const data = await res.json();
+          backendUploaded = data.uploaded || [];
         }
-      }, 350);
+      } catch (e) {}
+
+      bar.style.width = '65%';
+      pct.innerText = '65%';
+      label.innerText = 'Menyinkronkan katalog ke PicMe User & Monitor Admin...';
+
+      const sharedPhotos = JSON.parse(localStorage.getItem('picme_prod_photos') || '[]');
+      const sharedEvents = JSON.parse(localStorage.getItem('picme_prod_events') || '[]');
+
+      for (let i = 0; i < selectedBatchFiles.length; i++) {
+        const file = selectedBatchFiles[i];
+        const preview = await createImagePreviewDataUrl(file);
+        const apiItem = backendUploaded[i] && !backendUploaded[i].error ? backendUploaded[i] : null;
+        const photoId = apiItem ? apiItem.id : ('ph-' + Date.now().toString(36) + '-' + i);
+
+        const photoRecord = {
+          id: photoId,
+          photo_id: photoId,
+          event_id: eventId,
+          event_title: eventTitle,
+          filename: file.name,
+          thumbnail_url: apiItem ? apiItem.thumbnail_url : preview.dataUrl,
+          file_url: apiItem ? apiItem.file_url : preview.dataUrl,
+          width: preview.width,
+          height: preview.height,
+          faces_detected: apiItem ? (apiItem.faces_detected || 1) : 1,
+          uploaded_by: studioName,
+          status: 'Terbit',
+          created_at: new Date().toISOString()
+        };
+        sharedPhotos.unshift(photoRecord);
+
+        // Set event cover if empty
+        const evObj = sharedEvents.find(ev => ev.id === eventId);
+        if (evObj) {
+          if (!evObj.cover_url) evObj.cover_url = photoRecord.thumbnail_url;
+          const cnt = sharedPhotos.filter(p => p.event_id === eventId).length;
+          evObj.photos_count = `${cnt} Foto`;
+        }
+
+        aiQueue.unshift({
+          filename: file.name,
+          res: `${preview.width}x${preview.height}`,
+          faces: `${photoRecord.faces_detected} Wajah`,
+          bib: 'Terindeks',
+          status: 'Terbit'
+        });
+      }
+
+      localStorage.setItem('picme_prod_photos', JSON.stringify(sharedPhotos));
+      localStorage.setItem('picme_prod_events', JSON.stringify(sharedEvents));
+      appendAuditLog('PHOTO_UPLOADED', 'blue', `${selectedBatchFiles.length} foto diunggah ke ${eventTitle}`, studioName, eventId);
+
+      bar.style.width = '100%';
+      pct.innerText = '100%';
+      label.innerText = `✓ Berhasil! ${selectedBatchFiles.length} foto kini tayang di PicMe User & terpantau di Admin.`;
+      btn.disabled = false;
+
+      renderAiQueue();
+      loadPhotographerLiveData();
+      alert(`Berhasil mengunggah ${selectedBatchFiles.length} foto ke "${eventTitle}"! Foto langsung dapat dilihat & dibeli di PicMe User.`);
     }
 
     function clearCompletedQueue() {
@@ -1602,7 +1740,7 @@
       availableBalance -= amount;
       document.getElementById('cardAvailableBalance').innerText = `Rp ${new Intl.NumberFormat('id-ID').format(availableBalance)}`;
       closeModalWithdraw();
-      alert(`Permintaan penarikan Rp ${new Intl.NumberFormat('id-ID').format(amount)} berhasil diajukan! Dana akan ditransfer ke rekening BCA Rian Santoso dalam 1x24 jam.`);
+      alert(`Permintaan penarikan Rp ${new Intl.NumberFormat('id-ID').format(amount)} berhasil diajukan! Dana akan ditransfer ke rekening terdaftar dalam 1x24 jam.`);
     }
 
     // 8. Toggle Mobile Sidebar
@@ -1635,10 +1773,50 @@
       } catch (e) {}
     }
 
-    window.addEventListener('DOMContentLoaded', () => {
-      checkUserRole();
+    function loadPhotographerLiveData() {
+      let photos = [];
+      let orders = [];
+      try { photos = JSON.parse(localStorage.getItem('picme_prod_photos') || '[]'); } catch {}
+      try { orders = JSON.parse(localStorage.getItem('picme_orders') || '[]'); } catch {}
+
+      const soldItems = orders.flatMap(o => (o.items || []).map(it => ({
+        id: o.order_id,
+        photo: it.filename || it.photo_id,
+        event: it.event_title || 'Event PicMe',
+        price: it.price || 35000,
+        share: Math.round((it.price || 35000) * 0.5),
+        time: new Date(o.created_at || Date.now()).toLocaleDateString('id-ID', { day: 'numeric', month: 'short' })
+      })));
+
+      availableBalance = soldItems.reduce((sum, s) => sum + s.share, 0);
+      const balEl = document.getElementById('cardAvailableBalance');
+      if (balEl) balEl.innerText = `Rp ${new Intl.NumberFormat('id-ID').format(availableBalance)}`;
+
+      const soldEl = document.getElementById('kpiSoldCount');
+      if (soldEl) soldEl.innerText = `${soldItems.length} Unduhan`;
+
+      const activeEl = document.getElementById('kpiActivePhotos');
+      if (activeEl) activeEl.innerText = `${photos.length} Foto`;
+
+      mockRecentSales.length = 0;
+      soldItems.forEach(s => mockRecentSales.push(s));
+
+      aiQueue = photos.slice(0, 10).map(p => ({
+        filename: p.filename,
+        res: `${p.width || 6000}x${p.height || 4000}`,
+        faces: `${p.faces_detected || 1} Wajah`,
+        bib: 'Terindeks',
+        status: p.status || 'Terbit'
+      }));
+
       renderSalesChart();
       renderDashboardTables();
+    }
+
+    window.addEventListener('DOMContentLoaded', () => {
+      checkUserRole();
+      loadPhotographerEventsDropdown();
+      loadPhotographerLiveData();
     });
   </script>
 </body>

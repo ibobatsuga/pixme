@@ -283,3 +283,42 @@ class DatabaseService:
             "eo_share_idr": eo_share,
             "platform_share_idr": platform_share
         }
+
+    def get_admin_overview(self) -> Dict[str, Any]:
+        with self._get_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM events ORDER BY created_at DESC")
+            events = [dict(r) for r in cursor.fetchall()]
+
+            cursor.execute("""
+                SELECT p.*, e.title AS event_title
+                FROM photos p
+                LEFT JOIN events e ON p.event_id = e.id
+                ORDER BY p.created_at DESC
+            """)
+            photos = [dict(r) for r in cursor.fetchall()]
+
+            cursor.execute("""
+                SELECT pu.*, p.filename, e.title AS event_title
+                FROM purchases pu
+                LEFT JOIN photos p ON pu.photo_id = p.id
+                LEFT JOIN events e ON pu.event_id = e.id
+                ORDER BY pu.created_at DESC
+            """)
+            purchases = [dict(r) for r in cursor.fetchall()]
+
+        gmv = sum(p.get("price_idr", 0) for p in purchases)
+        photographer_share = sum(p.get("photographer_share_idr", 0) for p in purchases)
+        platform_profit = sum(p.get("platform_share_idr", 0) for p in purchases)
+
+        return {
+            "total_events": len(events),
+            "total_photos": len(photos),
+            "total_purchases": len(purchases),
+            "gmv_idr": gmv,
+            "photographer_share_idr": photographer_share,
+            "platform_profit_idr": platform_profit,
+            "events": events,
+            "photos": photos,
+            "purchases": purchases
+        }
