@@ -33,7 +33,11 @@ class StorageService:
             endpoint_url = os.getenv("S3_ENDPOINT_URL")
             access_key = os.getenv("S3_ACCESS_KEY")
             secret_key = os.getenv("S3_SECRET_KEY")
-            region_name = os.getenv("S3_REGION_NAME", "us-east-1")
+            default_region = "auto" if (endpoint_url and "r2.cloudflarestorage.com" in endpoint_url) else "us-east-1"
+            region_name = os.getenv("S3_REGION_NAME", default_region)
+
+            if not endpoint_url or not access_key or not secret_key:
+                raise ValueError("Missing S3_ENDPOINT_URL, S3_ACCESS_KEY, or S3_SECRET_KEY")
 
             self.s3_client = boto3.client(
                 "s3",
@@ -46,6 +50,14 @@ class StorageService:
         except Exception as e:
             print(f"[StorageService] Warning: Failed to init S3 client ({e}). Falling back to local disk.")
             self.driver = "local"
+
+    def get_status(self) -> dict:
+        return {
+            "driver": self.driver,
+            "s3_ready": bool(self.driver == "s3" and self.s3_client is not None),
+            "bucket": self.bucket_name if self.driver == "s3" else None,
+            "public_domain": self.public_domain if self.driver == "s3" else None,
+        }
 
     async def save_photo(
         self, 
@@ -77,14 +89,15 @@ class StorageService:
         # 2. Upload according to active driver
         if self.driver == "s3" and self.s3_client:
             raw_key = f"events/{event_id}/raw/{unique_name}"
-            thumb_key = f"events/{event_id}/thumbnails/thumb_{unique_name}"
+            thumb_key = f"events/{event_id}/thumbnails/thumb_{os.path.splitext(unique_name)[0]}.jpg"
+            raw_ct = "image/png" if ext == ".png" else ("image/webp" if ext == ".webp" else "image/jpeg")
 
             # Upload raw
             self.s3_client.put_object(
                 Bucket=self.bucket_name,
                 Key=raw_key,
                 Body=image_bytes,
-                ContentType="image/jpeg"
+                ContentType=raw_ct
             )
 
             # Upload thumbnail

@@ -51,7 +51,11 @@ class CreateEventRequest(BaseModel):
 
 @app.get("/api/health")
 def health_check():
-    return {"status": "ok", "service": "PixMe AI Engine"}
+    return {
+        "status": "ok",
+        "service": "PixMe AI Engine",
+        "storage": storage_service.get_status(),
+    }
 
 
 @app.get("/api/events")
